@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Tutorial.js</title>
+
+    <style type="text/css">
+        body,
+        html {
+            background-color: #DDD;
+            color: #333;
+            font-family: Arial;
+            height: 100%;
+            margin: 0;
+            width: 100%;
+        }
+
+        .greeting {
+            background-color: white;
+            height: 60px;
+            left: 50%;
+            margin-left: -125px;
+            margin-top: -30px;
+            position: absolute;
+            text-align: center;
+            top: 50%;
+            width: 250px;
+            border: 1px solid rgba(0,0,0,0.5);
+            border-top: none;
+            border-left: none;
+        }
+
+        h1 {
+            line-height: 60px;
+            margin: 0;
+        }
+    </style>
+
+    <link rel="stylesheet" type="text/css" href="dist/tour.js.css">
+
+</head>
+
+<body>
+    <div class="greeting">
+        <h1>Hello World!</h1>
+    </div>
+    <script type="text/javascript" src="dist/tour.js"></script>
+    <script type="text/javascript">
+        var tour = Tour({
+            steps: [{
+                hints: [
+                    {
+                        target: '.greeting',
+                        type: 'arrow',
+                        position: 'left',
+                        title: 'Hello World',
+                        description: 'The classing <b>programming</b> example.'
+                    }
+                ]
+            }, {
+                hints: [
+                    {
+                        target: '.greeting',
+                        type: 'arrow',
+                        position: 'top-left',
+                        title: 'Hello World',
+                        description: 'The classing <b>programming</b> example.'
+                    }
+                ]
+            }, {
+                hints: [
+                    {
+                        target: '.greeting',
+                        type: 'arrow',
+                        position: 'top',
+                        title: 'Hello World',
+                        description: 'The classing <b>programming</b> example.'
+                    }
+               ]
+            }, {
+                hints: [
+                    {
+                        target: '.greeting',
+                        type: 'arrow',
+                        position: 'top-right',
+                        title: 'Hello World',
+                        description: 'The classing <b>programming</b> example.'
+                    }
+                ]
+            }, {
+                hints: [
+                    {
+                        target: '.greeting',
+                        type: 'arrow',
+                        position: 'right',
+                        title: 'Hello World',
+                        description: 'The classing <b>programming</b> example.'
+                    }
+                ]
+            }, {
+                hints: [
+                    {
+                        target: '.greeting',
+                        type: 'arrow',
+                        position: 'bottom-right',
+                        title: 'Hello World',
+                        description: 'The classing <b>programming</b> example.'
+                    }
+                ]
+            }, {
+                hints: [
+                    {
+                        target: '.greeting',
+                        type: 'arrow',
+                        position: 'bottom',
+                        title: 'Hello World',
+                        description: 'The classing <b>programming</b> example.'
+                    }
+                ]
+            }, {
+                hints: [
+                    {
+                        target: '.greeting',
+                        type: 'arrow',
+                        position: 'bottom-left',
+                        title: 'Hello World',
+                        description: 'The classing <b>programming</b> example.'
+                    }
+                ]
+            }]
+        });
+
+        tour.render();
+        tour.render();
+    </script>
+</body>
+
+</html>

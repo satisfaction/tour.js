@@ -1,0 +1,130 @@
+#tourjs-overlay,
+.tourjs-step {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+#tourjs-overlay {
+  background-color: #000;
+  opacity: 0.5;
+  z-index: 9999;
+  display: none;
+}
+.tourjs-step {
+  z-index: 99999;
+}
+.tourjs-hint {
+  position: absolute;
+}
+.tourjs-shape {
+  position: absolute;
+}
+.tourjs-tooltip {
+  color: #fff;
+  padding: 10px;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+.tourjs-tooltip h2 {
+  font-size: 16pt;
+  margin: 0;
+  padding: 0;
+}
+.tourjs-tooltip .tourjs-desc {
+  font-size: 12pt;
+}
+.tourjs-tooltip h2,
+.tourjs-tooltip .tourjs-desc {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: normal;
+}
+.tourjs-hint {
+  max-width: 350px;
+  max-height: 350px;
+  overflow: hidden;
+}
+.tourjs-hint.tourjs-arrow.tourjs-top-left .tourjs-tooltip {
+  margin-right: 45px;
+  margin-bottom: 45px;
+  text-align: right;
+}
+.tourjs-hint.tourjs-arrow.tourjs-top-left .tourjs-shape {
+  bottom: 0;
+  height: 50px;
+  right: 0;
+  width: 50px;
+}
+.tourjs-hint.tourjs-arrow.tourjs-top .tourjs-tooltip {
+  margin-bottom: 65px;
+}
+.tourjs-hint.tourjs-arrow.tourjs-top .tourjs-shape {
+  bottom: 0;
+  left: 50%;
+  height: 68px;
+  margin-left: -16px;
+  width: 31px;
+}
+.tourjs-hint.tourjs-arrow.tourjs-top-right .tourjs-tooltip {
+  margin-left: 45px;
+  margin-bottom: 45px;
+}
+.tourjs-hint.tourjs-arrow.tourjs-top-right .tourjs-shape {
+  bottom: 0;
+  height: 50px;
+  left: 0;
+  width: 50px;
+}
+.tourjs-hint.tourjs-arrow.tourjs-right .tourjs-tooltip {
+  margin-left: 65px;
+}
+.tourjs-hint.tourjs-arrow.tourjs-right .tourjs-shape {
+  height: 31px;
+  left: 0;
+  margin-top: -16px;
+  top: 50%;
+  width: 68px;
+}
+.tourjs-hint.tourjs-arrow.tourjs-bottom-right .tourjs-tooltip {
+  margin-left: 45px;
+  margin-top: 45px;
+}
+.tourjs-hint.tourjs-arrow.tourjs-bottom-right .tourjs-shape {
+  top: 0;
+  height: 50px;
+  left: 0;
+  width: 50px;
+}
+.tourjs-hint.tourjs-arrow.tourjs-bottom .tourjs-tooltip {
+  margin-top: 65px;
+}
+.tourjs-hint.tourjs-arrow.tourjs-bottom .tourjs-shape {
+  height: 68px;
+  left: 50%;
+  margin-left: -16px;
+  top: 0;
+  width: 31px;
+}
+.tourjs-hint.tourjs-arrow.tourjs-bottom-left .tourjs-tooltip {
+  margin-top: 45px;
+  margin-right: 45px;
+  text-align: right;
+}
+.tourjs-hint.tourjs-arrow.tourjs-bottom-left .tourjs-shape {
+  height: 50px;
+  right: 0;
+  top: 0;
+  width: 50px;
+}
+.tourjs-hint.tourjs-arrow.tourjs-left .tourjs-tooltip {
+  margin-right: 65px;
+  text-align: right;
+}
+.tourjs-hint.tourjs-arrow.tourjs-left .tourjs-shape {
+  height: 31px;
+  margin-top: -16px;
+  right: 0px;
+  top: 50%;
+  width: 68px;
+}
