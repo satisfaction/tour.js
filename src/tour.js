@@ -193,8 +193,9 @@
             }
 
             this.node.className = 'tourjs-hint';
-            this.node.className += ' tourjs-' + this.options.position;
-            this.node.className += ' tourjs-' + this.options.type;
+            this.node.classList.add('tourjs-' + this.options.position);
+            this.node.classList.add('tourjs-' + this.options.type);
+
             this._setPosition();
 
             return this.node;
@@ -279,39 +280,54 @@
         }
     };
 
-    function Step(options) {
+    function Step(config) {
         if (!(this instanceof Step)) {
-            return new Step(options);
+            return new Step(config);
         }
 
         this.id = buildID();
-        this.options = options || {};
+        this.options = config.options || {};
         this.hints = [];
 
-        this.options.hints.forEach(function (options) {
+        config.hints.forEach(function (options) {
             this.hints.push(new Hint(options));
         }.bind(this));
     }
 
     Step.prototype = {
-        render: function render() {
-            if (!this.node) {
-                this.node = document.createElement('div');
-                this.node.id = this.id;
+        render: function render(callback) {
+
+            var asyncRender = function () {
+
+                if (!this.node) {
+                    this.node = document.createElement('div');
+                    this.node.id = this.id;
+                }
+
+                this.hints.forEach(function (hint) {
+                    hint.render();
+                    this.node.appendChild(hint.node);
+                }.bind(this));
+
+                this.node.className = 'tourjs-step';
+
+                if (!document.getElementById(this.id)) {
+                    document.body.appendChild(this.node);
+                }
+
+                callback(this);
+
+            }.bind(this);
+
+            if (typeof this.options.before === 'function') {
+                this.options.before(asyncRender);
+            } else {
+                asyncRender();
             }
 
-            this.hints.forEach(function (hint) {
-                hint.render();
-                this.node.appendChild(hint.node);
-            }.bind(this));
-
-            this.node.className = 'tourjs-step';
-
-            if (!document.getElementById(this.id)) {
-                document.body.appendChild(this.node);
+            if (typeof this.options.after === 'function') {
+                this.options.after();
             }
-
-            return this.node;
         }
     };
 
@@ -331,13 +347,11 @@
 
     Tour.prototype = {
         render: function render() {
-            var frag;
-
             if (!this.node) {
                 this.node = document.createElement('div');
                 this.node.id = this.id;
-                frag = document.createDocumentFragment();
-                frag.appendChild(this.node);
+                this._frag = document.createDocumentFragment();
+                this._frag.appendChild(this.node);
             }
 
             this.node.className = 'tourjs';
@@ -346,7 +360,7 @@
             fetchSVG(function () {
                 this._renderStep(0);
                 if (!document.getElementById(this.id)) {
-                    document.body.appendChild(frag);
+                    document.body.appendChild(this._frag);
                 }
             }.bind(this));
 
@@ -355,8 +369,9 @@
 
         _renderStep: function _renderStep(i) {
             var step = this.steps[i];
-            step.render();
-            this.node.appendChild(step.node);
+            step.render(function (step) {
+                this.node.appendChild(step.node);
+            }.bind(this));
         }
 
     };

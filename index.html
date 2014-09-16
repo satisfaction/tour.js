@@ -44,15 +44,43 @@
     <div class="greeting">
         <h1>Hello World!</h1>
     </div>
-    <script type="text/javascript" src="dist/tour.js"></script>
+    <script type="text/javascript" src="src/tour.js"></script>
     <script type="text/javascript">
-        var tour = Tour({
+        var tour = new Tour({
             steps: [{
+                options: {
+                    before: function (done) {
+                        done();
+                    },
+                    after: function () {
+                    }
+                },
                 hints: [
                     {
                         target: '.greeting',
                         type: 'arrow',
+                        position: 'bottom-left',
+                        title: 'Hello World',
+                        description: 'The classing <b>programming</b> example.'
+                    },
+                    {
+                        target: '.greeting',
+                        type: 'arrow',
+                        position: 'top-left',
+                        title: 'Hello World',
+                        description: 'The classing <b>programming</b> example.'
+                    },
+                    {
+                        target: '.greeting',
+                        type: 'arrow',
                         position: 'left',
+                        title: 'Hello World',
+                        description: 'The classing <b>programming</b> example.'
+                    },
+                    {
+                        target: '.greeting',
+                        type: 'arrow',
+                        position: 'top',
                         title: 'Hello World',
                         description: 'The classing <b>programming</b> example.'
                     }
@@ -132,6 +160,7 @@
 
         tour.render();
         tour.render();
+
     </script>
 </body>
 
