@@ -64,7 +64,7 @@
         return 'tourjs-' + ID_COUNT++;
     }
 
-    function fetchSVG(callback) {
+    function fetchSVG(options) {
         var httpRequest = new XMLHttpRequest();
 
         function load () {
@@ -72,15 +72,15 @@
                 SVG_DOM = document.createElement('div');
                 SVG_DOM.innerHTML = httpRequest.responseText;
 
-                if (callback) {
-                    callback();
+                if (options.success) {
+                    options.success();
                 }
             }
         }
 
         httpRequest.onreadystatechange = load;
         // TODO: Make the URL configurable
-        httpRequest.open('GET', 'dist/tour.js.svg', true);
+        httpRequest.open('GET', (options.svg || 'dist/tour.js.svg'), true);
         httpRequest.send();
     }
 
@@ -331,17 +331,17 @@
         }
     };
 
-    function Tour(options) {
+    function Tour(config) {
         if (!(this instanceof Tour)) {
-            return new Tour(options);
+            return new Tour(config);
         }
 
         this.id = buildID();
-        this.options = options || {};
+        this.options = config.options || {};
         this.steps = [];
 
-        this.options.steps.forEach(function (options) {
-            this.steps.push(new Step(options));
+        config.steps.forEach(function (config) {
+            this.steps.push(new Step(config));
         }.bind(this));
     }
 
@@ -357,12 +357,15 @@
             this.node.className = 'tourjs';
             renderOverlay();
 
-            fetchSVG(function () {
-                this._renderStep(0);
-                if (!document.getElementById(this.id)) {
-                    document.body.appendChild(this._frag);
-                }
-            }.bind(this));
+            fetchSVG({
+                svg: this.options.svg,
+                success: function () {
+                    this._renderStep(0);
+                    if (!document.getElementById(this.id)) {
+                        document.body.appendChild(this._frag);
+                    }
+                }.bind(this)
+            });
 
             return this.node;
         },

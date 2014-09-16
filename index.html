@@ -47,6 +47,9 @@
     <script type="text/javascript" src="src/tour.js"></script>
     <script type="text/javascript">
         var tour = new Tour({
+            options: {
+                svg: 'dist/tour.js.svg'
+            },
             steps: [{
                 options: {
                     before: function (done) {
