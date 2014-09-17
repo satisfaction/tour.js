@@ -139,8 +139,23 @@
 }
 .tourjs-pagination a {
   color: #fff;
+  display: block;
   text-decoration: none;
+}
+.tourjs-pagination svg {
+  width: 15px;
+  height: 17px;
 }
 .tourjs-pagination .tourjs-next-step {
   float: right;
+  margin-right: 15px;
+}
+.tourjs-pagination .tourjs-next-step span {
+  margin-right: 5px;
+}
+.tourjs-pagination .tourjs-previous-step {
+  margin-left: 15px;
+}
+.tourjs-pagination .tourjs-previous-step span {
+  margin-left: 20px;
 }

@@ -9,38 +9,32 @@
 
 #tourjs-overlay {
     background-color: black;
-    opacity: 0.5;
+    opacity: 0.7;
     z-index: 9999;
     display: none;
 }
 
-.tourjs-step {
-    z-index: 99999;
-}
+.tourjs-step { z-index: 99999; }
 
-.tourjs-hint {
-    position: absolute;
-}
+.tourjs-hint { position: absolute; }
 
-.tourjs-shape {
-    position: absolute;
-}
+.tourjs-shape { position: absolute; }
 
 .tourjs-tooltip {
     color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.3em;
     padding: 10px;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .tourjs-tooltip h2 {
-    font-size: 18pt;
+    font-size: 16pt;
     margin: 0;
     padding: 0;
 }
 
-.tourjs-tooltip .tourjs-desc {
-    font-size: 12pt;
-}
+.tourjs-tooltip .tourjs-desc { font-size: 12pt; }
 
 .tourjs-tooltip h2,
 .tourjs-tooltip .tourjs-desc {
@@ -55,7 +49,9 @@
     overflow: hidden;
 
     &.tourjs-arrow {
+
         &.tourjs-top-left {
+
             .tourjs-tooltip {
                 margin-right: 45px;
                 margin-bottom: 45px;
@@ -71,6 +67,7 @@
         }
 
         &.tourjs-top {
+
             .tourjs-tooltip {
                 margin-bottom: 65px;
             }
@@ -86,6 +83,7 @@
 
 
         &.tourjs-top-right {
+
             .tourjs-tooltip {
                 margin-left: 45px;
                 margin-bottom: 45px;
@@ -100,6 +98,7 @@
         }
 
         &.tourjs-right {
+
             .tourjs-tooltip {
                 margin-left: 65px;
             }
@@ -128,9 +127,8 @@
         }
 
         &.tourjs-bottom {
-            .tourjs-tooltip {
-                margin-top: 65px;
-            }
+
+            .tourjs-tooltip { margin-top: 65px; }
 
             .tourjs-shape {
                 height: 68px;
@@ -142,6 +140,7 @@
         }
 
         &.tourjs-bottom-left {
+
             .tourjs-tooltip {
                 margin-top: 45px;
                 margin-right: 45px;
@@ -154,10 +153,12 @@
                 top: 0;
                 width: 50px;
             }
+
         }
 
 
         &.tourjs-left {
+
             .tourjs-tooltip {
                 margin-right: 65px;
                 text-align: right;
@@ -170,6 +171,7 @@
                 top: 50%;
                 width: 68px;
             }
+
         }
     }
 }
@@ -183,10 +185,25 @@
 
   a {
     color: white;
+    display: block;
     text-decoration: none;
+  }
+
+  svg {
+    width: 15px;
+    height: 17px;
   }
 
   .tourjs-next-step {
     float: right;
+    margin-right: 15px;
+
+    span { margin-right: 5px; }
+  }
+
+  .tourjs-previous-step {
+    margin-left: 15px;
+
+    span { margin-left: 20px; }
   }
 }

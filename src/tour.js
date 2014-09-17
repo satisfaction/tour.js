@@ -61,30 +61,12 @@
     }
 
     function addPagination(step) {
-        var label, next, pagination, previous;
+        var label, next, nextChevron, pagination, previous;
 
         if (step.previous || step.next) {
 
             pagination = document.createElement('div');
             pagination.className = 'tourjs-pagination';
-
-            if (step.previous) {
-                previous = document.createElement('a');
-                previous.className = 'tourjs-previous-step';
-                previous.setAttribute('href', '#');
-
-                label = document.createElement('span');
-                label.innerText = 'Previous';
-                previous.appendChild(label);
-                previous.addEventListener('click', function (event) {
-                    event.stopPropagation();
-                    step.hide();
-                    step.previous.render();
-                    step.previous.render();
-                });
-
-                pagination.appendChild(previous);
-            }
 
             if (step.next) {
                 next = document.createElement('a');
@@ -101,7 +83,31 @@
                 label.innerText = 'Next';
                 next.appendChild(label);
 
+                nextChevron = renderSVG('#tutjs-chevron-ltr g');
+                next.appendChild(nextChevron);
+
                 pagination.appendChild(next);
+            }
+
+            if (step.previous) {
+                previous = document.createElement('a');
+                previous.className = 'tourjs-previous-step';
+                previous.setAttribute('href', '#');
+                previous.addEventListener('click', function (event) {
+                    event.stopPropagation();
+                    step.hide();
+                    step.previous.render();
+                    step.previous.render();
+                });
+
+                previousChevron = renderSVG('#tutjs-chevron-rtl g', { transform: 'translate(-10)' });
+                previous.appendChild(previousChevron);
+
+                label = document.createElement('span');
+                label.innerText = 'Previous';
+                previous.appendChild(label);
+
+                pagination.appendChild(previous);
             }
 
             step.node.appendChild(pagination);
@@ -198,7 +204,9 @@
     }
 
     function renderSVG(selector, options) {
-        var svg, vector;
+        var svg, options, vector;
+
+        options = options || {};
 
         vector = SVG_DOM.querySelector(selector).cloneNode(true);
 
