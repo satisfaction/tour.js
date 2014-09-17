@@ -27,7 +27,7 @@
   text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
 }
 .tourjs-tooltip h2 {
-  font-size: 16pt;
+  font-size: 18pt;
   margin: 0;
   padding: 0;
 }
@@ -127,4 +127,18 @@
   right: 0px;
   top: 50%;
   width: 68px;
+}
+.tourjs-pagination {
+  bottom: 0;
+  left: 0;
+  padding: 15px;
+  position: absolute;
+  right: 0;
+}
+.tourjs-pagination a {
+  color: #fff;
+  text-decoration: none;
+}
+.tourjs-pagination .tourjs-next-step {
+  float: right;
 }

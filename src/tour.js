@@ -60,6 +60,54 @@
         svg.setAttribute('style', 'filter: url(#' + id + ');');
     }
 
+    function addPagination(step) {
+        var label, next, pagination, previous;
+
+        if (step.previous || step.next) {
+
+            pagination = document.createElement('div');
+            pagination.className = 'tourjs-pagination';
+
+            if (step.previous) {
+                previous = document.createElement('a');
+                previous.className = 'tourjs-previous-step';
+                previous.setAttribute('href', '#');
+
+                label = document.createElement('span');
+                label.innerText = 'Previous';
+                previous.appendChild(label);
+                previous.addEventListener('click', function (event) {
+                    event.stopPropagation();
+                    step.hide();
+                    step.previous.render();
+                    step.previous.render();
+                });
+
+                pagination.appendChild(previous);
+            }
+
+            if (step.next) {
+                next = document.createElement('a');
+                next.className = 'tourjs-next-step';
+                next.setAttribute('href', '#');
+                next.addEventListener('click', function (event) {
+                    event.stopPropagation();
+                    step.hide();
+                    step.next.render();
+                    step.next.render();
+                });
+
+                label = document.createElement('span');
+                label.innerText = 'Next';
+                next.appendChild(label);
+
+                pagination.appendChild(next);
+            }
+
+            step.node.appendChild(pagination);
+        }
+    }
+
     function buildID() {
         return 'tourjs-' + ID_COUNT++;
     }
@@ -302,6 +350,9 @@
                 if (!this.node) {
                     this.node = document.createElement('div');
                     this.node.id = this.id;
+                    addPagination(this);
+                } else {
+                    this.node.style.display = 'block';
                 }
 
                 this.hints.forEach(function (hint) {
@@ -315,7 +366,9 @@
                     document.body.appendChild(this.node);
                 }
 
-                callback(this);
+                if (callback) {
+                    callback(this);
+                }
 
             }.bind(this);
 
@@ -328,10 +381,15 @@
             if (typeof this.options.after === 'function') {
                 this.options.after();
             }
+        },
+        hide: function () {
+            this.node.style.display = 'none';
         }
     };
 
     function Tour(config) {
+        var step, previous;
+
         if (!(this instanceof Tour)) {
             return new Tour(config);
         }
@@ -340,8 +398,14 @@
         this.options = config.options || {};
         this.steps = [];
 
-        config.steps.forEach(function (config) {
-            this.steps.push(new Step(config));
+        config.steps.forEach(function (stepConfig) {
+            step = new Step(stepConfig);
+            if (previous) {
+                step.previous = previous;
+                previous.next = step;
+            }
+            this.steps.push(step);
+            previous = step;
         }.bind(this));
     }
 
