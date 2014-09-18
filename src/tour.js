@@ -80,9 +80,9 @@
                 next.setAttribute('href', '#');
                 next.addEventListener('click', function (event) {
                     event.stopPropagation();
-                    step.close();
-                    step.next.render();
-                    step.next.render();
+                    step.unload();
+                    step.next.load();
+                    step.next.load();
                 });
 
                 label = document.createElement('span');
@@ -101,9 +101,9 @@
                 previous.setAttribute('href', '#');
                 previous.addEventListener('click', function (event) {
                     event.stopPropagation();
-                    step.close();
-                    step.previous.render();
-                    step.previous.render();
+                    step.unload();
+                    step.previous.load();
+                    step.previous.load();
                 });
 
                 previousChevron = renderSVG('#tutjs-chevron-rtl g', { transform: 'translate(-10)' });
@@ -241,7 +241,7 @@
 
     Hint.prototype = {
 
-        render: function render() {
+        load: function () {
 
             if (!this.node) {
                 this.node = document.createElement('div');
@@ -265,7 +265,7 @@
             return this.node;
         },
 
-        close: function close() {
+        unload: function () {
             if (this.options.highlight) {
                 document.querySelector(this.options.target).classList.remove('tourjs-highlight');
             }
@@ -273,7 +273,7 @@
             window.removeEventListener('resize', this._setPosition);
         },
 
-        _setPosition: function _setPosition() {
+        _setPosition: function () {
             var margin = 5,
                 targetRect = getClientRect(document.querySelector(this.options.target)),
                 rect = getClientRect(this.node);
@@ -322,7 +322,7 @@
             }
         },
 
-        _renderDescription: function _renderDescription(parent) {
+        _renderDescription: function (parent) {
             var desc;
             if (this.options.description) {
                 desc = document.createElement('div');
@@ -332,18 +332,18 @@
             }
         },
 
-        _renderShape: function _renderShape() {
+        _renderShape: function () {
             var arrow = renderArrow(this.options.position);
             this.node.appendChild(arrow);
         },
 
-        _renderTitle: function _renderTitle(parent) {
+        _renderTitle: function (parent) {
             var title = document.createElement('h2');
             title.innerText = this.options.title;
             parent.appendChild(title);
         },
 
-        _renderTooltip: function _renderTooltip() {
+        _renderTooltip: function () {
             var tooltip = document.createElement('div');
             tooltip.className = 'tourjs-tooltip';
             this._renderTitle(tooltip);
@@ -367,7 +367,7 @@
     }
 
     Step.prototype = {
-        render: function render(callback) {
+        load: function load(callback) {
 
             var asyncRender = function () {
 
@@ -380,7 +380,7 @@
                 }
 
                 this.hints.forEach(function (hint) {
-                    hint.render();
+                    hint.load();
                     this.node.appendChild(hint.node);
                 }.bind(this));
 
@@ -407,69 +407,101 @@
             }
         },
 
-        close: function () {
-            this.node.style.display = 'none';
+        unload: function () {
+            if (this.node) {
+                this.node.style.display = 'none';
 
-            this.hints.forEach(function (hint) {
-                hint.close();
-            });
+                this.hints.forEach(function (hint) {
+                    hint.unload();
+                });
+            }
         }
     };
 
     function Tour(config) {
-        var step, previous;
 
         if (!(this instanceof Tour)) {
             return new Tour(config);
         }
 
+        this._onKeyUp = bind(this._onKeyUp, this);
+        this._onLoad = bind(this._onLoad, this);
+        this.unload = bind(this.unload, this);
+        this._initStep = bind(this._initStep, this);
+
         this.id = buildID();
         this.options = config.options || {};
-        this.steps = [];
+        this._initSteps(config);
+    }
 
-        config.steps.forEach(function (stepConfig) {
-            step = new Step(stepConfig);
+    Tour.prototype = {
+        load: function () {
+            renderOverlay(); // TODO: Make this a method
+            this._render();
+            fetchSVG({
+                svg: this.options.svg,
+                success: this._onLoad
+            });
+        },
+
+        unload: function () {
+            document.removeEventListener('keyup', this._onKeyUp);
+            this.steps.forEach(function (step) {
+                step.unload();
+            });
+            hideOverlay();
+        },
+
+        _initStep: function (config) {
+            var previous, step;
+            step = new Step(config);
             if (previous) {
                 step.previous = previous;
                 previous.next = step;
             }
-            this.steps.push(step);
             previous = step;
-        }.bind(this));
-    }
+            this.steps.push(step);
+        },
 
-    Tour.prototype = {
-        render: function render() {
+        _initSteps: function (config) {
+            this.steps = [];
+            config.steps.forEach(this._initStep);
+        },
+
+        _onKeyUp: function (event) {
+            if (event.keyCode === 27) {
+                this.unload();
+            }
+        },
+
+        _onLoad: function () {
+            document.addEventListener('keyup', this._onKeyUp);
+            this._renderFirstStep();
+            if (!document.getElementById(this.id)) {
+                document.body.appendChild(this._frag);
+            }
+        },
+
+        _render: function () {
             if (!this.node) {
                 this.node = document.createElement('div');
                 this.node.id = this.id;
                 this._frag = document.createDocumentFragment();
                 this._frag.appendChild(this.node);
             }
-
             this.node.className = 'tourjs';
-            renderOverlay();
-
-            fetchSVG({
-                svg: this.options.svg,
-                success: function () {
-                    this._renderStep(0);
-                    if (!document.getElementById(this.id)) {
-                        document.body.appendChild(this._frag);
-                    }
-                }.bind(this)
-            });
-
-            return this.node;
         },
 
-        _renderStep: function _renderStep(i) {
+        _renderFirstStep: function () {
+            this._renderStep(0);
+        },
+
+        _renderStep: function (i) {
             var step = this.steps[i];
-            step.render(function (step) {
+            step.load(function (step) {
                 this.node.appendChild(step.node);
             }.bind(this));
         }
-
     };
 
     return Tour;
