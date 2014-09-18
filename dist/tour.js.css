@@ -19,7 +19,7 @@
   position: absolute;
 }
 .tourjs-highlight {
-  z-index: 9999999;
+  z-index: 9999999 !important;
 }
 .tourjs-shape {
   position: absolute;

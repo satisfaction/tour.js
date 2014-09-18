@@ -427,7 +427,6 @@
         this._onKeyUp = bind(this._onKeyUp, this);
         this._onLoad = bind(this._onLoad, this);
         this.unload = bind(this.unload, this);
-        this._initStep = bind(this._initStep, this);
 
         this.id = buildID();
         this.options = config.options || {};
@@ -452,20 +451,22 @@
             hideOverlay();
         },
 
-        _initStep: function (config) {
+        _initStep: function () {
             var previous, step;
-            step = new Step(config);
-            if (previous) {
-                step.previous = previous;
-                previous.next = step;
-            }
-            previous = step;
-            this.steps.push(step);
+            return function (config) {
+                step = new Step(config);
+                if (previous) {
+                    step.previous = previous;
+                    previous.next = step;
+                }
+                previous = step;
+                this.steps.push(step);
+            }.bind(this);
         },
 
         _initSteps: function (config) {
             this.steps = [];
-            config.steps.forEach(this._initStep);
+            config.steps.forEach(this._initStep());
         },
 
         _onKeyUp: function (event) {
