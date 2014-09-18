@@ -15,6 +15,12 @@
     OVERLAY_ID = 'tourjs-overlay';
     XMLNS = 'http://www.w3.org/2000/svg';
 
+    function bind(fn, self) {
+        return function () {
+            return fn.apply(self, arguments);
+        };
+    }
+
     function addDropShadowFilter(svg, style) {
         var blend, blur, defs, filter, id, matrix, offset;
 
@@ -133,7 +139,6 @@
         }
 
         httpRequest.onreadystatechange = load;
-        // TODO: Make the URL configurable
         httpRequest.open('GET', (options.svg || 'dist/tour.js.svg'), true);
         httpRequest.send();
     }
@@ -204,7 +209,7 @@
     }
 
     function renderSVG(selector, options) {
-        var svg, options, vector;
+        var svg, vector;
 
         options = options || {};
 
@@ -230,6 +235,8 @@
 
         this.id = buildID();
         this.options = options || {};
+
+        this._setPosition = bind(this._setPosition, this);
     }
 
     Hint.prototype = {
@@ -241,16 +248,13 @@
                 this.node.id = this.id;
                 this._renderTooltip();
                 this._renderShape();
-
-                // TODO: Make sure to un-subscribe to the event
-                window.addEventListener('resize', function () {
-                    this._setPosition();
-                }.bind(this));
             }
 
             this.node.className = 'tourjs-hint';
             this.node.classList.add('tourjs-' + this.options.position);
             this.node.classList.add('tourjs-' + this.options.type);
+
+            window.addEventListener('resize', this._setPosition);
 
             if (this.options.highlight === true) {
                 document.querySelector(this.options.target).classList.add('tourjs-highlight');
@@ -265,6 +269,8 @@
             if (this.options.highlight) {
                 document.querySelector(this.options.target).classList.remove('tourjs-highlight');
             }
+
+            window.removeEventListener('resize', this._setPosition);
         },
 
         _setPosition: function _setPosition() {
