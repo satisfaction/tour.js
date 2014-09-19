@@ -395,14 +395,14 @@
 
                 if (callback) callback(this);
 
-                // Trigger `after` callback
+                // Trigger `afterLoad` callback
                 if (typeof this.options.afterLoad === 'function') {
                     this.options.afterLoad();
                 }
             }.bind(this);
 
             if (typeof this.options.beforeLoad === 'function') {
-                // Trigger `before` callback
+                // Trigger `beforeLoad` callback
                 this.options.beforeLoad(asyncLoad);
             } else {
                 asyncLoad();
@@ -419,10 +419,15 @@
                         hint.unload();
                     });
                 }
+
+                // Trigger `afterUnload` callback
+                if (typeof this.options.afterUnload === 'function') {
+                    this.options.afterUnload();
+                }
             }.bind(this);
 
             if (typeof this.options.beforeUnload === 'function') {
-                // Tigger `beforeClose` callback
+                // Tigger `beforeUnload` callback
                 this.options.beforeUnload(asyncUnload);
             } else {
                 asyncUnload();
@@ -463,10 +468,15 @@
                     svg: this.options.svg,
                     success: this._onLoad
                 });
+
+                // Trigger `afterLoad` callback
+                if (typeof this.options.afterLoad === 'function') {
+                    this.options.afterLoad();
+                }
             }.bind(this);
 
             if (typeof this.options.beforeLoad === 'function') {
-                // Trigger `before` callback
+                // Trigger `beforeLoad` callback
                 this.options.beforeLoad(asyncLoad);
             } else {
                 asyncLoad();
@@ -474,11 +484,27 @@
         },
 
         unload: function () {
-            document.removeEventListener('keyup', this._onKeyUp);
-            this.steps.forEach(function (step) {
-                step.unload();
-            });
-            hideOverlay();
+            var asyncUnload = function () {
+                document.removeEventListener('keyup', this._onKeyUp);
+
+                this.steps.forEach(function (step) {
+                    step.unload();
+                });
+
+                hideOverlay();
+
+                // Trigger `afterUnload` callback
+                if (typeof this.options.afterUnload === 'function') {
+                    this.options.afterUnload();
+                }
+            }.bind(this);
+
+            if (typeof this.options.beforeUnload === 'function') {
+                // Tigger `beforeUnload` callback
+                this.options.beforeUnload(asyncUnload);
+            } else {
+                asyncUnload();
+            }
         },
 
         _initStep: function () {
@@ -512,7 +538,7 @@
                 document.body.appendChild(this._frag);
             }
 
-            // Trigger `after` callback
+            // Trigger `afterLoad` callback
             if (typeof this.options.afterLoad === 'function') {
                 this.options.afterLoad();
             }
