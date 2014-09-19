@@ -390,20 +390,19 @@
                     document.body.appendChild(this.node);
                 }
 
-                if (callback) {
-                    callback(this);
-                }
+                if (callback) callback(this);
 
+                // Trigger `after` callback
+                if (typeof this.options.after === 'function') {
+                    this.options.after();
+                }
             }.bind(this);
 
             if (typeof this.options.before === 'function') {
+                // Trigger `before` callback
                 this.options.before(asyncRender);
             } else {
                 asyncRender();
-            }
-
-            if (typeof this.options.after === 'function') {
-                this.options.after();
             }
         },
 
