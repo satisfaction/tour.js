@@ -120,8 +120,8 @@
         }
     }
 
-    function buildID() {
-        return 'tourjs-' + ID_COUNT++;
+    function buildID(prefix) {
+        return 'tourjs-' + (prefix ? prefix + '-' : '') + ID_COUNT++;
     }
 
     function fetchSVG(options) {
@@ -233,7 +233,7 @@
             return new Hint(options);
         }
 
-        this.id = buildID();
+        this.id = buildID('hint');
         this.options = options || {};
 
         this._setPosition = bind(this._setPosition, this);
@@ -357,7 +357,7 @@
             return new Step(config);
         }
 
-        this.id = buildID();
+        this.id = buildID('step');
         this.options = config.options || {};
         this.hints = [];
 
