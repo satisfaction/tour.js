@@ -258,6 +258,8 @@
 
             if (this.options.highlight === true) {
                 document.querySelector(this.options.target).classList.add('tourjs-highlight');
+            } else if (typeof this.options.highlight === 'string') {
+                document.querySelector(this.options.highlight).classList.add('tourjs-highlight');
             }
 
             this._setPosition();
@@ -266,8 +268,10 @@
         },
 
         unload: function () {
-            if (this.options.highlight) {
+            if (this.options.highlight === true) {
                 document.querySelector(this.options.target).classList.remove('tourjs-highlight');
+            } else if (typeof this.options.highlight === 'string') {
+                document.querySelector(this.options.highlight).classList.remove('tourjs-highlight');
             }
 
             window.removeEventListener('resize', this._setPosition);
