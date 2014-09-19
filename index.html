@@ -48,7 +48,26 @@
     <script type="text/javascript">
         var tour = new Tour({
             options: {
-                svg: 'dist/tour.js.svg'
+                svg: 'dist/tour.js.svg',
+
+                beforeLoad: function (done) {
+                    console.log('Tour to be loaded');
+                    done();
+                },
+
+                afterLoad: function () {
+                    console.log('Tour loaded');
+                },
+
+                beforeUnload: function (done) {
+                    console.log('Tour to be unloaded');
+                    done();
+                },
+
+                afterUnload: function () {
+                    console.log('Tour unloaded');
+                }
+
             },
             steps: [{
                 options: {
@@ -56,13 +75,16 @@
                         console.log('Step to be loaded');
                         done();
                     },
+
                     afterLoad: function () {
                         console.log('Step loaded');
                     },
+
                     beforeUnload: function (done) {
                         console.log('Step to be unloaded');
                         done();
                     },
+
                     afterUnload: function () {
                         console.log('Step unloaded');
                     }

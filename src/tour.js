@@ -448,11 +448,29 @@
     Tour.prototype = {
         load: function () {
             renderOverlay(); // TODO: Make this a method
-            this._render();
-            fetchSVG({
-                svg: this.options.svg,
-                success: this._onLoad
-            });
+
+            var asyncLoad = function () {
+                if (!this.node) {
+                    this.node = document.createElement('div');
+                    this.node.id = this.id;
+                    this._frag = document.createDocumentFragment();
+                    this._frag.appendChild(this.node);
+                }
+
+                this.node.className = 'tourjs';
+
+                fetchSVG({
+                    svg: this.options.svg,
+                    success: this._onLoad
+                });
+            }.bind(this);
+
+            if (typeof this.options.beforeLoad === 'function') {
+                // Trigger `before` callback
+                this.options.beforeLoad(asyncLoad);
+            } else {
+                asyncLoad();
+            }
         },
 
         unload: function () {
@@ -482,34 +500,29 @@
         },
 
         _onKeyUp: function (event) {
-            if (event.keyCode === 27) {
-                this.unload();
-            }
+            if (event.keyCode === 27) this.unload();
         },
 
         _onLoad: function () {
             document.addEventListener('keyup', this._onKeyUp);
-            this._renderFirstStep();
+
+            this._loadFirstStep();
+
             if (!document.getElementById(this.id)) {
                 document.body.appendChild(this._frag);
             }
-        },
 
-        _render: function () {
-            if (!this.node) {
-                this.node = document.createElement('div');
-                this.node.id = this.id;
-                this._frag = document.createDocumentFragment();
-                this._frag.appendChild(this.node);
+            // Trigger `after` callback
+            if (typeof this.options.afterLoad === 'function') {
+                this.options.afterLoad();
             }
-            this.node.className = 'tourjs';
         },
 
-        _renderFirstStep: function () {
-            this._renderStep(0);
+        _loadFirstStep: function () {
+            this._loadStep(0);
         },
 
-        _renderStep: function (i) {
+        _loadStep: function (i) {
             var step = this.steps[i];
             step.load(function (step) {
                 this.node.appendChild(step.node);
