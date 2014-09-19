@@ -121,7 +121,7 @@
         }
     }
 
-    function buildID(prefix) {
+    function getId(prefix) {
         return 'tourjs-' + (prefix ? prefix + '-' : '') + ID_COUNT++;
     }
 
@@ -234,7 +234,7 @@
             return new Hint(options);
         }
 
-        this.id = buildID('hint');
+        this.id = getId('hint');
         this.options = options || {};
 
         this._setPosition = bind(this._setPosition, this);
@@ -362,7 +362,7 @@
             return new Step(config);
         }
 
-        this.id = buildID('step');
+        this.id = getId('step');
         this.options = config.options || {};
         this.hints = [];
 
@@ -373,7 +373,6 @@
 
     Step.prototype = {
         load: function load(callback) {
-
             var asyncLoad = function () {
                 if (!this.node) {
                     this.node = document.createElement('div');
@@ -445,7 +444,7 @@
         this._onLoad = bind(this._onLoad, this);
         this.unload = bind(this.unload, this);
 
-        this.id = buildID();
+        this.id = getId();
         this.options = config.options || {};
         this._initSteps(config);
     }
