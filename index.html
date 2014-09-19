@@ -52,10 +52,19 @@
             },
             steps: [{
                 options: {
-                    before: function (done) {
+                    beforeLoad: function (done) {
+                        console.log('Step to be loaded');
                         done();
                     },
-                    after: function () {
+                    afterLoad: function () {
+                        console.log('Step loaded');
+                    },
+                    beforeUnload: function (done) {
+                        console.log('Step to be unloaded');
+                        done();
+                    },
+                    afterUnload: function () {
+                        console.log('Step unloaded');
                     }
                 },
                 hints: [

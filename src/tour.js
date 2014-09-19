@@ -66,6 +66,7 @@
         svg.setAttribute('style', 'filter: url(#' + id + ');');
     }
 
+    // TODO: Make this a method of Step
     function addPagination(step) {
         var label, next, nextChevron, pagination, previous;
 
@@ -373,8 +374,7 @@
     Step.prototype = {
         load: function load(callback) {
 
-            var asyncRender = function () {
-
+            var asyncLoad = function () {
                 if (!this.node) {
                     this.node = document.createElement('div');
                     this.node.id = this.id;
@@ -390,33 +390,42 @@
 
                 this.node.className = 'tourjs-step';
 
-                if (!document.getElementById(this.id)) {
+                if (!document.getElementById(this.id))
                     document.body.appendChild(this.node);
-                }
 
                 if (callback) callback(this);
 
                 // Trigger `after` callback
-                if (typeof this.options.after === 'function') {
-                    this.options.after();
+                if (typeof this.options.afterLoad === 'function') {
+                    this.options.afterLoad();
                 }
             }.bind(this);
 
-            if (typeof this.options.before === 'function') {
+            if (typeof this.options.beforeLoad === 'function') {
                 // Trigger `before` callback
-                this.options.before(asyncRender);
+                this.options.beforeLoad(asyncLoad);
             } else {
-                asyncRender();
+                asyncLoad();
             }
         },
 
         unload: function () {
-            if (this.node) {
-                this.node.style.display = 'none';
+            var asyncUnload = function () {
+                // Check if the `this.node` is present. If the Step has never
+                // been loaded then it won't exist yet.
+                if (this.node) {
+                    this.node.style.display = 'none';
+                    this.hints.forEach(function (hint) {
+                        hint.unload();
+                    });
+                }
+            }.bind(this);
 
-                this.hints.forEach(function (hint) {
-                    hint.unload();
-                });
+            if (typeof this.options.beforeUnload === 'function') {
+                // Tigger `beforeClose` callback
+                this.options.beforeUnload(asyncUnload);
+            } else {
+                asyncUnload();
             }
         }
     };
