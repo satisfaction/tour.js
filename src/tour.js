@@ -371,7 +371,7 @@
 
     Overview.prototype = {
         load: function (parentNode) {
-            var description, title;
+            var description, line, title;
 
             if (!this.node) {
                 this.node = document.createElement('div');
@@ -381,6 +381,11 @@
                 title = document.createElement('h1');
                 title.innerText = this.options.title;
                 this.node.appendChild(title);
+
+                line = document.createElement('div');
+                line.className = 'tourjs-overview-line';
+                line.appendChild(renderSVG('#tutjs-line g'));
+                this.node.appendChild(line);
 
                 if (this.options.description) {
                     description = document.createElement('div');

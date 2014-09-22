@@ -35,6 +35,7 @@
   text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
 }
 .tourjs-tooltip h2 {
+  line-height: 1.3em;
   font-size: 16pt;
   margin: 0;
   padding: 0;
@@ -173,4 +174,11 @@
 }
 .tourjs-overview h1 {
   font-weight: normal;
+  line-height: 1.3em;
+}
+.tourjs-overview-line {
+  padding-bottom: 10px;
+}
+.tourjs-overview-line svg {
+  width: 100%;
 }
