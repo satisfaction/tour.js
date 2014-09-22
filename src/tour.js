@@ -407,9 +407,8 @@
 
         _setPosition: function () {
             var rect = getClientRect(this.node);
-            console.log(rect);
-            this.node.setAttribute('style', 'margin-left:-' + (rect.width/2) + 'px;');
-            // this.node.style['margin-left'] = -(rect.width / 2);
+            this.node.style.marginLeft = -(rect.width / 2) + 'px';
+            this.node.style.marginTop = -(rect.height / 2) + 'px';
         }
     };
 
