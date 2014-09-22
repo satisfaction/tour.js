@@ -50,20 +50,30 @@
   font-weight: normal;
 }
 .tourjs-hint {
-  max-width: 350px;
-  max-height: 350px;
+  max-width: 300px;
+  max-height: 300px;
   overflow: hidden;
+}
+.tourjs-hint .tourjs-tooltip {
+  white-space: wrap;
+}
+.tourjs-hint.tourjs-arrow.tourjs-top-left .tourjs-tooltip,
+.tourjs-hint.tourjs-arrow.tourjs-top-left .tourjs-description {
+  text-align: right;
 }
 .tourjs-hint.tourjs-arrow.tourjs-top-left .tourjs-tooltip {
   margin-right: 45px;
   margin-bottom: 45px;
-  text-align: right;
 }
 .tourjs-hint.tourjs-arrow.tourjs-top-left .tourjs-shape {
   bottom: 0;
   height: 50px;
   right: 0;
   width: 50px;
+}
+.tourjs-hint.tourjs-arrow.tourjs-top .tourjs-tooltip,
+.tourjs-hint.tourjs-arrow.tourjs-top .tourjs-description {
+  text-align: center;
 }
 .tourjs-hint.tourjs-arrow.tourjs-top .tourjs-tooltip {
   margin-bottom: 65px;
@@ -105,6 +115,10 @@
   left: 0;
   width: 50px;
 }
+.tourjs-hint.tourjs-arrow.tourjs-bottom .tourjs-tooltip,
+.tourjs-hint.tourjs-arrow.tourjs-bottom .tourjs-description {
+  text-align: center;
+}
 .tourjs-hint.tourjs-arrow.tourjs-bottom .tourjs-tooltip {
   margin-top: 65px;
 }
@@ -115,10 +129,13 @@
   top: 0;
   width: 31px;
 }
+.tourjs-hint.tourjs-arrow.tourjs-bottom-left .tourjs-tooltip,
+.tourjs-hint.tourjs-arrow.tourjs-bottom-left .tourjs-description {
+  text-align: right;
+}
 .tourjs-hint.tourjs-arrow.tourjs-bottom-left .tourjs-tooltip {
   margin-top: 45px;
   margin-right: 45px;
-  text-align: right;
 }
 .tourjs-hint.tourjs-arrow.tourjs-bottom-left .tourjs-shape {
   height: 50px;
@@ -126,9 +143,12 @@
   top: 0;
   width: 50px;
 }
+.tourjs-hint.tourjs-arrow.tourjs-left .tourjs-tooltip,
+.tourjs-hint.tourjs-arrow.tourjs-left .tourjs-description {
+  text-align: right;
+}
 .tourjs-hint.tourjs-arrow.tourjs-left .tourjs-tooltip {
   margin-right: 65px;
-  text-align: right;
 }
 .tourjs-hint.tourjs-arrow.tourjs-left .tourjs-shape {
   height: 31px;
@@ -145,9 +165,13 @@
   right: 0;
 }
 .tourjs-pagination a {
-  color: #fff;
   display: block;
   text-decoration: none;
+}
+.tourjs-pagination a,
+.tourjs-pagination a:active,
+.tourjs-pagination a:hover {
+  color: #fff;
 }
 .tourjs-pagination svg {
   width: 15px;
@@ -169,12 +193,15 @@
 .tourjs-overview {
   color: #fff;
   left: 50%;
+  max-width: 400px;
   position: absolute;
   top: 50%;
 }
-.tourjs-overview h1 {
+.tourjs-overview .tourjs-overview-title,
+.tourjs-overview .tourjs-overview-description {
   font-weight: normal;
   line-height: 1.3em;
+  text-align: center;
 }
 .tourjs-overview-line {
   padding-bottom: 10px;

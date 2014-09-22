@@ -49,18 +49,26 @@
 }
 
 .tourjs-hint {
-    max-width: 350px;
-    max-height: 350px;
+    max-width: 300px;
+    max-height: 300px;
     overflow: hidden;
+
+    .tourjs-tooltip {
+      white-space: wrap;
+    }
 
     &.tourjs-arrow {
 
         &.tourjs-top-left {
 
+            .tourjs-tooltip,
+            .tourjs-description {
+              text-align: right;
+            }
+
             .tourjs-tooltip {
                 margin-right: 45px;
                 margin-bottom: 45px;
-                text-align: right;
             }
 
             .tourjs-shape {
@@ -72,6 +80,11 @@
         }
 
         &.tourjs-top {
+          
+            .tourjs-tooltip,
+            .tourjs-description {
+              text-align: center;
+            }
 
             .tourjs-tooltip {
                 margin-bottom: 65px;
@@ -133,6 +146,11 @@
 
         &.tourjs-bottom {
 
+            .tourjs-tooltip,
+            .tourjs-description {
+              text-align: center;
+            }
+
             .tourjs-tooltip { margin-top: 65px; }
 
             .tourjs-shape {
@@ -146,10 +164,14 @@
 
         &.tourjs-bottom-left {
 
+            .tourjs-tooltip,
+            .tourjs-description {
+              text-align: right;
+            }
+
             .tourjs-tooltip {
                 margin-top: 45px;
                 margin-right: 45px;
-                text-align: right;
             }
 
             .tourjs-shape {
@@ -164,9 +186,13 @@
 
         &.tourjs-left {
 
+            .tourjs-tooltip,
+            .tourjs-description {
+              text-align: right;
+            }
+
             .tourjs-tooltip {
                 margin-right: 65px;
-                text-align: right;
             }
 
             .tourjs-shape {
@@ -189,9 +215,12 @@
   right: 0;
 
   a {
-    color: white;
     display: block;
     text-decoration: none;
+
+    &,
+    &:active
+    &:hover { color: white; }
   }
 
   svg {
@@ -216,12 +245,15 @@
 .tourjs-overview {
     color: white;
     left: 50%;
+    max-width: 400px;
     position: absolute;
     top: 50%;
 
-    h1 {
+    .tourjs-overview-title,
+    .tourjs-overview-description {
         font-weight: normal;
         line-height: 1.3em;
+        text-align: center;
     }
 }
 

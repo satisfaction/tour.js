@@ -299,6 +299,10 @@
     _renderTooltip: function () {
       var tooltip = document.createElement('div');
       tooltip.className = 'tourjs-tooltip';
+      if (this.options.width) {
+        this.node.style.width = this.options.width + 'px';
+        this.node.style.maxWidth = this.options.width + 'px';
+      }
       this._renderTitle(tooltip);
       this._renderDescription(tooltip);
       this.node.appendChild(tooltip);
@@ -326,16 +330,22 @@
         this.node.id = this.id;
         this.node.className = 'tourjs-overview';
 
+        if (this.options.width) {
+          var customWidth = this.options.width + 'px';
+          this.node.style.width = customWidth;
+          this.node.style.maxWidth = customWidth;
+        }
+
         title = document.createElement('h1');
         title.innerText = this.options.title;
         this.node.appendChild(title);
 
-        line = document.createElement('div');
-        line.className = 'tourjs-overview-line';
-        line.appendChild(renderSVG('#tutjs-line g'));
-        this.node.appendChild(line);
-
         if (this.options.description) {
+          line = document.createElement('div');
+          line.className = 'tourjs-overview-line';
+          line.appendChild(renderSVG('#tutjs-line g'));
+          this.node.appendChild(line);
+
           description = document.createElement('div');
           description.innerHTML = this.options.description;
           this.node.appendChild(description);
