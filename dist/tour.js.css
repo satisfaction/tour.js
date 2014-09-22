@@ -165,3 +165,12 @@
 .tourjs-pagination .tourjs-previous-step span {
   margin-left: 20px;
 }
+.tourjs-overview {
+  color: #fff;
+  left: 50%;
+  position: absolute;
+  top: 50%;
+}
+.tourjs-overview h1 {
+  font-weight: normal;
+}

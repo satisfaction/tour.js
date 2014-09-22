@@ -23,7 +23,7 @@
             margin-top: -30px;
             position: absolute;
             text-align: center;
-            top: 50%;
+            top: 200px;
             width: 250px;
             border: 1px solid rgba(0,0,0,0.5);
             border-top: none;
@@ -67,7 +67,6 @@
                 afterUnload: function () {
                     console.log('Tour unloaded');
                 }
-
             },
             steps: [{
                 options: {
@@ -87,6 +86,11 @@
 
                     afterUnload: function () {
                         console.log('Step unloaded');
+                    },
+
+                    overview: {
+                        title: 'Welcome to Hello World!',
+                        description: 'This little example page will show how to use me.'
                     }
                 },
                 hints: [
@@ -95,8 +99,7 @@
                         type: 'arrow',
                         position: 'bottom-left',
                         title: 'Hello World',
-                        description: 'The classing <b>programming</b> example.',
-                        highlight: true
+                        description: 'The classing <b>programming</b> example.'
                     },
                     {
                         target: '.greeting',
@@ -193,7 +196,6 @@
             }]
         });
 
-        tour.load();
         tour.load();
 
     </script>

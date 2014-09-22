@@ -9,6 +9,8 @@
     }
 }(this, function () {
 
+    'use strict';
+
     var OVERLAY_ID, SVG_DOM, XMLNS, ID_COUNT;
 
     ID_COUNT = 0;
@@ -67,8 +69,8 @@
     }
 
     // TODO: Make this a method of Step
-    function addPagination(step) {
-        var label, next, nextChevron, pagination, previous;
+    function addPagination(parentNode, step) {
+        var label, next, nextChevron, pagination, previous, previousChevron;
 
         if (step.previous || step.next) {
 
@@ -82,8 +84,7 @@
                 next.addEventListener('click', function (event) {
                     event.stopPropagation();
                     step.unload();
-                    step.next.load();
-                    step.next.load();
+                    step.next.load(parentNode);
                 });
 
                 label = document.createElement('span');
@@ -103,8 +104,7 @@
                 previous.addEventListener('click', function (event) {
                     event.stopPropagation();
                     step.unload();
-                    step.previous.load();
-                    step.previous.load();
+                    step.previous.load(parentNode);
                 });
 
                 previousChevron = renderSVG('#tutjs-chevron-rtl g', { transform: 'translate(-10)' });
@@ -242,18 +242,21 @@
 
     Hint.prototype = {
 
-        load: function () {
+        load: function (parentNode) {
 
             if (!this.node) {
                 this.node = document.createElement('div');
                 this.node.id = this.id;
+                this.node.className = 'tourjs-hint';
+                this.node.classList.add('tourjs-' + this.options.position);
+                this.node.classList.add('tourjs-' + this.options.type);
                 this._renderTooltip();
                 this._renderShape();
+                if (!document.getElementById(this.id)) {
+                    parentNode.appendChild(this.node);
+                }
+                this._setPosition();
             }
-
-            this.node.className = 'tourjs-hint';
-            this.node.classList.add('tourjs-' + this.options.position);
-            this.node.classList.add('tourjs-' + this.options.type);
 
             window.addEventListener('resize', this._setPosition);
 
@@ -262,10 +265,6 @@
             } else if (typeof this.options.highlight === 'string') {
                 document.querySelector(this.options.highlight).classList.add('tourjs-highlight');
             }
-
-            this._setPosition();
-
-            return this.node;
         },
 
         unload: function () {
@@ -282,6 +281,8 @@
             var margin = 5,
                 targetRect = getClientRect(document.querySelector(this.options.target)),
                 rect = getClientRect(this.node);
+
+            console.log(this.options.position, targetRect, rect);
 
             switch (this.options.position) {
                 case 'top-left':
@@ -357,6 +358,61 @@
         }
     };
 
+    function Overview(config) {
+        if (!(this instanceof Overview)) {
+            return new Overview(config);
+        }
+
+        this.id = getId('overview');
+        this.options = config || {};
+
+        this._setPosition = bind(this._setPosition, this);
+    }
+
+    Overview.prototype = {
+        load: function (parentNode) {
+            var description, title;
+
+            if (!this.node) {
+                this.node = document.createElement('div');
+                this.node.id = this.id;
+                this.node.className = 'tourjs-overview';
+
+                title = document.createElement('h1');
+                title.innerText = this.options.title;
+                this.node.appendChild(title);
+
+                if (this.options.description) {
+                    description = document.createElement('div');
+                    description.innerHTML = this.options.description;
+                    this.node.appendChild(description);
+                }
+
+                if (!document.getElementById(this.id)) {
+                    parentNode.appendChild(this.node);
+                }
+            }
+
+            window.addEventListener('resize', this._setPosition);
+            window.setTimeout(function () {
+                this._setPosition();
+            }.bind(this), 0);
+
+            return this.node;
+        },
+
+        unload: function () {
+            window.removeEventListener('resize', this._setPosition);
+        },
+
+        _setPosition: function () {
+            var rect = getClientRect(this.node);
+            console.log(rect);
+            this.node.setAttribute('style', 'margin-left:-' + (rect.width/2) + 'px;');
+            // this.node.style['margin-left'] = -(rect.width / 2);
+        }
+    };
+
     function Step(config) {
         if (!(this instanceof Step)) {
             return new Step(config);
@@ -364,33 +420,36 @@
 
         this.id = getId('step');
         this.options = config.options || {};
-        this.hints = [];
 
+        this._initOverview(this.options.overview);
+
+        this.hints = [];
         config.hints.forEach(function (options) {
             this.hints.push(new Hint(options));
         }.bind(this));
     }
 
     Step.prototype = {
-        load: function load(callback) {
+        load: function(parentNode, callback) {
             var asyncLoad = function () {
                 if (!this.node) {
                     this.node = document.createElement('div');
                     this.node.id = this.id;
-                    addPagination(this);
+                    this.node.className = 'tourjs-step';
+                    if (!document.getElementById(this.id)) {
+                        parentNode.appendChild(this.node);
+                    }
+
+                    addPagination(parentNode, this);
+
+                    this._loadOverview();
+
+                    this.hints.forEach(function (hint) {
+                        hint.load(this.node);
+                    }.bind(this));
                 } else {
                     this.node.style.display = 'block';
                 }
-
-                this.hints.forEach(function (hint) {
-                    hint.load();
-                    this.node.appendChild(hint.node);
-                }.bind(this));
-
-                this.node.className = 'tourjs-step';
-
-                if (!document.getElementById(this.id))
-                    document.body.appendChild(this.node);
 
                 if (callback) callback(this);
 
@@ -431,6 +490,18 @@
             } else {
                 asyncUnload();
             }
+        },
+
+        _initOverview: function (overview) {
+            if (overview && !this.overview) {
+                this.overview = new Overview(overview);
+            }
+        },
+
+        _loadOverview: function () {
+            if (this.overview) {
+                this.node.appendChild(this.overview.load(this.node));
+            }
         }
     };
 
@@ -446,7 +517,8 @@
 
         this.id = getId();
         this.options = config.options || {};
-        this._initSteps(config);
+
+        this._initSteps(config.steps);
     }
 
     Tour.prototype = {
@@ -457,11 +529,12 @@
                 if (!this.node) {
                     this.node = document.createElement('div');
                     this.node.id = this.id;
-                    this._frag = document.createDocumentFragment();
-                    this._frag.appendChild(this.node);
-                }
+                    this.node.className = 'tourjs';
 
-                this.node.className = 'tourjs';
+                    if (!document.getElementById(this.id)) {
+                        document.body.appendChild(this.node);
+                    }
+                }
 
                 fetchSVG({
                     svg: this.options.svg,
@@ -519,9 +592,11 @@
             }.bind(this);
         },
 
-        _initSteps: function (config) {
-            this.steps = [];
-            config.steps.forEach(this._initStep());
+        _initSteps: function (stepDefs) {
+            if (stepDefs) {
+                this.steps = [];
+                stepDefs.forEach(this._initStep());
+            }
         },
 
         _onKeyUp: function (event) {
@@ -532,10 +607,6 @@
             document.addEventListener('keyup', this._onKeyUp);
 
             this._loadFirstStep();
-
-            if (!document.getElementById(this.id)) {
-                document.body.appendChild(this._frag);
-            }
 
             // Trigger `afterLoad` callback
             if (typeof this.options.afterLoad === 'function') {
@@ -549,9 +620,7 @@
 
         _loadStep: function (i) {
             var step = this.steps[i];
-            step.load(function (step) {
-                this.node.appendChild(step.node);
-            }.bind(this));
+            step.load(this.node);
         }
     };
 
