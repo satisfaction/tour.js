@@ -338,6 +338,7 @@
 
         title = document.createElement('h1');
         title.innerText = this.options.title;
+        title.className = 'tourjs-overview-title';
         this.node.appendChild(title);
 
         if (this.options.description) {
@@ -348,6 +349,7 @@
 
           description = document.createElement('div');
           description.innerHTML = this.options.description;
+          description.className = 'tourjs-overview-description';
           this.node.appendChild(description);
         }
 

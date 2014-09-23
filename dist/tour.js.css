@@ -165,7 +165,7 @@
   right: 0;
 }
 .tourjs-pagination a {
-  display: block;
+  display: inline-block;
   text-decoration: none;
 }
 .tourjs-pagination a,
