@@ -87,18 +87,12 @@
     }
 
     httpRequest.onreadystatechange = load;
-    httpRequest.open('GET', (options.svg || 'dist/tour.js.svg'), true);
+    httpRequest.open('GET', (options.svg || 'dist/svg/defs.svg'), true);
     httpRequest.send();
   }
 
   function getClientRect(node) {
-    var rect = node.getBoundingClientRect(),
-        size = getWindowSize();
-
-    rect.right = size.width - rect.right;
-    rect.bottom = size.height - rect.bottom;
-
-    return rect;
+    return node.getBoundingClientRect();
   }
 
   function getWindowSize() {
@@ -112,36 +106,6 @@
 
   function hideOverlay() {
     document.getElementById(OVERLAY_ID).style.display = 'none';
-  }
-
-  function renderArrow(position) {
-    var options = {};
-    switch (position) {
-      case 'top-left':
-        options.transform = 'translate(11 -12) rotate(45)';
-        break;
-      case 'top':
-        options.transform = 'translate(32) rotate(90)';
-        break;
-      case 'top-right':
-        options.transform = 'translate(60 12) rotate(135)';
-        break;
-      case 'right':
-        options.transform = 'translate(63 32) rotate(180)';
-        break;
-      case 'bottom-right':
-        options.transform = 'translate(33 60) rotate(-135)';
-        break;
-      case 'bottom':
-        options.transform = 'translate(0 64) rotate(-90)';
-        break;
-      case 'bottom-left':
-        options.transform = 'translate(-11 38) rotate(-45)';
-        break;
-      case 'left':
-        break;
-    }
-    return renderSVG('#tutjs-arrow g', options);
   }
 
   function renderOverlay() {
@@ -170,7 +134,8 @@
     svg = document.createElementNS(XMLNS, 'svg');
     svg.setAttribute('class', 'tourjs-shape');
 
-    addDropShadowFilter(svg);
+    // TODO: Re-enable
+    // addDropShadowFilter(svg);
     svg.appendChild(vector);
 
     return svg;
@@ -195,7 +160,7 @@
         this.node = document.createElement('div');
         this.node.id = this.id;
         this.node.className = 'tourjs-hint';
-        this.node.classList.add('tourjs-' + this.options.position);
+        this.node.classList.add('tourjs-' + this.options.position + (this.options.inverted ? '-inverted' : ''));
         this.node.classList.add('tourjs-' + this.options.type);
         this._renderTooltip();
         this._renderShape();
@@ -206,6 +171,7 @@
       }
 
       window.addEventListener('resize', this._setPosition);
+      window.addEventListener('scroll', this._setPosition);
 
       if (this.options.highlight === true) {
         document.querySelector(this.options.target).classList.add('tourjs-highlight');
@@ -222,6 +188,7 @@
       }
 
       window.removeEventListener('resize', this._setPosition);
+      window.removeEventListener('scroll', this._setPosition);
     },
 
     _setPosition: function () {
@@ -229,9 +196,10 @@
       targetRect = getClientRect(document.querySelector(this.options.target)),
       rect = getClientRect(this.node);
 
-      console.log(this.options.position, targetRect, rect);
+      switch (this.options.type) {
+      case 'arrow':
 
-      switch (this.options.position) {
+        switch (this.options.position) {
         case 'top-left':
           this.node.style.top = targetRect.top - rect.height - margin + 'px';
           this.node.style.left = targetRect.left - rect.width - margin + 'px';
@@ -272,6 +240,65 @@
           }
           this.node.style.left = targetRect.left - rect.width - margin + 'px';
           break;
+        }
+        break;
+
+      case 'curved-arrow':
+
+        switch (this.options.position) {
+        case 'top-left':
+          this.node.style.top = targetRect.top - rect.height - margin + 'px';
+          this.node.style.left = targetRect.left - rect.width - margin + 'px';
+          break;
+        case 'top':
+          this.node.style.top = targetRect.top - rect.height - margin + 'px';
+          if (!this.options.inverted) {
+            this.node.style.left = targetRect.left + (targetRect.width / 2) - 16 + 'px';
+          } else {
+            this.node.style.left = targetRect.left - (targetRect.width / 2) - 32 + 'px';
+          }
+          break;
+        case 'top-right':
+          this.node.style.top = targetRect.top - rect.height - margin + 'px';
+          this.node.style.left = targetRect.left + targetRect.width + 5 + 'px';
+          break;
+        case 'right':
+          if (targetRect.height > rect.height) {
+            // TODO: This may be out of place
+            this.node.style.top = targetRect.top + targetRect.height / 2 + 'px';
+          } else {
+            if (!this.options.inverted) {
+              this.node.style.top = targetRect.top + targetRect.height / 2 - 16 + 'px';
+            } else {
+              this.node.style.top = targetRect.top - targetRect.height / 2 - 16 + 'px';
+            }
+          }
+          this.node.style.left = targetRect.left + targetRect.width + margin + 'px';
+          break;
+        case 'bottom-right':
+          this.node.style.top = targetRect.bottom + margin + 'px';
+          this.node.style.left = targetRect.left + targetRect.width + margin + 'px';
+          break;
+        case 'bottom':
+          this.node.style.top = targetRect.bottom + margin + 'px';
+          this.node.style.left = targetRect.left + targetRect.width / 2 - rect.width + 16 + 'px';
+          break;
+        case 'bottom-left':
+          this.node.style.top = targetRect.bottom + margin + 'px';
+          this.node.style.left = targetRect.left - rect.width - margin + 'px';
+          break;
+        case 'left':
+          if (targetRect.height > rect.height) {
+            // TODO: This may be out of place
+            this.node.style.top = targetRect.top + targetRect.height / 2 + 'px';
+          } else {
+            this.node.style.top = targetRect.top - targetRect.height / 2 + 'px';
+          }
+          this.node.style.left = targetRect.left - rect.width - margin + 'px';
+          break;
+        }
+
+        break;
       }
     },
 
@@ -286,8 +313,10 @@
     },
 
     _renderShape: function () {
-      var arrow = renderArrow(this.options.position);
-      this.node.appendChild(arrow);
+      var vector = renderSVG(
+        '#tourjs-symbol-' + this.options.type + '-' + this.options.position  + (this.options.inverted ? '-inverted' : '')
+      );
+      this.node.appendChild(vector);
     },
 
     _renderTitle: function (parent) {
@@ -344,7 +373,7 @@
         if (this.options.description) {
           line = document.createElement('div');
           line.className = 'tourjs-overview-line';
-          line.appendChild(renderSVG('#tutjs-line g'));
+          line.appendChild(renderSVG('#tourjs-symbol-line'));
           this.node.appendChild(line);
 
           description = document.createElement('div');
@@ -359,6 +388,7 @@
       }
 
       window.addEventListener('resize', this._setPosition);
+      window.addEventListener('scroll', this._setPosition);
       window.setTimeout(function () {
         this._setPosition();
       }.bind(this), 0);
@@ -368,6 +398,7 @@
 
     unload: function () {
       window.removeEventListener('resize', this._setPosition);
+      window.removeEventListener('scroll', this._setPosition);
     },
 
     _setPosition: function () {
@@ -491,7 +522,7 @@
           label.innerText = 'Next';
           next.appendChild(label);
 
-          nextChevron = renderSVG('#tutjs-chevron-ltr g');
+          nextChevron = renderSVG('#tourjs-symbol-next');
           next.appendChild(nextChevron);
 
           pagination.appendChild(next);
@@ -507,7 +538,7 @@
             this.previous.load(parentNode);
           }.bind(this));
 
-          previousChevron = renderSVG('#tutjs-chevron-rtl g', { transform: 'translate(-10)' });
+          previousChevron = renderSVG('#tourjs-symbol-previous', { transform: 'translate(-10)' });
           previous.appendChild(previousChevron);
 
           label = document.createElement('span');

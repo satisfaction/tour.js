@@ -8,7 +8,7 @@
 }
 #tourjs-overlay {
   background-color: #000;
-  opacity: 0.7;
+  opacity: 0.5;
   z-index: 9999;
   display: none;
 }
@@ -31,7 +31,7 @@
   color: #fff;
   font-family: Arial, Helvetica, sans-serif;
   line-height: 1.3em;
-  padding: 10px;
+  padding: 5px;
   text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
 }
 .tourjs-tooltip h2 {
@@ -66,9 +66,10 @@
   margin-bottom: 45px;
 }
 .tourjs-hint.tourjs-arrow.tourjs-top-left .tourjs-shape {
+  position: absolute;
   bottom: 0;
-  height: 50px;
   right: 0;
+  height: 50px;
   width: 50px;
 }
 .tourjs-hint.tourjs-arrow.tourjs-top .tourjs-tooltip,
@@ -157,12 +158,215 @@
   top: 50%;
   width: 68px;
 }
+.tourjs-hint.tourjs-curved-arrow.tourjs-top-left .tourjs-tooltip,
+.tourjs-hint.tourjs-curved-arrow.tourjs-top-left .tourjs-description {
+  text-align: right;
+}
+.tourjs-hint.tourjs-curved-arrow.tourjs-top-left .tourjs-tooltip {
+  margin-bottom: 28px;
+  margin-right: 60px;
+  padding-bottom: 0;
+  padding-right: 0;
+}
+.tourjs-hint.tourjs-curved-arrow.tourjs-top-left .tourjs-shape {
+  bottom: 0;
+  height: 37px;
+  position: absolute;
+  right: 0;
+  width: 58px;
+}
+.tourjs-hint.tourjs-curved-arrow.tourjs-top .tourjs-tooltip,
+.tourjs-hint.tourjs-curved-arrow.tourjs-top .tourjs-description {
+  text-align: left;
+}
+.tourjs-hint.tourjs-curved-arrow.tourjs-top .tourjs-tooltip {
+  margin-bottom: 55px;
+  margin-left: 35px;
+  padding-bottom: 0;
+  padding-left: 0;
+}
+.tourjs-hint.tourjs-curved-arrow.tourjs-top .tourjs-shape {
+  bottom: 0;
+  height: 65px;
+  position: absolute;
+  width: 32px;
+}
+.tourjs-hint.tourjs-curved-arrow.tourjs-top-inverted .tourjs-tooltip,
+.tourjs-hint.tourjs-curved-arrow.tourjs-top-inverted .tourjs-description {
+  text-align: right;
+}
+.tourjs-hint.tourjs-curved-arrow.tourjs-top-inverted .tourjs-tooltip {
+  margin-bottom: 55px;
+  margin-right: 35px;
+  padding-bottom: 0;
+  padding-right: 0;
+}
+.tourjs-hint.tourjs-curved-arrow.tourjs-top-inverted .tourjs-shape {
+  bottom: 0;
+  height: 65px;
+  position: absolute;
+  right: 0;
+  width: 32px;
+}
+.tourjs-hint.tourjs-curved-arrow.tourjs-top-right .tourjs-tooltip,
+.tourjs-hint.tourjs-curved-arrow.tourjs-top-right .tourjs-description {
+  text-align: left;
+}
+.tourjs-hint.tourjs-curved-arrow.tourjs-top-right .tourjs-tooltip {
+  margin-bottom: 28px;
+  margin-left: 60px;
+  padding-bottom: 0;
+  padding-left: 0;
+}
+.tourjs-hint.tourjs-curved-arrow.tourjs-top-right .tourjs-shape {
+  bottom: 0;
+  height: 37px;
+  position: absolute;
+  left: 0;
+  width: 58px;
+}
+.tourjs-hint.tourjs-curved-arrow.tourjs-right .tourjs-tooltip,
+.tourjs-hint.tourjs-curved-arrow.tourjs-right .tourjs-description {
+  text-align: left;
+}
+.tourjs-hint.tourjs-curved-arrow.tourjs-right .tourjs-tooltip {
+  margin-top: 10px;
+  margin-left: 65px;
+  padding-bottom: 0;
+  padding-left: 0;
+}
+.tourjs-hint.tourjs-curved-arrow.tourjs-right .tourjs-shape {
+  height: 37px;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 58px;
+}
+.tourjs-hint.tourjs-curved-arrow.tourjs-right-inverted .tourjs-tooltip,
+.tourjs-hint.tourjs-curved-arrow.tourjs-right-inverted .tourjs-description {
+  text-align: left;
+}
+.tourjs-hint.tourjs-curved-arrow.tourjs-right-inverted .tourjs-tooltip {
+  margin-bottom: 22px;
+  margin-left: 65px;
+  padding-bottom: 0;
+  padding-left: 0;
+}
+.tourjs-hint.tourjs-curved-arrow.tourjs-right-inverted .tourjs-shape {
+  height: 37px;
+  left: 0;
+  position: absolute;
+  bottom: 0;
+  width: 58px;
+}
+.tourjs-hint.tourjs-curved-arrow.tourjs-bottom-right .tourjs-tooltip,
+.tourjs-hint.tourjs-curved-arrow.tourjs-bottom-right .tourjs-description {
+  text-align: left;
+}
+.tourjs-hint.tourjs-curved-arrow.tourjs-bottom-right .tourjs-tooltip {
+  margin-left: 60px;
+  margin-top: 22px;
+  padding-left: 0;
+  padding-top: 0;
+}
+.tourjs-hint.tourjs-curved-arrow.tourjs-bottom-right .tourjs-shape {
+  height: 37px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 58px;
+}
+.tourjs-hint.tourjs-curved-arrow.tourjs-bottom .tourjs-tooltip,
+.tourjs-hint.tourjs-curved-arrow.tourjs-bottom .tourjs-description {
+  text-align: right;
+}
+.tourjs-hint.tourjs-curved-arrow.tourjs-bottom .tourjs-tooltip {
+  margin-right: 40px;
+  margin-top: 51px;
+  padding-right: 0;
+  padding-top: 0;
+}
+.tourjs-hint.tourjs-curved-arrow.tourjs-bottom .tourjs-shape {
+  height: 65px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 32px;
+}
+.tourjs-hint.tourjs-curved-arrow.tourjs-bottom-inverted .tourjs-tooltip,
+.tourjs-hint.tourjs-curved-arrow.tourjs-bottom-inverted .tourjs-description {
+  text-align: right;
+}
+.tourjs-hint.tourjs-curved-arrow.tourjs-bottom-inverted .tourjs-tooltip {
+  margin-right: 40px;
+  margin-top: 51px;
+  padding-right: 0;
+  padding-top: 0;
+}
+.tourjs-hint.tourjs-curved-arrow.tourjs-bottom-inverted .tourjs-shape {
+  height: 65px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 32px;
+}
+.tourjs-hint.tourjs-curved-arrow.tourjs-bottom-left .tourjs-tooltip,
+.tourjs-hint.tourjs-curved-arrow.tourjs-bottom-left .tourjs-description {
+  text-align: right;
+}
+.tourjs-hint.tourjs-curved-arrow.tourjs-bottom-left .tourjs-tooltip {
+  margin-right: 60px;
+  margin-top: 22px;
+  padding-right: 0;
+  padding-top: 0;
+}
+.tourjs-hint.tourjs-curved-arrow.tourjs-bottom-left .tourjs-shape {
+  height: 37px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 58px;
+}
+.tourjs-hint.tourjs-curved-arrow.tourjs-left .tourjs-tooltip,
+.tourjs-hint.tourjs-curved-arrow.tourjs-left .tourjs-description {
+  text-align: right;
+}
+.tourjs-hint.tourjs-curved-arrow.tourjs-left .tourjs-tooltip {
+  margin-bottom: 16px;
+  margin-right: 70px;
+  padding-bottom: 0;
+  padding-right: 0;
+}
+.tourjs-hint.tourjs-curved-arrow.tourjs-left .tourjs-shape {
+  height: 37px;
+  right: 0;
+  position: absolute;
+  bottom: 0;
+  width: 65px;
+}
+.tourjs-hint.tourjs-curved-arrow.tourjs-left-inverted .tourjs-tooltip,
+.tourjs-hint.tourjs-curved-arrow.tourjs-left-inverted .tourjs-description {
+  text-align: right;
+}
+.tourjs-hint.tourjs-curved-arrow.tourjs-left-inverted .tourjs-tooltip {
+  margin-top: 11px;
+  margin-right: 70px;
+  padding-bottom: 0;
+  padding-right: 0;
+}
+.tourjs-hint.tourjs-curved-arrow.tourjs-left-inverted .tourjs-shape {
+  height: 37px;
+  right: 0;
+  position: absolute;
+  top: 0;
+  width: 65px;
+}
 .tourjs-pagination {
   bottom: 0;
   left: 0;
   padding: 15px;
   position: absolute;
-  right: 0;
+  right: 0.5;
 }
 .tourjs-pagination a {
   display: inline-block;

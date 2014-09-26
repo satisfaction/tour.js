@@ -7,193 +7,464 @@
     <style type="text/css">
         body,
         html {
-            background-color: #DDD;
-            color: #333;
+            background: url(img/background.jpg) no-repeat center center fixed;
+            background-size: cover;
+            color: white;
             font-family: Arial;
             height: 100%;
             margin: 0;
+            padding: 0;
             width: 100%;
         }
 
-        .greeting {
-            background-color: white;
-            height: 60px;
-            left: 50%;
-            margin-left: -125px;
-            margin-top: -30px;
-            position: absolute;
-            text-align: center;
-            top: 200px;
-            width: 250px;
-            border: 1px solid rgba(0,0,0,0.5);
-            border-top: none;
-            border-left: none;
+        a {
+            color: white;
         }
 
-        h1 {
-            line-height: 60px;
-            margin: 0;
+        section {
+            width: 800px;
+            margin: 30px auto;
+        }
+
+        section > header a {
+            font-size: 24px;
+            text-decoration: none;
+        }
+
+        section > article {
+            padding: 150px 100px;
+            text-align: center;
+        }
+
+        .target {
+            background: #299a0b;
+            background: linear-gradient(to bottom, #299a0b 0%,#299a0b 100%);
+            border-radius: 2px;
+            box-shadow: 1px 1px 3px black;
+            border: none;
+            color: white;
+            display: inline-block;
+            font-size: 18px;
+            font-weight: bold;
+            line-height: 40px;
+            width: 200px;
+        }
+
+        .target.big {
+            width: 500px;
+            line-height: 400px;
         }
     </style>
 
     <link rel="stylesheet" type="text/css" href="dist/tour.js.css">
-
 </head>
 
 <body>
-    <div class="greeting">
-        <h1>Hello World!</h1>
-    </div>
+
+    <section id="arrow">
+        <header>
+            <a href="#arrow">Arrows</a>
+        </header>
+        <article>
+            <div id="arrow-target" class="target">
+                Target
+            </div>
+        </article>
+    </section>
+
+    <section id="arrow-big">
+        <article>
+            <div id="arrow-target-big" class="target big">
+                Target
+            </div>
+        </article>
+    </section>
+
+    <section id="curved-arrow-corners">
+        <header>
+            <a href="#curved-arrow-corners">Curved Arrows (Corners)</a>
+        </header>
+        <article>
+            <div id="curved-arrow-corners-target" class="target">
+                Target
+            </div>
+        </article>
+    </section>
+
+    <section id="curved-arrow-corners-big">
+        <article>
+            <div id="curved-arrow-corners-target-big" class="target big">
+                Target
+            </div>
+        </article>
+    </section>
+
+    <section id="curved-arrow">
+        <header>
+            <a href="#curved-arrow">Curved Arrows</a>
+        </header>
+        <article>
+            <div id="curved-arrow-target" class="target">
+                Target
+            </div>
+        </article>
+    </section>
+
+    <section id="curved-arrow-big">
+        <article>
+            <div id="curved-arrow-target-big" class="target big">
+                Target
+            </div>
+        </article>
+    </section>
+
+    <section id="curved-arrow-inverted">
+        <header>
+            <a href="#curved-arrow-inverted">Curved Arrows (Inverted)</a>
+        </header>
+        <article>
+            <div id="curved-arrow-inverted-target" class="target">
+                Target
+            </div>
+        </article>
+    </section>
+
+    <section id="curved-arrow-inverted-big">
+        <article>
+            <div id="curved-arrow-inverted-target-big" class="target big">
+                Target
+            </div>
+        </article>
+    </section>
+
     <script type="text/javascript" src="src/tour.js"></script>
     <script type="text/javascript">
         var tour = new Tour({
-            options: {
-                svg: 'dist/tour.js.svg',
-
-                beforeLoad: function (done) {
-                    console.log('Tour to be loaded');
-                    done();
-                },
-
-                afterLoad: function () {
-                    console.log('Tour loaded');
-                },
-
-                beforeUnload: function (done) {
-                    console.log('Tour to be unloaded');
-                    done();
-                },
-
-                afterUnload: function () {
-                    console.log('Tour unloaded');
-                }
-            },
             steps: [{
-                options: {
-                    beforeLoad: function (done) {
-                        console.log('Step to be loaded');
-                        done();
-                    },
-
-                    afterLoad: function () {
-                        console.log('Step loaded');
-                    },
-
-                    beforeUnload: function (done) {
-                        console.log('Step to be unloaded');
-                        done();
-                    },
-
-                    afterUnload: function () {
-                        console.log('Step unloaded');
-                    },
-
-                    overview: {
-                        title: 'Welcome to Hello World!',
-                        description: 'This little example page will show how to use me.',
-                        width: 400
-                    }
-                },
                 hints: [
+
+                    // Arrows
+
                     {
-                        target: '.greeting',
+                        target: '#arrow-target',
                         type: 'arrow',
                         position: 'bottom-left',
                         title: 'Hello World',
-                        description: 'The classing <b>programming</b> example.',
+                        description: 'The classic <b>programming</b> example.',
                         width: 300
                     },
                     {
-                        target: '.greeting',
+                        target: '#arrow-target',
                         type: 'arrow',
                         position: 'top-left',
                         title: 'Hello World',
-                        description: 'The classing <b>programming</b> example.'
+                        description: 'The classic <b>programming</b> example.'
                     },
                     {
-                        target: '.greeting',
+                        target: '#arrow-target',
                         type: 'arrow',
                         position: 'left',
                         title: 'Hello World',
-                        description: 'The classing <b>programming</b> example.'
+                        description: 'The classic <b>programming</b> example.'
                     },
                     {
-                        target: '.greeting',
+                        target: '#arrow-target',
                         type: 'arrow',
                         position: 'top',
                         title: 'Hello World',
-                        description: 'The classing <b>programming</b> example.'
-                    }
-                ]
-            }, {
-                hints: [
+                        description: 'The classic <b>programming</b> example.'
+                    },
                     {
-                        target: '.greeting',
-                        type: 'arrow',
-                        position: 'top-left',
-                        title: 'Hello World',
-                        description: 'The classing <b>programming</b> example.'
-                    }
-                ]
-            }, {
-                hints: [
-                    {
-                        target: '.greeting',
-                        type: 'arrow',
-                        position: 'top',
-                        title: 'Hello World',
-                        description: 'The classing <b>programming</b> example.'
-                    }
-               ]
-            }, {
-                hints: [
-                    {
-                        target: '.greeting',
+                        target: '#arrow-target',
                         type: 'arrow',
                         position: 'top-right',
                         title: 'Hello World',
-                        description: 'The classing <b>programming</b> example.'
-                    }
-                ]
-            }, {
-                hints: [
+                        description: 'The classic <b>programming</b> example.'
+                    },
                     {
-                        target: '.greeting',
+                        target: '#arrow-target',
                         type: 'arrow',
                         position: 'right',
                         title: 'Hello World',
-                        description: 'The classing <b>programming</b> example.'
-                    }
-                ]
-            }, {
-                hints: [
+                        description: 'The classic <b>programming</b> example.'
+                    },
                     {
-                        target: '.greeting',
+                        target: '#arrow-target',
                         type: 'arrow',
                         position: 'bottom-right',
                         title: 'Hello World',
-                        description: 'The classing <b>programming</b> example.'
-                    }
-                ]
-            }, {
-                hints: [
+                        description: 'The classic <b>programming</b> example.'
+                    },
                     {
-                        target: '.greeting',
+                        target: '#arrow-target',
                         type: 'arrow',
                         position: 'bottom',
                         title: 'Hello World',
-                        description: 'The classing <b>programming</b> example.'
-                    }
-                ]
-            }, {
-                hints: [
+                        description: 'The classic <b>programming</b> example.'
+                    },
+
+                    // Arrows (Big)
+
                     {
-                        target: '.greeting',
+                        target: '#arrow-target-big',
                         type: 'arrow',
                         position: 'bottom-left',
                         title: 'Hello World',
-                        description: 'The classing <b>programming</b> example.'
+                        description: 'The classic <b>programming</b> example.',
+                        width: 300
+                    },
+                    {
+                        target: '#arrow-target-big',
+                        type: 'arrow',
+                        position: 'top-left',
+                        title: 'Hello World',
+                        description: 'The classic <b>programming</b> example.'
+                    },
+                    {
+                        target: '#arrow-target-big',
+                        type: 'arrow',
+                        position: 'left',
+                        title: 'Hello World',
+                        description: 'The classic <b>programming</b> example.'
+                    },
+                    {
+                        target: '#arrow-target-big',
+                        type: 'arrow',
+                        position: 'top',
+                        title: 'Hello World',
+                        description: 'The classic <b>programming</b> example.'
+                    },
+                    {
+                        target: '#arrow-target-big',
+                        type: 'arrow',
+                        position: 'top-right',
+                        title: 'Hello World',
+                        description: 'The classic <b>programming</b> example.'
+                    },
+                    {
+                        target: '#arrow-target-big',
+                        type: 'arrow',
+                        position: 'right',
+                        title: 'Hello World',
+                        description: 'The classic <b>programming</b> example.'
+                    },
+                    {
+                        target: '#arrow-target-big',
+                        type: 'arrow',
+                        position: 'bottom-right',
+                        title: 'Hello World',
+                        description: 'The classic <b>programming</b> example.'
+                    },
+                    {
+                        target: '#arrow-target-big',
+                        type: 'arrow',
+                        position: 'bottom',
+                        title: 'Hello World',
+                        description: 'The classic <b>programming</b> example.'
+                    },
+
+                    // Curved Arrows Corners
+
+                    {
+                        target: '#curved-arrow-corners-target',
+                        type: 'curved-arrow',
+                        position: 'bottom-left',
+                        title: 'Hello World',
+                        description: 'The classic <b>programming</b> example.',
+                        width: 300
+                    },
+                    {
+                        target: '#curved-arrow-corners-target',
+                        type: 'curved-arrow',
+                        position: 'top-left',
+                        title: 'Hello World',
+                        description: 'The classic <b>programming</b> example.'
+                    },
+                    {
+                        target: '#curved-arrow-corners-target',
+                        type: 'curved-arrow',
+                        position: 'top-right',
+                        title: 'Hello World',
+                        description: 'The classic <b>programming</b> example.'
+                    },
+                    {
+                        target: '#curved-arrow-corners-target',
+                        type: 'curved-arrow',
+                        position: 'bottom-right',
+                        title: 'Hello World',
+                        description: 'The classic <b>programming</b> example.'
+                    },
+
+                    // Curved Arrows Corners (Big)
+
+                    {
+                        target: '#curved-arrow-corners-target-big',
+                        type: 'curved-arrow',
+                        position: 'bottom-left',
+                        title: 'Hello World',
+                        description: 'The classic <b>programming</b> example.',
+                        width: 300
+                    },
+                    {
+                        target: '#curved-arrow-corners-target-big',
+                        type: 'curved-arrow',
+                        position: 'top-left',
+                        title: 'Hello World',
+                        description: 'The classic <b>programming</b> example.'
+                    },
+                    {
+                        target: '#curved-arrow-corners-target-big',
+                        type: 'curved-arrow',
+                        position: 'top-right',
+                        title: 'Hello World',
+                        description: 'The classic <b>programming</b> example.'
+                    },
+                    {
+                        target: '#curved-arrow-corners-target-big',
+                        type: 'curved-arrow',
+                        position: 'bottom-right',
+                        title: 'Hello World',
+                        description: 'The classic <b>programming</b> example.'
+                    },
+
+                    // Curved Arrows
+
+                    {
+                        target: '#curved-arrow-target',
+                        type: 'curved-arrow',
+                        position: 'left',
+                        title: 'Hello World',
+                        description: 'The classic <b>programming</b> example.'
+                    },
+                    {
+                        target: '#curved-arrow-target',
+                        type: 'curved-arrow',
+                        position: 'top',
+                        title: 'Hello World',
+                        description: 'The classic <b>programming</b> example.'
+                    },
+                    {
+                        target: '#curved-arrow-target',
+                        type: 'curved-arrow',
+                        position: 'right',
+                        title: 'Hello World',
+                        description: 'The classic <b>programming</b> example.'
+                    },
+                    {
+                        target: '#curved-arrow-target',
+                        type: 'curved-arrow',
+                        position: 'bottom',
+                        title: 'Hello World',
+                        description: 'The classic <b>programming</b> example.'
+                    },
+
+                    // Curved Arrows (Big)
+
+                    {
+                        target: '#curved-arrow-target-big',
+                        type: 'curved-arrow',
+                        position: 'left',
+                        title: 'Hello World',
+                        description: 'The classic <b>programming</b> example.'
+                    },
+                    {
+                        target: '#curved-arrow-target-big',
+                        type: 'curved-arrow',
+                        position: 'top',
+                        title: 'Hello World',
+                        description: 'The classic <b>programming</b> example.'
+                    },
+                    {
+                        target: '#curved-arrow-target-big',
+                        type: 'curved-arrow',
+                        position: 'right',
+                        title: 'Hello World',
+                        description: 'The classic <b>programming</b> example.'
+                    },
+                    {
+                        target: '#curved-arrow-target-big',
+                        type: 'curved-arrow',
+                        position: 'bottom',
+                        title: 'Hello World',
+                        description: 'The classic <b>programming</b> example.'
+                    },
+
+                    // Curved Arrows Inverted
+
+                    {
+                        target: '#curved-arrow-inverted-target',
+                        type: 'curved-arrow',
+                        position: 'left',
+                        inverted: true,
+                        title: 'Hello World',
+                        description: 'The classic <b>programming</b> example.'
+                    },
+                    {
+                        target: '#curved-arrow-inverted-target',
+                        type: 'curved-arrow',
+                        position: 'top',
+                        inverted: true,
+                        title: 'Hello World',
+                        description: 'The classic <b>programming</b> example.'
+                    },
+                    {
+                        target: '#curved-arrow-inverted-target',
+                        type: 'curved-arrow',
+                        position: 'right',
+                        inverted: true,
+                        title: 'Hello World',
+                        description: 'The classic <b>programming</b> example.'
+                    },
+                    {
+                        target: '#curved-arrow-inverted-target',
+                        type: 'curved-arrow',
+                        position: 'bottom',
+                        inverted: true,
+                        title: 'Hello World',
+                        description: 'The classic <b>programming</b> example.'
+                    },
+
+                    // Curved Arrows Inverted (Big)
+
+                    {
+                        target: '#curved-arrow-inverted-target-big',
+                        type: 'curved-arrow',
+                        position: 'left',
+                        inverted: true,
+                        title: 'Hello World',
+                        description: 'The classic <b>programming</b> example.'
+                    },
+                    {
+                        target: '#curved-arrow-inverted-target-big',
+                        type: 'curved-arrow',
+                        position: 'top',
+                        inverted: true,
+                        title: 'Hello World',
+                        description: 'The classic <b>programming</b> example.'
+                    },
+                    {
+                        target: '#curved-arrow-inverted-target-big',
+                        type: 'curved-arrow',
+                        position: 'right',
+                        inverted: true,
+                        title: 'Hello World',
+                        description: 'The classic <b>programming</b> example.'
+                    },
+                    {
+                        target: '#curved-arrow-inverted-target-big',
+                        type: 'curved-arrow',
+                        position: 'bottom',
+                        inverted: true,
+                        title: 'Hello World',
+                        description: 'The classic <b>programming</b> example.'
                     }
+            //     ]
+            // },{
+                // hints: [
+                // ]
+            // },{
+                // hints: [
+                // ]
                 ]
             }]
         });
