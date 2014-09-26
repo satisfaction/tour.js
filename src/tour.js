@@ -92,7 +92,11 @@
   }
 
   function getClientRect(node) {
-    return node.getBoundingClientRect();
+    var rect  = node.getBoundingClientRect(),
+        wsize = getWindowSize();
+    rect.right = wsize.width - rect.right;
+    rect.bottom = wsize.height - rect.bottom;
+    return rect;
   }
 
   function getWindowSize() {
@@ -123,6 +127,7 @@
   function renderSVG(selector, options) {
     options = options || {};
     var vector = SVG_DOM.querySelector(selector).cloneNode(true);
+    vector.setAttribute('class', 'tourjs-shape');
     if (options.transform) {
       vector.setAttribute('transform', options.transform);
     }
@@ -243,7 +248,7 @@
           if (!this.options.inverted) {
             this.node.style.left = targetRect.left + (targetRect.width / 2) - 16 + 'px';
           } else {
-            this.node.style.left = targetRect.left - (targetRect.width / 2) - 32 + 'px';
+            this.node.style.left = targetRect.left + (targetRect.width / 2) - rect.width + 16 + 'px';
           }
           break;
         case 'top-right':
@@ -252,13 +257,16 @@
           break;
         case 'right':
           if (targetRect.height > rect.height) {
-            // TODO: This may be out of place
-            this.node.style.top = targetRect.top + targetRect.height / 2 + 'px';
+            if (!this.options.inverted) {
+              this.node.style.top = targetRect.top + targetRect.height / 2 + 'px';
+            } else {
+              this.node.style.top = targetRect.top + targetRect.height / 2 - rect.height + 16 + 'px';
+            }
           } else {
             if (!this.options.inverted) {
-              this.node.style.top = targetRect.top + targetRect.height / 2 - 16 + 'px';
+              this.node.style.top = targetRect.top + targetRect.height / 2 -  16 + 'px';
             } else {
-              this.node.style.top = targetRect.top - targetRect.height / 2 - 16 + 'px';
+              this.node.style.top = targetRect.top - targetRect.height / 2 - rect.height / 2 + 12 + 'px';
             }
           }
           this.node.style.left = targetRect.left + targetRect.width + margin + 'px';
@@ -269,7 +277,11 @@
           break;
         case 'bottom':
           this.node.style.top = targetRect.bottom + margin + 'px';
-          this.node.style.left = targetRect.left + targetRect.width / 2 - rect.width + 16 + 'px';
+          if (!this.options.inverted) {
+            this.node.style.left = targetRect.left + targetRect.width / 2 - rect.width + 16 + 'px';
+          } else {
+            this.node.style.left = targetRect.left + targetRect.width / 2 - 16 + 'px';
+          }
           break;
         case 'bottom-left':
           this.node.style.top = targetRect.bottom + margin + 'px';
@@ -277,10 +289,17 @@
           break;
         case 'left':
           if (targetRect.height > rect.height) {
-            // TODO: This may be out of place
-            this.node.style.top = targetRect.top + targetRect.height / 2 + 'px';
+            if (!this.options.inverted) {
+              this.node.style.top = targetRect.top - (rect.height - targetRect.height / 2) + 16 + 'px';
+            } else {
+              this.node.style.top = targetRect.top + targetRect.height / 2 - 16 + 'px';
+            }
           } else {
-            this.node.style.top = targetRect.top - targetRect.height / 2 + 'px';
+            if (!this.options.inverted) {
+              this.node.style.top = targetRect.top + targetRect.height / 2 - rect.height + 18 + 'px';
+            } else {
+              this.node.style.top = targetRect.top + targetRect.height / 2 - rect.height / 2 + 24 + 'px';
+            }
           }
           this.node.style.left = targetRect.left - rect.width - margin + 'px';
           break;

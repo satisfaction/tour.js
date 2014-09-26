@@ -43,8 +43,6 @@ $opacity = 0.5;
 
 .tourjs-silence { opacity: 0 !important; }
 
-.tourjs-shape { position: absolute; }
-
 .tourjs-tooltip {
   color: $white;
   font-family: Arial, Helvetica, sans-serif;
@@ -74,9 +72,9 @@ $opacity = 0.5;
   max-height: 300px;
   overflow: hidden;
 
-  .tourjs-tooltip {
-    white-space: wrap;
-  }
+  .tourjs-tooltip { white-space: wrap; }
+
+  .tourjs-shape { position: absolute; }
 
   &.tourjs-arrow {
     &.tourjs-top-left {
@@ -366,20 +364,20 @@ $opacity = 0.5;
 
     &.tourjs-bottom-inverted {
       .tourjs-tooltip,
-      .tourjs-description { text-align: right; }
+      .tourjs-description { text-align: left; }
 
       .tourjs-tooltip {
-        margin-right: 40px;
+        margin-left: 40px;
         margin-top: 51px;
-        padding-right: 0;
+        padding-left: 0;
         padding-top: 0;
       }
 
       .tourjs-shape {
         height: 65px;
+        left: 0;
         position: absolute;
         top: 0;
-        right: 0;
         width: 32px;
       }
     }
@@ -452,6 +450,7 @@ $opacity = 0.5;
   bottom: 20px;
   left: 0;
   height: 40px;
+  z-index: 9999999;
 
   .tourjs-pagination-wrapper {
     margin: 0 auto;

@@ -40,9 +40,6 @@
 .tourjs-silence {
   opacity: 0 !important;
 }
-.tourjs-shape {
-  position: absolute;
-}
 .tourjs-tooltip {
   color: #fff;
   font-family: Arial, Helvetica, sans-serif;
@@ -72,6 +69,9 @@
 }
 .tourjs-hint .tourjs-tooltip {
   white-space: wrap;
+}
+.tourjs-hint .tourjs-shape {
+  position: absolute;
 }
 .tourjs-hint.tourjs-arrow.tourjs-top-left .tourjs-tooltip,
 .tourjs-hint.tourjs-arrow.tourjs-top-left .tourjs-description {
@@ -311,19 +311,19 @@
 }
 .tourjs-hint.tourjs-curved-arrow.tourjs-bottom-inverted .tourjs-tooltip,
 .tourjs-hint.tourjs-curved-arrow.tourjs-bottom-inverted .tourjs-description {
-  text-align: right;
+  text-align: left;
 }
 .tourjs-hint.tourjs-curved-arrow.tourjs-bottom-inverted .tourjs-tooltip {
-  margin-right: 40px;
+  margin-left: 40px;
   margin-top: 51px;
-  padding-right: 0;
+  padding-left: 0;
   padding-top: 0;
 }
 .tourjs-hint.tourjs-curved-arrow.tourjs-bottom-inverted .tourjs-shape {
   height: 65px;
+  left: 0;
   position: absolute;
   top: 0;
-  right: 0;
   width: 32px;
 }
 .tourjs-hint.tourjs-curved-arrow.tourjs-bottom-left .tourjs-tooltip,
@@ -383,6 +383,7 @@
   bottom: 20px;
   left: 0;
   height: 40px;
+  z-index: 9999999;
 }
 .tourjs-pagination .tourjs-pagination-wrapper {
   margin: 0 auto;
