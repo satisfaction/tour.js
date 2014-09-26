@@ -323,6 +323,7 @@
       var vector = renderSVG(
         '#tourjs-symbol-' + this.options.type + '-' + this.options.position  + (this.options.inverted ? '-inverted' : '')
       );
+
       this.node.appendChild(vector);
     },
 
@@ -684,12 +685,18 @@
     },
 
     _loadFirstStep: function () {
-      this._loadStep(0);
+      this.loadStep(1);
     },
 
-    _loadStep: function (i) {
-      var step = this.steps[i];
-      step.load(this.node);
+    loadStep: function (i) {
+      this.steps.forEach(function (step) {
+        var step = this.steps[i - 1];
+        if (step.options.index === i) {
+          step.load(this.node);
+        } else {
+          step.unload();
+        }
+      }.bind(this));
     },
 
     _loadCloseButton: function () {
