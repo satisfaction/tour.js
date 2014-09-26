@@ -613,6 +613,7 @@
         });
 
         hideOverlay();
+        this._unloadCloseButton();
 
         // Trigger `afterUnload` callback
         if (typeof this.options.afterUnload === 'function') {
@@ -655,6 +656,7 @@
     _onLoad: function () {
       document.addEventListener('keyup', this._onKeyUp);
 
+      this._loadCloseButton();
       this._loadFirstStep();
 
       // Trigger `afterLoad` callback
@@ -670,6 +672,28 @@
     _loadStep: function (i) {
       var step = this.steps[i];
       step.load(this.node);
+    },
+
+    _loadCloseButton: function () {
+      var button;
+
+      if (!document.getElementById('tourjs-close')) {
+        button = renderSVG('#tourjs-symbol-close');
+        button.id = 'tourjs-close';
+        this.node.appendChild(button);
+      }
+
+      button.addEventListener('click', this.unload);
+
+      button.style.display = 'block';
+    },
+
+    _unloadCloseButton: function () {
+      var button;
+      if (button = document.getElementById('tourjs-close')) {
+        button.style.display = 'none';
+        button.removeEventListener('click', this.unload);
+      }
     }
   };
 

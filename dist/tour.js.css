@@ -12,6 +12,20 @@
   z-index: 9999;
   display: none;
 }
+#tourjs-close {
+  cursor: pointer;
+  height: 30px;
+  position: fixed;
+  right: 10px;
+  top: 10px;
+  width: 30px;
+  z-index: 999999;
+}
+.tourjs {
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-shadow: rgba(0,0,0,0.01) 0 0 1px;
+  text-shadow: rgba(0,0,0,0.01) 0 0 1px;
+}
 .tourjs-step {
   z-index: 99999;
 }
@@ -363,13 +377,16 @@
 }
 .tourjs-pagination {
   bottom: 0;
-  left: 0;
+  left: 50%;
+  margin-left: -300px;
   padding: 15px;
   position: absolute;
   right: 0.5;
+  width: 600px;
 }
 .tourjs-pagination a {
   display: inline-block;
+  font-weight: normal;
   text-decoration: none;
 }
 .tourjs-pagination a,
@@ -378,8 +395,8 @@
   color: #fff;
 }
 .tourjs-pagination svg {
-  width: 15px;
-  height: 17px;
+  width: 22px;
+  height: 16px;
 }
 .tourjs-pagination .tourjs-next-step {
   float: right;
