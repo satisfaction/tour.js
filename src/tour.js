@@ -121,24 +121,12 @@
   }
 
   function renderSVG(selector, options) {
-    var svg, vector;
-
     options = options || {};
-
-    vector = SVG_DOM.querySelector(selector).cloneNode(true);
-
+    var vector = SVG_DOM.querySelector(selector).cloneNode(true);
     if (options.transform) {
       vector.setAttribute('transform', options.transform);
     }
-
-    svg = document.createElementNS(XMLNS, 'svg');
-    svg.setAttribute('class', 'tourjs-shape');
-
-    // TODO: Re-enable
-    // addDropShadowFilter(svg);
-    svg.appendChild(vector);
-
-    return svg;
+    return vector;
   }
 
   function Hint(options) {
@@ -501,53 +489,52 @@
     },
 
     _paginate: function (parentNode) {
-      var label, next, nextChevron, pagination, previous, previousChevron;
+      var label, next, nextChevron, pagination, previous, previousChevron, wrapper;
 
       if (this.previous || this.next) {
 
         pagination = document.createElement('div');
         pagination.className = 'tourjs-pagination';
 
-        if (this.next) {
-          next = document.createElement('a');
-          next.className = 'tourjs-next-step';
-          next.setAttribute('href', '#');
-          next.addEventListener('click', function (event) {
-            event.stopPropagation();
-            this.unload();
-            this.next.load(parentNode);
-          }.bind(this));
+        wrapper = document.createElement('div');
+        wrapper.className = 'tourjs-pagination-wrapper';
 
-          label = document.createElement('span');
-          label.innerText = 'Next';
-          next.appendChild(label);
-
-          nextChevron = renderSVG('#tourjs-symbol-next');
-          next.appendChild(nextChevron);
-
-          pagination.appendChild(next);
-        }
+        previous = document.createElement('div');
+        previous.className = 'tourjs-previous-step';
 
         if (this.previous) {
-          previous = document.createElement('a');
-          previous.className = 'tourjs-previous-step';
-          previous.setAttribute('href', '#');
           previous.addEventListener('click', function (event) {
             event.stopPropagation();
             this.unload();
             this.previous.load(parentNode);
           }.bind(this));
-
-          previousChevron = renderSVG('#tourjs-symbol-previous', { transform: 'translate(-10)' });
-          previous.appendChild(previousChevron);
-
-          label = document.createElement('span');
-          label.innerText = 'Previous';
-          previous.appendChild(label);
-
-          pagination.appendChild(previous);
         }
 
+        previousChevron = renderSVG('#tourjs-symbol-chevron-left');
+        previous.appendChild(previousChevron);
+        wrapper.appendChild(previous);
+
+        var stepCount = document.createElement('div');
+        stepCount.className = 'tourjs-step-count';
+        stepCount.innerText = 'Step ' + this.options.index + ' of ' + this.options.stepCount;
+        wrapper.appendChild(stepCount);
+
+        next = document.createElement('div');
+        next.className = 'tourjs-next-step';
+
+        if (this.next) {
+          next.addEventListener('click', function (event) {
+            event.stopPropagation();
+            this.unload();
+            this.next.load(parentNode);
+          }.bind(this));
+        }
+
+        nextChevron = renderSVG('#tourjs-symbol-chevron-right');
+        next.appendChild(nextChevron);
+        wrapper.appendChild(next);
+
+        pagination.appendChild(wrapper);
         this.node.appendChild(pagination);
       }
     }
@@ -629,23 +616,35 @@
       }
     },
 
-    _initStep: function () {
-      var previous, step;
-      return function (config) {
-        step = new Step(config);
-        if (previous) {
-          step.previous = previous;
-          previous.next = step;
-        }
-        previous = step;
-        this.steps.push(step);
-      }.bind(this);
-    },
-
     _initSteps: function (stepDefs) {
+      var step,
+          next,
+          previous,
+          stepIndex = 1,
+          stepCount = stepDefs.length;
+
       if (stepDefs) {
         this.steps = [];
-        stepDefs.forEach(this._initStep());
+
+        stepDefs.forEach(function (def) {
+
+          if (!def.options) def.options = {};
+
+          def.options.index = stepIndex;
+          def.options.stepCount = stepCount;
+
+          step = new Step(def);
+          this.steps.push(step);
+
+          if (previous) {
+            step.previous = previous;
+            previous.next = step;
+          }
+
+          previous = step;
+          stepIndex++;
+
+        }.bind(this));
       }
     },
 
