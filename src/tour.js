@@ -385,6 +385,7 @@
 
       window.addEventListener('resize', this._setPosition);
       window.addEventListener('scroll', this._setPosition);
+
       window.setTimeout(function () {
         this._setPosition();
       }.bind(this), 0);
@@ -436,12 +437,13 @@
           this._paginate(parentNode);
           this._loadOverview();
 
-          this.hints.forEach(function (hint) {
-            hint.load(this.node);
-          }.bind(this));
         } else {
           this.node.style.display = 'block';
         }
+
+        this.hints.forEach(function (hint) {
+          hint.load(this.node);
+        }.bind(this));
 
         if (callback) callback(this);
 
