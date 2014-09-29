@@ -412,7 +412,9 @@
         mask.appendChild(rect);
 
         this.highlights.forEach(function (highlight) {
-          mask.appendChild(highlight.load());
+          if (highlight.load()) {
+            mask.appendChild(highlight.load());
+          }
         });
 
         defs.appendChild(mask);
