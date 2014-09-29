@@ -690,7 +690,7 @@
 
     loadStep: function (i) {
       this.steps.forEach(function (step) {
-        var step = this.steps[i - 1];
+        step = this.steps[i - 1];
         if (step.options.index === i) {
           step.load(this.node);
         } else {
@@ -714,8 +714,8 @@
     },
 
     _unloadCloseButton: function () {
-      var button;
-      if (button = document.getElementById('tourjs-close')) {
+      var button = document.getElementById('tourjs-close');
+      if (button) {
         button.style.display = 'none';
         button.removeEventListener('click', this.unload);
       }
