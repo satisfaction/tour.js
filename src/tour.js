@@ -700,9 +700,9 @@
     },
 
     _loadCloseButton: function () {
-      var button;
+      var button = document.getElementById('tourjs-close');
 
-      if (!document.getElementById('tourjs-close')) {
+      if (!button) {
         button = renderSVG('#tourjs-symbol-close');
         button.id = 'tourjs-close';
         this.node.appendChild(button);
