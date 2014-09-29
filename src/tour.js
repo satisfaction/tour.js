@@ -11,11 +11,11 @@
 
   'use strict';
 
-  var OVERLAY_ID, SVG_DOM, XMLNS, ID_COUNT;
+  var idCount, margin, svgSymbols, xmlns;
 
-  ID_COUNT = 0;
-  OVERLAY_ID = 'tourjs-overlay';
-  XMLNS = 'http://www.w3.org/2000/svg';
+  idCount = 0;
+  margin = 10;
+  xmlns = 'http://www.w3.org/2000/svg';
 
   function bind(fn, self) {
     return function () {
@@ -27,32 +27,32 @@
     var blend, blur, defs, filter, id, matrix, offset;
 
     id = (new Date()).getTime();
-    defs = document.createElementNS(XMLNS, 'defs');
+    defs = document.createElementNS(xmlns, 'defs');
 
-    filter = document.createElementNS(XMLNS, 'filter');
+    filter = document.createElementNS(xmlns, 'filter');
     filter.setAttributeNS(null, 'id', id);
     filter.setAttributeNS(null, 'x', '-50%');
     filter.setAttributeNS(null, 'y', '-50%');
     filter.setAttributeNS(null, 'width', '200%');
     filter.setAttributeNS(null, 'height', '200%');
 
-    offset = document.createElementNS(XMLNS, 'feOffset');
+    offset = document.createElementNS(xmlns, 'feOffset');
     offset.setAttributeNS(null, 'dx', 1);
     offset.setAttributeNS(null, 'dy', 1);
     offset.setAttributeNS(null, 'in', 'SourceAlpha');
     offset.setAttributeNS(null, 'result', 'ShadowOffsetOuter');
 
-    blur = document.createElementNS(XMLNS, 'feGaussianBlur');
+    blur = document.createElementNS(xmlns, 'feGaussianBlur');
     blur.setAttributeNS(null, 'stdDeviation', 2);
     blur.setAttributeNS(null, 'in', 'ShadowOffsetOuter');
     blur.setAttributeNS(null, 'result', 'ShadowBlurOuter');
 
-    matrix = document.createElementNS(XMLNS, 'feColorMatrix');
+    matrix = document.createElementNS(xmlns, 'feColorMatrix');
     matrix.setAttributeNS(null, 'values', '0 0 0 0 0   0 0 0 0 0   0 0 0 0 0   0 0 0 0.3 0');
     matrix.setAttributeNS(null, 'in', 'ShadowBlurOuter');
     matrix.setAttributeNS(null, 'result', 'ShadowMatrixOuter');
 
-    blend = document.createElementNS(XMLNS, 'feBlend');
+    blend = document.createElementNS(xmlns, 'feBlend');
     blend.setAttributeNS(null, 'in', 'ShadowMatrixOuter');
     blend.setAttributeNS(null, 'in2', 'SourceGraphic');
     blend.setAttributeNS(null, 'mode', 'normal');
@@ -69,7 +69,7 @@
   }
 
   function getId(prefix) {
-    return 'tourjs-' + (prefix ? prefix + '-' : '') + ID_COUNT++;
+    return 'tourjs-' + (prefix ? prefix + '-' : '') + idCount++;
   }
 
   function fetchSVG(options) {
@@ -77,8 +77,8 @@
 
     function load () {
       if (httpRequest.readyState == 4 && httpRequest.status == 200) {
-        SVG_DOM = document.createElement('div');
-        SVG_DOM.innerHTML = httpRequest.responseText;
+        svgSymbols = document.createElement('div');
+        svgSymbols.innerHTML = httpRequest.responseText;
 
         if (options.success) {
           options.success();
@@ -108,25 +108,9 @@
     };
   }
 
-  function hideOverlay() {
-    document.getElementById(OVERLAY_ID).style.display = 'none';
-  }
-
-  function renderOverlay() {
-    var overlay;
-
-    if (!document.getElementById(OVERLAY_ID)) {
-      overlay = document.createElement('div');
-      overlay.id = OVERLAY_ID;
-      document.body.appendChild(overlay);
-    }
-
-    document.getElementById(OVERLAY_ID).style.display = 'block';
-  }
-
   function renderSVG(selector, options) {
     options = options || {};
-    var vector = SVG_DOM.querySelector(selector).cloneNode(true);
+    var vector = svgSymbols.querySelector(selector).cloneNode(true);
     vector.setAttribute('class', 'tourjs-shape');
     if (options.transform) {
       vector.setAttribute('transform', options.transform);
@@ -173,8 +157,7 @@
     },
 
     _setPosition: function () {
-      var margin = 5,
-      targetRect = getClientRect(document.querySelector(this.options.target)),
+      var targetRect = getClientRect(document.querySelector(this.options.target)),
       rect = getClientRect(this.node);
 
       switch (this.options.type) {
@@ -191,7 +174,7 @@
           break;
         case 'top-right':
           this.node.style.top = targetRect.top - rect.height - margin + 'px';
-          this.node.style.left = targetRect.left + targetRect.width + 5 + 'px';
+          this.node.style.left = targetRect.left + targetRect.width + margin + 'px';
           break;
         case 'right':
           if (targetRect.height > rect.height) {
@@ -241,7 +224,7 @@
           break;
         case 'top-right':
           this.node.style.top = targetRect.top - rect.height - margin + 'px';
-          this.node.style.left = targetRect.left + targetRect.width + 5 + 'px';
+          this.node.style.left = targetRect.left + targetRect.width + margin + 'px';
           break;
         case 'right':
           if (targetRect.height > rect.height) {
@@ -334,6 +317,138 @@
     }
   };
 
+  function Highlight(hint) {
+    this.hint = hint;
+    this._setPosition = bind(this._setPosition, this);
+  }
+
+  Highlight.prototype = {
+
+    load: function () {
+      if (this.hint.highlight === false) return;
+
+      if (!this.node) {
+        this.node = document.createElementNS(xmlns, 'rect');
+        this.node.setAttributeNS(
+          null,
+          'style',
+          'stroke:none;fill:#000;'
+        );
+      }
+
+      this._setPosition();
+
+      window.addEventListener('resize', this._setPosition);
+      window.addEventListener('scroll', this._setPosition);
+
+      return this.node;
+    },
+
+    unload: function () {
+      if (this.node) {
+        window.removeEventListener('resize', this._setPosition);
+        window.removeEventListener('scroll', this._setPosition);
+      }
+    },
+
+    _setPosition: function () {
+      var rect, target;
+
+      if (this.node) {
+        if (!this.hint.highlight) {
+          target = document.querySelector(this.hint.target);
+        } else {
+          target = document.querySelector(this.hint.highlight);
+        }
+
+        rect = getClientRect(target);
+
+        this.node.setAttributeNS(null, 'x', rect.left - margin);
+        this.node.setAttributeNS(null, 'y', rect.top - margin);
+        this.node.setAttributeNS(null, 'height', rect.height + margin * 2);
+        this.node.setAttributeNS(null, 'width', rect.width + margin * 2);
+      }
+    }
+  };
+
+  function Overlay(hints) {
+    this.id = getId();
+    this.hints = hints;
+    this.highlights = [];
+    this.hints.forEach(function (hint) {
+      this.highlights.push(new Highlight(hint));
+    }.bind(this));
+  }
+
+  Overlay.prototype = {
+    load: function (parentNode) {
+      var defs, mask, rect;
+
+      if (!this.node) {
+        this.node = document.createElementNS(xmlns, 'svg');
+        this.node.setAttributeNS(null, 'id', 'overlay-' + this.id);
+        this.node.setAttributeNS(null, 'class', 'tourjs-overlay');
+        this.node.setAttributeNS(null, 'x', 0);
+        this.node.setAttributeNS(null, 'y', 0);
+        this.node.setAttributeNS(null, 'height', '100%');
+        this.node.setAttributeNS(null, 'width', '100%');
+
+        defs = document.createElementNS(xmlns, 'defs');
+
+        mask = document.createElementNS(xmlns, 'mask');
+        mask.setAttributeNS(null, 'x', 0);
+        mask.setAttributeNS(null, 'y', 0);
+        mask.setAttributeNS(null, 'height', '100%');
+        mask.setAttributeNS(null, 'width', '100%');
+        mask.setAttributeNS(null, 'id', 'overlay-' + this.id + '-mask');
+
+        rect = document.createElementNS(xmlns, 'rect');
+        rect.setAttributeNS(null, 'x', 0);
+        rect.setAttributeNS(null, 'y', 0);
+        rect.setAttributeNS(null, 'height', '100%');
+        rect.setAttributeNS(null, 'width', '100%');
+        rect.setAttributeNS(null, 'style', 'stroke:none;fill:#FFF;');
+
+        mask.appendChild(rect);
+
+        this.highlights.forEach(function (highlight) {
+          mask.appendChild(highlight.load());
+        });
+
+        defs.appendChild(mask);
+        this.node.appendChild(defs);
+
+        rect = document.createElementNS(xmlns, 'rect');
+        rect.setAttributeNS(null, 'x', 0);
+        rect.setAttributeNS(null, 'y', 0);
+        rect.setAttributeNS(null, 'height', '100%');
+        rect.setAttributeNS(null, 'width', '100%');
+        rect.setAttributeNS(
+          null,
+          'style',
+          'stroke:none;fill:rgba(0,0,0,0.6);mask:url(#overlay-' + this.id + '-mask);'
+        );
+
+        this.node.appendChild(rect);
+        parentNode.appendChild(this.node);
+      } else {
+        this.node.style.display = 'block';
+        this.highlights.forEach(function (highlight) {
+          highlight.load();
+        });
+      }
+    },
+
+    unload: function () {
+      if (this.node) {
+        this.node.style.display = 'none';
+        this.highlights.forEach(function (highlight) {
+          highlight.unload();
+        });
+      }
+    }
+  };
+
   function Overview(config) {
     if (!(this instanceof Overview)) {
       return new Overview(config);
@@ -416,6 +531,8 @@
 
     this._initOverview(this.options.overview);
 
+    this.overlay = new Overlay(config.hints);
+
     this.hints = [];
     config.hints.forEach(function (options) {
       this.hints.push(new Hint(options));
@@ -440,6 +557,8 @@
         } else {
           this.node.style.display = 'block';
         }
+
+        this.overlay.load(this.node);
 
         this.hints.forEach(function (hint) {
           hint.load(this.node);
@@ -548,7 +667,6 @@
         this.node.appendChild(pagination);
       }
     }
-
   };
 
   function Tour(config) {
@@ -569,8 +687,6 @@
 
   Tour.prototype = {
     load: function () {
-      renderOverlay(); // TODO: Make this a method
-
       var asyncLoad = function () {
         if (!this.node) {
           this.node = document.createElement('div');
@@ -609,7 +725,6 @@
           step.unload();
         });
 
-        hideOverlay();
         this._unloadCloseButton();
 
         // Trigger `afterUnload` callback
