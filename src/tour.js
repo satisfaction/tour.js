@@ -569,14 +569,17 @@
         if (callback) callback(this);
 
         // Trigger `afterLoad` callback
-        if (typeof this.options.afterLoad === 'function') {
-          this.options.afterLoad();
+        if (typeof this.options.afterLoad === 'function' &! this.loaded) {
+          this.options.afterLoad(this);
         }
+
+        this.loaded = true;
+
       }.bind(this);
 
-      if (typeof this.options.beforeLoad === 'function') {
+      if (typeof this.options.beforeLoad === 'function' &! this.loaded) {
         // Trigger `beforeLoad` callback
-        this.options.beforeLoad(asyncLoad);
+        this.options.beforeLoad(this, asyncLoad);
       } else {
         asyncLoad();
       }
@@ -594,14 +597,17 @@
         }
 
         // Trigger `afterUnload` callback
-        if (typeof this.options.afterUnload === 'function') {
-          this.options.afterUnload();
+        if (typeof this.options.afterUnload === 'function' && this.loaded === true) {
+          this.options.afterUnload(this);
         }
+
+        this.loaded = false;
+
       }.bind(this);
 
-      if (typeof this.options.beforeUnload === 'function') {
+      if (typeof this.options.beforeUnload === 'function' && this.loaded === true) {
         // Tigger `beforeUnload` callback
-        this.options.beforeUnload(asyncUnload);
+        this.options.beforeUnload(this, asyncUnload);
       } else {
         asyncUnload();
       }
