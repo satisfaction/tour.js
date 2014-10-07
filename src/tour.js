@@ -363,10 +363,10 @@
 
         rect = getClientRect(target);
 
-        this.node.setAttributeNS(null, 'x', rect.left - margin);
-        this.node.setAttributeNS(null, 'y', rect.top - margin);
-        this.node.setAttributeNS(null, 'height', rect.height + margin * 2);
-        this.node.setAttributeNS(null, 'width', rect.width + margin * 2);
+        this.node.setAttributeNS(null, 'x', rect.left);
+        this.node.setAttributeNS(null, 'y', rect.top);
+        this.node.setAttributeNS(null, 'height', rect.height);
+        this.node.setAttributeNS(null, 'width', rect.width);
       }
     }
   };
