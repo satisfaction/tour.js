@@ -705,10 +705,6 @@
           success: this._onLoad
         });
 
-        // Trigger `afterLoad` callback
-        if (typeof this.options.afterLoad === 'function') {
-          this.options.afterLoad();
-        }
       }.bind(this);
 
       if (typeof this.options.beforeLoad === 'function') {
@@ -797,7 +793,6 @@
 
     loadStep: function (i) {
       this.steps.forEach(function (step) {
-        step = this.steps[i - 1];
         if (step.options.index === i) {
           step.load(this.node);
         } else {
