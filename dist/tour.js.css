@@ -46,12 +46,12 @@
 }
 .tourjs-tooltip h2 {
   line-height: 1.3em;
-  font-size: 16pt;
+  font-size: 24px;
   margin: 0;
   padding: 0;
 }
 .tourjs-tooltip .tourjs-desc {
-  font-size: 12pt;
+  font-size: 16px;
 }
 .tourjs-tooltip h2,
 .tourjs-tooltip .tourjs-desc {
@@ -87,6 +87,7 @@
 }
 .tourjs-hint.tourjs-arrow.tourjs-top .tourjs-tooltip,
 .tourjs-hint.tourjs-arrow.tourjs-top .tourjs-description {
+  font-size: 16px;
   text-align: center;
 }
 .tourjs-hint.tourjs-arrow.tourjs-top .tourjs-tooltip {
