@@ -378,7 +378,7 @@
 .tourjs-pagination {
   position: fixed;
   right: 0;
-  bottom: 20px;
+  bottom: 40px;
   left: 0;
   height: 40px;
   z-index: 9999999;
@@ -386,24 +386,25 @@
 .tourjs-pagination .tourjs-pagination-wrapper {
   margin: 0 auto;
   position: relative;
-  line-height: 30px;
+  line-height: 32px;
   text-align: center;
-  width: 150px;
+  width: 200px;
 }
 .tourjs-pagination .tourjs-next-step,
 .tourjs-pagination .tourjs-previous-step {
   background-color: #fff;
   cursor: pointer;
-  height: 30px;
-  opacity: 0.5;
-  padding-top: 3px;
+  height: 32px;
+  opacity: 0.8;
   position: absolute;
-  width: 30px;
+  width: 32px;
 }
 .tourjs-pagination .tourjs-next-step svg,
 .tourjs-pagination .tourjs-previous-step svg {
-  height: 14px;
-  width: 14px;
+  height: 16px;
+  position: relative;
+  top: 3px;
+  width: 16px;
 }
 .tourjs-pagination .tourjs-next-step svg path,
 .tourjs-pagination .tourjs-previous-step svg path {
@@ -423,12 +424,11 @@
   right: 0;
 }
 .tourjs-pagination .tourjs-step-count {
-  background-color: #fff;
-  color: #000;
+  color: #fff;
+  font-size: 20px;
   line-height: 33px;
-  opacity: 0.3;
   text-align: center;
-  width: 86px;
+  width: 140px;
   position: absolute;
   top: 0;
   left: 31px;
