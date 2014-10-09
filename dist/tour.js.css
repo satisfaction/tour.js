@@ -420,6 +420,15 @@
 .tourjs-pagination .tourjs-previous-step svg path {
   fill: rgba(0,0,0,0.5);
 }
+.tourjs-pagination .tourjs-next-step.tourjs-step-disabled,
+.tourjs-pagination .tourjs-previous-step.tourjs-step-disabled {
+  cursor: default;
+  opacity: 0.2;
+}
+.tourjs-pagination .tourjs-next-step.tourjs-step-disabled svg path,
+.tourjs-pagination .tourjs-previous-step.tourjs-step-disabled svg path {
+  fill: rgba(0,0,0,0.3);
+}
 .tourjs-pagination .tourjs-previous-step {
   border-radius: 2px 0 0 2px;
   position: absolute;

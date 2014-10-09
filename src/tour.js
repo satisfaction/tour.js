@@ -697,6 +697,8 @@
             this.unload();
             this.previous.load(parentNode);
           }.bind(this));
+        } else {
+          previous.className += ' tourjs-step-disabled';
         }
 
         previousChevron = renderSVG('#tourjs-symbol-chevron-left');
@@ -717,6 +719,8 @@
             this.unload();
             this.next.load(parentNode);
           }.bind(this));
+        } else {
+          next.className += ' tourjs-step-disabled';
         }
 
         nextChevron = renderSVG('#tourjs-symbol-chevron-right');
