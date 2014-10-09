@@ -516,9 +516,47 @@
     },
 
     _setPosition: function () {
-      var rect = getClientRect(this.node);
-      this.node.style.marginLeft = -(rect.width / 2) + 'px';
-      this.node.style.marginTop = -(rect.height / 2) + 'px';
+      var rect = getClientRect(this.node),
+          wsize = getWindowSize();
+
+      switch (this.options.position) {
+        case 'top':
+          this.node.style.left = wsize.width / 2 - rect.width / 2 + 'px';
+          this.node.style.top = '66px';
+          break;
+        case 'top-right':
+          this.node.style.right = '66px';
+          this.node.style.top = '66px';
+          break;
+        case 'right':
+          this.node.style.right = '20px';
+          this.node.style.top = wsize.height / 2 - rect.height / 2 + 'px';
+          break;
+        case 'bottom-right':
+          this.node.style.right = '20px';
+          this.node.style.bottom = '100px';
+          break;
+        case 'bottom':
+          this.node.style.left = wsize.width / 2 - rect.width / 2 + 'px';
+          this.node.style.bottom = '100px';
+          break;
+        case 'bottom-left':
+          this.node.style.left = '20px';
+          this.node.style.bottom = '100px';
+          break;
+        case 'left':
+          this.node.style.left = '20px';
+          this.node.style.top = wsize.height / 2 - rect.height / 2 + 'px';
+          break;
+        case 'top-left':
+          this.node.style.left = '20px';
+          this.node.style.top = '66px';
+          break;
+        default:
+          this.node.style.left = wsize.width / 2 - rect.width / 2 + 'px';
+          this.node.style.top = wsize.height / 2 - rect.height / 2 + 'px';
+          break;
+      }
     }
 
   };

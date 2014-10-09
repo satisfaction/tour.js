@@ -437,10 +437,8 @@
 }
 .tourjs-overview {
   color: #fff;
-  left: 50%;
   max-width: 400px;
   position: absolute;
-  top: 50%;
 }
 .tourjs-overview .tourjs-overview-title,
 .tourjs-overview .tourjs-overview-description {
