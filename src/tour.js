@@ -525,42 +525,42 @@
     },
 
     _setPosition: function () {
-      var margin = '100px',
+      var margin = 100,
           rect = getClientRect(this.node),
           wsize = getWindowSize();
 
       switch (this.options.position) {
         case 'top':
           this.node.style.left = wsize.width / 2 - rect.width / 2 + 'px';
-          this.node.style.top = margin;
+          this.node.style.top = margin + 'px';
           break;
         case 'top-right':
-          this.node.style.right = margin;
-          this.node.style.top = margin;
+          this.node.style.right = margin + 'px';
+          this.node.style.top = margin + 'px';
           break;
         case 'right':
-          this.node.style.right = margin;
+          this.node.style.right = margin + 'px';
           this.node.style.top = wsize.height / 2 - rect.height / 2 + 'px';
           break;
         case 'bottom-right':
-          this.node.style.right = margin;
-          this.node.style.bottom = margin;
+          this.node.style.right = margin + 'px';
+          this.node.style.bottom = margin * 1.5 + 'px';
           break;
         case 'bottom':
           this.node.style.left = wsize.width / 2 - rect.width / 2 + 'px';
-          this.node.style.bottom = margin;
+          this.node.style.bottom = margin * 1.5 + 'px';
           break;
         case 'bottom-left':
-          this.node.style.left = margin;
-          this.node.style.bottom = margin;
+          this.node.style.left = margin + 'px';
+          this.node.style.bottom = margin * 1.5 + 'px';
           break;
         case 'left':
-          this.node.style.left = margin;
+          this.node.style.left = margin + 'px';
           this.node.style.top = wsize.height / 2 - rect.height / 2 + 'px';
           break;
         case 'top-left':
-          this.node.style.left = margin;
-          this.node.style.top = margin;
+          this.node.style.left = margin + 'px';
+          this.node.style.top = margin + 'px';
           break;
         default:
           this.node.style.left = wsize.width / 2 - rect.width / 2 + 'px';
