@@ -92,11 +92,7 @@
   }
 
   function getClientRect(node) {
-    var rect  = node.getBoundingClientRect(),
-        wsize = getWindowSize();
-    rect.right = wsize.width - rect.right;
-    rect.bottom = wsize.height - rect.bottom;
-    return rect;
+    return node.getBoundingClientRect();
   }
 
   function getWindowSize() {
@@ -309,7 +305,7 @@
 
     _renderTitle: function (parent) {
       var title = document.createElement('h2');
-      title.innerText = this.options.title;
+      title.innerHTML = this.options.title;
       parent.appendChild(title);
     },
 
@@ -491,7 +487,7 @@
         }
 
         title = document.createElement('h1');
-        title.innerText = this.options.title;
+        title.innerHTML = this.options.title;
         title.className = 'tourjs-overview-title';
         this.node.appendChild(title);
 
@@ -707,7 +703,7 @@
 
         var stepCount = document.createElement('div');
         stepCount.className = 'tourjs-step-count';
-        stepCount.innerText = 'Step ' + this.options.index + ' of ' + this.options.stepCount;
+        stepCount.innerHTML = 'Step ' + this.options.index + ' of ' + this.options.stepCount;
         wrapper.appendChild(stepCount);
 
         next = document.createElement('div');
