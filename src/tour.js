@@ -137,8 +137,8 @@
         this.node = document.createElement('div');
         this.node.id = this.id;
         this.node.className = 'tourjs-hint';
-        this.node.classList.add('tourjs-' + this.options.position + (this.options.inverted ? '-inverted' : ''));
-        this.node.classList.add('tourjs-' + this.options.type);
+        this.node.className += ' tourjs-' + this.options.position + (this.options.inverted ? '-inverted' : '');
+        this.node.className += ' tourjs-' + this.options.type;
 
         if (this.options.width) {
           var customWidth = this.options.width + 'px';
