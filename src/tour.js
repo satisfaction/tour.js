@@ -380,8 +380,9 @@
     }
   };
 
-  function Overlay(hints) {
+  function Overlay(hints, options) {
     this.id = getId();
+    this.options = options || {};
     this.hints = hints;
     this.highlights = [];
     this.hints.forEach(function (hint) {
@@ -391,7 +392,7 @@
 
   Overlay.prototype = {
     load: function (parentNode) {
-      var defs, mask, rect;
+      var defs, mask, opacity, rect;
 
       if (!this.node) {
         this.node = document.createElementNS(xmlns, 'svg');
@@ -429,6 +430,8 @@
         defs.appendChild(mask);
         this.node.appendChild(defs);
 
+        opacity = this.options.opacity || '0.8';
+
         rect = document.createElementNS(xmlns, 'rect');
         rect.setAttributeNS(null, 'x', 0);
         rect.setAttributeNS(null, 'y', 0);
@@ -437,7 +440,7 @@
         rect.setAttributeNS(
           null,
           'style',
-          'stroke:none;fill:rgba(0,0,0,0.6);mask:url(#overlay-' + this.id + '-mask);'
+          'stroke:none;fill:rgba(0,0,0,' + opacity +  ');mask:url(#overlay-' + this.id + '-mask);'
         );
 
         this.node.appendChild(rect);
@@ -581,7 +584,7 @@
 
     this._initOverview(this.options.overview);
 
-    this.overlay = new Overlay(config.hints);
+    this.overlay = new Overlay(config.hints, config.options.overlay);
 
     this.hints = [];
     config.hints.forEach(function (options) {
@@ -810,6 +813,7 @@
 
           def.options.index = stepIndex;
           def.options.stepCount = stepCount;
+          def.options.overlay = this.options.overlay;
 
           step = new Step(def);
           this.steps.push(step);
