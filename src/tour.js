@@ -139,11 +139,20 @@
         this.node.className = 'tourjs-hint';
         this.node.classList.add('tourjs-' + this.options.position + (this.options.inverted ? '-inverted' : ''));
         this.node.classList.add('tourjs-' + this.options.type);
+
+        if (this.options.width) {
+          var customWidth = this.options.width + 'px';
+          this.node.style.width = customWidth;
+          this.node.style.maxWidth = customWidth;
+        }
+
         this._renderTooltip();
         this._renderShape();
+
         if (!document.getElementById(this.id)) {
           parentNode.appendChild(this.node);
         }
+
         this._setPosition();
       }
 
@@ -587,6 +596,7 @@
           this.node = document.createElement('div');
           this.node.id = this.id;
           this.node.className = 'tourjs-step';
+
           if (!document.getElementById(this.id)) {
             parentNode.appendChild(this.node);
           }
