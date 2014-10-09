@@ -446,6 +446,9 @@
   line-height: 1.3em;
   text-align: center;
 }
+.tourjs-overview .tourjs-overview-title {
+  margin: 0;
+}
 .tourjs-overview-line {
   padding-bottom: 10px;
 }
