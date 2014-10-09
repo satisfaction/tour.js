@@ -46,6 +46,7 @@
   line-height: 1.3em;
   font-size: 24px;
   margin: 0;
+  margin-bottom: 5px;
   padding: 0;
 }
 .tourjs-tooltip .tourjs-desc {
