@@ -23,7 +23,7 @@
     };
   }
 
-  function addDropShadowFilter(svg, style) {
+  function addDropShadowFilter(svg) {
     var blend, blur, defs, filter, id, matrix, offset;
 
     id = (new Date()).getTime();
@@ -39,7 +39,7 @@
     offset = document.createElementNS(xmlns, 'feOffset');
     offset.setAttributeNS(null, 'dx', 1);
     offset.setAttributeNS(null, 'dy', 1);
-    offset.setAttributeNS(null, 'in', 'SourceAlpha');
+    offset.setAttributeNS(null, 'in', 'SourceGraphic');
     offset.setAttributeNS(null, 'result', 'ShadowOffsetOuter');
 
     blur = document.createElementNS(xmlns, 'feGaussianBlur');
@@ -299,6 +299,8 @@
       var vector = renderSVG(
         '#tourjs-symbol-' + this.options.type + '-' + this.options.position  + (this.options.inverted ? '-inverted' : '')
       );
+
+      addDropShadowFilter(vector);
 
       this.node.appendChild(vector);
     },
@@ -867,6 +869,7 @@
       if (!button) {
         button = renderSVG('#tourjs-symbol-close');
         button.id = 'tourjs-close';
+        addDropShadowFilter(button);
         this.node.appendChild(button);
       }
 
