@@ -322,15 +322,15 @@
     }
   };
 
-  function Highlight(hint) {
-    this.hint = hint;
+  function Highlight(options) {
+    this.options = options;
     this._setPosition = bind(this._setPosition, this);
   }
 
   Highlight.prototype = {
 
     load: function () {
-      if (this.hint.highlight === false) return;
+      if (this.options.highlight === false) return;
 
       if (!this.node) {
         this.node = document.createElementNS(xmlns, 'rect');
@@ -357,21 +357,22 @@
     },
 
     _setPosition: function () {
-      var rect, target;
+      var padding, rect, target;
 
       if (this.node) {
-        if (!this.hint.highlight) {
-          target = document.querySelector(this.hint.target);
+        if (!this.options.highlight) {
+          target = document.querySelector(this.options.target);
         } else {
-          target = document.querySelector(this.hint.highlight);
+          target = document.querySelector(this.options.highlight);
         }
 
         rect = getClientRect(target);
+        padding = this.options.padding || 0;
 
-        this.node.setAttributeNS(null, 'x', rect.left);
-        this.node.setAttributeNS(null, 'y', rect.top);
-        this.node.setAttributeNS(null, 'height', rect.height);
-        this.node.setAttributeNS(null, 'width', rect.width);
+        this.node.setAttributeNS(null, 'x', rect.left - padding);
+        this.node.setAttributeNS(null, 'y', rect.top - padding);
+        this.node.setAttributeNS(null, 'height', rect.height + padding * 2);
+        this.node.setAttributeNS(null, 'width', rect.width + padding * 2);
       }
     }
   };
