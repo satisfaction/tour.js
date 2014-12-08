@@ -579,8 +579,15 @@
     }
 
     this.id = getId('step');
+
+    if (typeof config.shouldShow === 'function') {
+      this.shouldShow = config.shouldShow;
+      delete config.shouldShow;
+    }
+
     this.options = config.options || {};
 
+    // TODO: Run this at load time
     this._initOverview(this.options.overview);
 
     this.overlay = new Overlay(config.hints, config.options.overlay);
@@ -801,36 +808,68 @@
     },
 
     _initSteps: function (stepDefs) {
-      var step,
-          next,
-          previous,
-          stepIndex = 1,
-          stepCount = stepDefs.length;
+
+      // TODO: Move this to the state
+      this.steps = [];
+
+      /* initialize steps that can be shown */
 
       if (stepDefs) {
-        this.steps = [];
+        var waitCount = stepDefs.lenght;
 
         stepDefs.forEach(function (def) {
 
           if (!def.options) def.options = {};
 
-          def.options.index = stepIndex;
-          def.options.stepCount = stepCount;
-          def.options.overlay = this.options.overlay;
+          // def.options.overlay = this.options.overlay; // TODO: Why this?
+          // def.options.stepCount = 2;
+          // def.options.index = 1;
 
-          step = new Step(def);
-          this.steps.push(step);
+          var step = new Step(def);
 
-          if (previous) {
-            step.previous = previous;
-            previous.next = step;
+          if (typeof step.shouldShow === 'function') {
+            step.shouldShow(function (show) {
+              if (show) this.steps.push(step);
+              waitCount--;
+            }.bind(this));
+          } else {
+            this.steps.push(step);
+            waitCount--;
           }
 
-          previous = step;
-          stepIndex++;
-
         }.bind(this));
+
+        /* wait for all callbacks to return */
+
+        var wait;
+
+        (wait = function() {
+          if (waitCount) setTimeout(wait, 1);
+        })();
       }
+
+      /* link steps */
+
+      var previous;
+
+      this.steps.forEach(function (step, i) {
+        // TODO: Make the index a property of step,
+        // rather than part of its options
+        step.options.index = i + 1;
+
+        // TODO: Move step count to the state
+        step.options.stepCount = this.steps.length;
+
+        if (previous) {
+          step.previous = previous;
+          previous.next = step;
+        }
+
+        previous = step;
+      }.bind(this));
+
+      this._initialized = true;
+
     },
 
     _onKeyUp: function (event) {

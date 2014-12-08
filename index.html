@@ -151,6 +151,11 @@
               }
             },
             steps: [{
+                shouldShow: function (done) {
+                  setTimeout(function () {
+                    done(true);
+                  }, 3000);
+                },
                 hints: [
 
                     // Arrows
