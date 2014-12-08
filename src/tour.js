@@ -751,8 +751,10 @@
 
     this.id = getId();
     this.options = config.options || {};
+    this._stepDefs = config.steps;
 
-    this._initSteps(config.steps);
+    // Moving this to load, with a callback
+    // this._initSteps(config.steps);
   }
 
   Tour.prototype = {
@@ -775,12 +777,16 @@
 
       }.bind(this);
 
-      if (typeof this.options.beforeLoad === 'function') {
-        // Trigger `beforeLoad` callback
-        this.options.beforeLoad(asyncLoad);
-      } else {
-        asyncLoad();
-      }
+      // initialize steps and then start loading the tour
+      this._initSteps(function () {
+        if (typeof this.options.beforeLoad === 'function') {
+          // Trigger `beforeLoad` callback
+          this.options.beforeLoad(asyncLoad);
+        } else {
+          asyncLoad();
+        }
+      }.bind(this));
+
     },
 
     unload: function () {
@@ -807,69 +813,82 @@
       }
     },
 
-    _initSteps: function (stepDefs) {
+    _initSteps: function (done) {
 
       // TODO: Move this to the state
+      var allSteps = [];
       this.steps = [];
 
       /* initialize steps that can be shown */
 
-      if (stepDefs) {
-        var waitCount = stepDefs.lenght;
+      var waitCount = this._stepDefs.length;
 
-        stepDefs.forEach(function (def) {
+      this._stepDefs.forEach(function (def) {
 
-          if (!def.options) def.options = {};
+        if (!def.options) def.options = {};
 
-          // def.options.overlay = this.options.overlay; // TODO: Why this?
-          // def.options.stepCount = 2;
-          // def.options.index = 1;
+        def.options.overlay = this.options.overlay; // TODO: Why this?
+        // def.options.stepCount = 2;
+        // def.options.index = 1;
 
-          var step = new Step(def);
+        var step = new Step(def);
 
-          if (typeof step.shouldShow === 'function') {
-            step.shouldShow(function (show) {
-              if (show) this.steps.push(step);
-              waitCount--;
-            }.bind(this));
-          } else {
-            this.steps.push(step);
+        allSteps.push(step);
+
+        if (typeof step.shouldShow === 'function') {
+          step.shouldShow(function (show) {
+            step.show = show;
             waitCount--;
-          }
-
-        }.bind(this));
-
-        /* wait for all callbacks to return */
-
-        var wait;
-
-        (wait = function() {
-          if (waitCount) setTimeout(wait, 1);
-        })();
-      }
-
-      /* link steps */
-
-      var previous;
-
-      this.steps.forEach(function (step, i) {
-        // TODO: Make the index a property of step,
-        // rather than part of its options
-        step.options.index = i + 1;
-
-        // TODO: Move step count to the state
-        step.options.stepCount = this.steps.length;
-
-        if (previous) {
-          step.previous = previous;
-          previous.next = step;
+          }.bind(this));
+        } else {
+          step.show = true;
+          waitCount--;
         }
 
-        previous = step;
       }.bind(this));
 
-      this._initialized = true;
+      /* wait for all callbacks to return */
 
+      var wait;
+
+      wait = function () {
+        if (waitCount > 0) {
+          setTimeout(wait, 500);
+        } else {
+          /* link steps */
+
+          var previous;
+
+          for (var i = 0, len = allSteps.length; i < len; i++) {
+            var step = allSteps[i];
+
+            if (step.show) {
+
+              // TODO: Make the index a property of step,
+              // rather than part of its options
+              step.options.index = i + 1;
+
+              // TODO: Move step count to the state, at this point
+              // the state will be wrong so pagination will not work
+              step.options.stepCount = allSteps.length;
+
+              if (previous) {
+                step.previous = previous;
+                previous.next = step;
+              }
+
+              this.steps.push(step);
+
+              previous = step;
+
+            }
+          }
+
+          done();
+        }
+      }.bind(this);
+
+      wait();
     },
 
     _onKeyUp: function (event) {
