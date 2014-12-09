@@ -142,20 +142,25 @@
         </article>
     </section>
 
-    <script type="text/javascript" src="src/tour.js"></script>
+    <script type="text/javascript" src="dist/tour.js"></script>
     <script type="text/javascript">
         var tour = new Tour({
-            options: {
-              overlay: {
-                opacity: 0.6
-              }
-            },
+
+            overlay: { opacity: 0.6 },
+
+            svg: 'dist/svg/defs.svg',
+
             steps: [{
+                load: function (state) {
+                  console.log(state);
+                },
+
                 shouldShow: function (done) {
                   setTimeout(function () {
                     done(true);
-                  }, 3000);
+                  }, 10);
                 },
+
                 hints: [
 
                     // Arrows
@@ -474,88 +479,69 @@
                     }
                 ]
             }, {
-              options: {
-                overview: {
-                  title: 'Sample Overview',
-                  description: 'Default centered overview',
-                }
+              overview: {
+                title: 'Sample Overview',
+                description: 'Default centered overview',
               },
               hints: []
             }, {
-              options: {
-                overview: {
-                  title: 'Sample Overview',
-                  description: 'Default centered overview',
-                  position: 'top'
-                }
+              overview: {
+                title: 'Sample Overview',
+                description: 'Default centered overview',
+                position: 'top'
               },
               hints: []
             }, {
-              options: {
-                overview: {
-                  title: 'Sample Overview',
-                  description: 'Default centered overview',
-                  position: 'top-right'
-                }
+              overview: {
+                title: 'Sample Overview',
+                description: 'Default centered overview',
+                position: 'top-right'
               },
               hints: []
             }, {
-              options: {
-                overview: {
-                  title: 'Sample Overview',
-                  description: 'Default centered overview',
-                  position: 'right'
-                }
+              overview: {
+                title: 'Sample Overview',
+                description: 'Default centered overview',
+                position: 'right'
               },
               hints: []
             }, {
-              options: {
-                overview: {
-                  title: 'Sample Overview',
-                  description: 'Default centered overview',
-                  position: 'bottom-right'
-                }
+              overview: {
+                title: 'Sample Overview',
+                description: 'Default centered overview',
+                position: 'bottom-right'
               },
               hints: []
             }, {
-              options: {
-                overview: {
-                  title: 'Sample Overview',
-                  description: 'Default centered overview',
-                  position: 'bottom'
-                }
+              overview: {
+                title: 'Sample Overview',
+                description: 'Default centered overview',
+                position: 'bottom'
               },
               hints: []
             }, {
-              options: {
-                overview: {
-                  title: 'Sample Overview',
-                  description: 'Default centered overview',
-                  position: 'bottom-left'
-                }
+              overview: {
+                title: 'Sample Overview',
+                description: 'Default centered overview',
+                position: 'bottom-left'
               },
               hints: []
             }, {
-              options: {
-                overview: {
-                  title: 'Sample Overview',
-                  description: 'Default centered overview',
-                  position: 'left'
-                }
+              overview: {
+                title: 'Sample Overview',
+                description: 'Default centered overview',
+                position: 'left'
               },
               hints: []
             }, {
-              options: {
-                overview: {
-                  title: 'Sample Overview',
-                  description: 'Default centered overview',
-                  position: 'top-left'
-                }
+              overview: {
+                title: 'Sample Overview',
+                description: 'Default centered overview',
+                position: 'top-left'
               },
               hints: []
-            }, {
-              hints: []
-            }]
+            }
+          ]
         });
 
         tour.load();

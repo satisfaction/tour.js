@@ -1,20 +1,28 @@
-var connect = require('gulp-connect'),
+var coffee = require('gulp-coffee'),
+    coffeelint = require('gulp-coffeelint')
+    connect = require('gulp-connect'),
     gulp = require('gulp'),
-    jshint = require('gulp-jshint'),
+    rename = require('gulp-rename'),
+    sass = require('gulp-sass'),
     svgSprite = require('gulp-svg-sprites'),
-    stylus = require('gulp-stylus'),
-    uglify = require('gulp-uglify');
+    uglify = require('gulp-uglify')
+    util = require('gulp-util');
 
 gulp.task('assets', function() {
   gulp.src('index.html').pipe(connect.reload());
-  gulp.src('src/*.styl')
-    .pipe(stylus())
+  gulp.src('./scss/*.scss')
+    .pipe(sass())
     .pipe(gulp.dest('dist'))
     .pipe(connect.reload());
-  gulp.src('src/*.js')
-    .pipe(jshint('.jshintrc'))
-    .pipe(jshint.reporter('jshint-stylish'))
-    .pipe(uglify())
+  gulp.src('src/*.coffee')
+    .pipe(coffeelint('./coffeelint.json'))
+    .pipe(coffeelint.reporter())
+  gulp.src('src/*.coffee')
+    .pipe(coffee({bare: true}))
+    .on('error', util.log)
+    .pipe(gulp.dest('dist'))
+    .pipe(rename({suffix: '.min'}))
+    .pipe(uglify({mangle: false}))
     .pipe(gulp.dest('dist'))
     .pipe(connect.reload());
 });
