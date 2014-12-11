@@ -127,11 +127,11 @@
 
   class Highlight
 
-    constructor: (@config = {}) ->
+    constructor: (@state, @config = {}) ->
 
       @id = buildID 'highlight'
 
-    render: (parent, state) =>
+    render: (parent) =>
       return if @config.highlight is false
 
       unless @node
@@ -165,11 +165,11 @@
 
   class Hint
 
-    constructor: (@config = {}, @step) ->
+    constructor: (@state, @config = {}, @step) ->
 
       @id = buildID 'hint'
 
-    render: (parent, state) =>
+    render: (parent) =>
 
       unless @node
         @node = document.createElement 'div'
@@ -353,11 +353,11 @@
 
   class Overlay
 
-    constructor: (@config = {}) ->
+    constructor: (@state, @config = {}) ->
 
       @id = buildID 'overlay'
 
-    render: (parent, hints, state) =>
+    render: (parent, hints) =>
 
       unless @node
         @node = document.createElementNS XMLNS, 'svg'
@@ -387,9 +387,9 @@
 
         @highlights = []
         for hint in hints
-          h = new Highlight(hint.config)
+          h = new Highlight(@state, hint.config)
           @highlights.push h
-          h.render mask, state
+          h.render mask, @state
 
         defs = document.createElementNS XMLNS, 'defs'
         defs.appendChild mask
@@ -410,11 +410,11 @@
 
   class Overview
 
-    constructor: (@config = {}) ->
+    constructor: (@state, @config = {}) ->
 
       @id = buildID 'overview'
 
-    render: (parent, state) =>
+    render: (parent) =>
 
       unless @node
         @node = document.createElement 'div'
@@ -511,15 +511,15 @@
 
   class Step
 
-    constructor: (@config = {}) ->
+    constructor: (@state, @config = {}) ->
 
       @id = buildID 'step'
       @_active = false
 
-      @hints = (new Hint(config) for config in @config.hints)
-      @overlay = new Overlay(@config.overlay or {})
+      @hints = (new Hint(@state, config) for config in @config.hints)
+      @overlay = new Overlay(@state, @config.overlay or {})
 
-    render: (parent, state) =>
+    render: (parent) =>
 
       load = =>
         unless @node
@@ -529,30 +529,30 @@
 
           parent.appendChild @node
 
-        @_renderOverview state
-        @_renderHints state
-        @_renderOverlay state
-        @_renderPagination parent, state
+        @_renderOverview @state
+        @_renderHints @state
+        @_renderOverlay @state
+        @_renderPagination parent, @state
 
         @node.style.display = 'block'
 
-        state.step = this
-        state.started = true unless state.started
-        state.finished = true unless @next
+        @state.step = this
+        @state.started = true unless @state.started
+        @state.finished = true unless @next
 
         # calls `load` callback if provided
-        @config.load state if isFunction(@config.load) and not @_active
+        @config.load @state if isFunction(@config.load) and not @_active
 
         @_active = true
 
       # calls `beforeLoad` callback if provided
       if isFunction(@config.beforeLoad) and not @_active
-        @config.beforeLoad state, load
+        @config.beforeLoad @state, load
 
       # otherwise we start rendering the step immediately
       else load()
 
-    unload: (state) =>
+    unload: =>
 
       unload = =>
         if @node
@@ -561,22 +561,22 @@
           @overview.unload() if @overview
 
         if isFunction(@config.unload) and @_active
-          @config.unload state
+          @config.unload @state
 
         @_active = false
 
       if isFunction(@config.beforeUnload) and @_active
-        @config.beforeUnload state, unload
+        @config.beforeUnload @state, unload
       else
         unload()
 
-    _renderHints: (state) =>
-      hint.render(@node, state) for hint in @hints
+    _renderHints: =>
+      hint.render(@node) for hint in @hints
 
-    _renderOverlay: (state) =>
-      @overlay.render(@node, @hints, state)
+    _renderOverlay: =>
+      @overlay.render @node, @hints
 
-    _renderPagination: (parent, state) =>
+    _renderPagination: (parent) =>
       return unless @previous or @next
 
       wrapper = document.createElement 'div'
@@ -590,8 +590,8 @@
         previous.addEventListener 'click', (event) =>
           event.preventDefault()
           event.stopPropagation()
-          @unload state
-          @previous.render(parent, state)
+          @unload @state
+          @previous.render parent
       else
         previous.className += ' tourjs-step-disabled'
 
@@ -599,7 +599,7 @@
 
       stepCount = document.createElement 'div'
       stepCount.className = 'tourjs-step-count'
-      stepCount.innerHTML = "Step #{@index} of #{state.steps.length}"
+      stepCount.innerHTML = "Step #{@index} of #{@state.steps.length}"
 
       wrapper.appendChild stepCount
 
@@ -611,8 +611,8 @@
         next.addEventListener 'click', (event) =>
           event.preventDefault()
           event.stopPropagation()
-          @unload state
-          @next.render(parent, state)
+          @unload @state
+          @next.render parent
       else
         next.className += ' tourjs-step-disabled'
 
@@ -624,10 +624,10 @@
 
       @node.appendChild pagination
 
-    _renderOverview: (state) =>
+    _renderOverview: =>
       if @config.overview
-        @overview = new Overview(@config.overview) unless @overview
-        @overview.render @node, state
+        @overview = new Overview(@state, @config.overview) unless @overview
+        @overview.render @node, @state
 
   class Tour
 
@@ -692,7 +692,7 @@
       for def in @config.steps
         def.config = {} unless def.config
         assign def, overlay: @config.overlay
-        step = new Step(def)
+        step = new Step(@state, def)
         allSteps.push step
 
         if isFunction step.config.shouldShow

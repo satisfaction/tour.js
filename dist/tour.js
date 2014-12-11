@@ -147,7 +147,8 @@ var __slice = [].slice,
     return vector;
   };
   Highlight = (function() {
-    function Highlight(config) {
+    function Highlight(state, config) {
+      this.state = state;
       this.config = config != null ? config : {};
       this._setPosition = __bind(this._setPosition, this);
       this.unload = __bind(this.unload, this);
@@ -155,7 +156,7 @@ var __slice = [].slice,
       this.id = buildID('highlight');
     }
 
-    Highlight.prototype.render = function(parent, state) {
+    Highlight.prototype.render = function(parent) {
       if (this.config.highlight === false) {
         return;
       }
@@ -194,7 +195,8 @@ var __slice = [].slice,
 
   })();
   Hint = (function() {
-    function Hint(config, step) {
+    function Hint(state, config, step) {
+      this.state = state;
       this.config = config != null ? config : {};
       this.step = step;
       this._setPosition = __bind(this._setPosition, this);
@@ -207,7 +209,7 @@ var __slice = [].slice,
       this.id = buildID('hint');
     }
 
-    Hint.prototype.render = function(parent, state) {
+    Hint.prototype.render = function(parent) {
       var className, width;
       if (!this.node) {
         this.node = document.createElement('div');
@@ -388,14 +390,15 @@ var __slice = [].slice,
 
   })();
   Overlay = (function() {
-    function Overlay(config) {
+    function Overlay(state, config) {
+      this.state = state;
       this.config = config != null ? config : {};
       this.unload = __bind(this.unload, this);
       this.render = __bind(this.render, this);
       this.id = buildID('overlay');
     }
 
-    Overlay.prototype.render = function(parent, hints, state) {
+    Overlay.prototype.render = function(parent, hints) {
       var defs, h, hint, mask, opacity, rect, _i, _len;
       if (!this.node) {
         this.node = document.createElementNS(XMLNS, 'svg');
@@ -421,9 +424,9 @@ var __slice = [].slice,
         this.highlights = [];
         for (_i = 0, _len = hints.length; _i < _len; _i++) {
           hint = hints[_i];
-          h = new Highlight(hint.config);
+          h = new Highlight(this.state, hint.config);
           this.highlights.push(h);
-          h.render(mask, state);
+          h.render(mask, this.state);
         }
         defs = document.createElementNS(XMLNS, 'defs');
         defs.appendChild(mask);
@@ -457,7 +460,8 @@ var __slice = [].slice,
 
   })();
   Overview = (function() {
-    function Overview(config) {
+    function Overview(state, config) {
+      this.state = state;
       this.config = config != null ? config : {};
       this._setPosition = __bind(this._setPosition, this);
       this.unload = __bind(this.unload, this);
@@ -465,7 +469,7 @@ var __slice = [].slice,
       this.id = buildID('overview');
     }
 
-    Overview.prototype.render = function(parent, state) {
+    Overview.prototype.render = function(parent) {
       var description, line, title, width;
       if (!this.node) {
         this.node = document.createElement('div');
@@ -552,7 +556,8 @@ var __slice = [].slice,
 
   })();
   Step = (function() {
-    function Step(config) {
+    function Step(state, config) {
+      this.state = state;
       this.config = config != null ? config : {};
       this._renderOverview = __bind(this._renderOverview, this);
       this._renderPagination = __bind(this._renderPagination, this);
@@ -568,14 +573,14 @@ var __slice = [].slice,
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           config = _ref[_i];
-          _results.push(new Hint(config));
+          _results.push(new Hint(this.state, config));
         }
         return _results;
       }).call(this);
-      this.overlay = new Overlay(this.config.overlay || {});
+      this.overlay = new Overlay(this.state, this.config.overlay || {});
     }
 
-    Step.prototype.render = function(parent, state) {
+    Step.prototype.render = function(parent) {
       var load;
       load = (function(_this) {
         return function() {
@@ -585,32 +590,32 @@ var __slice = [].slice,
             _this.node.className = 'tourjs-step';
             parent.appendChild(_this.node);
           }
-          _this._renderOverview(state);
-          _this._renderHints(state);
-          _this._renderOverlay(state);
-          _this._renderPagination(parent, state);
+          _this._renderOverview(_this.state);
+          _this._renderHints(_this.state);
+          _this._renderOverlay(_this.state);
+          _this._renderPagination(parent, _this.state);
           _this.node.style.display = 'block';
-          state.step = _this;
-          if (!state.started) {
-            state.started = true;
+          _this.state.step = _this;
+          if (!_this.state.started) {
+            _this.state.started = true;
           }
           if (!_this.next) {
-            state.finished = true;
+            _this.state.finished = true;
           }
           if (isFunction(_this.config.load) && !_this._active) {
-            _this.config.load(state);
+            _this.config.load(_this.state);
           }
           return _this._active = true;
         };
       })(this);
       if (isFunction(this.config.beforeLoad) && !this._active) {
-        return this.config.beforeLoad(state, load);
+        return this.config.beforeLoad(this.state, load);
       } else {
         return load();
       }
     };
 
-    Step.prototype.unload = function(state) {
+    Step.prototype.unload = function() {
       var unload;
       unload = (function(_this) {
         return function() {
@@ -627,34 +632,34 @@ var __slice = [].slice,
             }
           }
           if (isFunction(_this.config.unload) && _this._active) {
-            _this.config.unload(state);
+            _this.config.unload(_this.state);
           }
           return _this._active = false;
         };
       })(this);
       if (isFunction(this.config.beforeUnload) && this._active) {
-        return this.config.beforeUnload(state, unload);
+        return this.config.beforeUnload(this.state, unload);
       } else {
         return unload();
       }
     };
 
-    Step.prototype._renderHints = function(state) {
+    Step.prototype._renderHints = function() {
       var hint, _i, _len, _ref, _results;
       _ref = this.hints;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         hint = _ref[_i];
-        _results.push(hint.render(this.node, state));
+        _results.push(hint.render(this.node));
       }
       return _results;
     };
 
-    Step.prototype._renderOverlay = function(state) {
-      return this.overlay.render(this.node, this.hints, state);
+    Step.prototype._renderOverlay = function() {
+      return this.overlay.render(this.node, this.hints);
     };
 
-    Step.prototype._renderPagination = function(parent, state) {
+    Step.prototype._renderPagination = function(parent) {
       var next, pagination, previous, stepCount, wrapper;
       if (!(this.previous || this.next)) {
         return;
@@ -669,8 +674,8 @@ var __slice = [].slice,
           return function(event) {
             event.preventDefault();
             event.stopPropagation();
-            _this.unload(state);
-            return _this.previous.render(parent, state);
+            _this.unload(_this.state);
+            return _this.previous.render(parent);
           };
         })(this));
       } else {
@@ -679,7 +684,7 @@ var __slice = [].slice,
       wrapper.appendChild(previous);
       stepCount = document.createElement('div');
       stepCount.className = 'tourjs-step-count';
-      stepCount.innerHTML = "Step " + this.index + " of " + state.steps.length;
+      stepCount.innerHTML = "Step " + this.index + " of " + this.state.steps.length;
       wrapper.appendChild(stepCount);
       next = document.createElement('div');
       next.className = 'tourjs-next-step';
@@ -689,8 +694,8 @@ var __slice = [].slice,
           return function(event) {
             event.preventDefault();
             event.stopPropagation();
-            _this.unload(state);
-            return _this.next.render(parent, state);
+            _this.unload(_this.state);
+            return _this.next.render(parent);
           };
         })(this));
       } else {
@@ -703,12 +708,12 @@ var __slice = [].slice,
       return this.node.appendChild(pagination);
     };
 
-    Step.prototype._renderOverview = function(state) {
+    Step.prototype._renderOverview = function() {
       if (this.config.overview) {
         if (!this.overview) {
-          this.overview = new Overview(this.config.overview);
+          this.overview = new Overview(this.state, this.config.overview);
         }
-        return this.overview.render(this.node, state);
+        return this.overview.render(this.node, this.state);
       }
     };
 
@@ -806,7 +811,7 @@ var __slice = [].slice,
         assign(def, {
           overlay: this.config.overlay
         });
-        step = new Step(def);
+        step = new Step(this.state, def);
         allSteps.push(step);
         if (isFunction(step.config.shouldShow)) {
           (function(step) {
