@@ -100,16 +100,17 @@
   # Fetches SVGs symbols and appends them into the DOM
   ###
   fetchSVG = (options = {}) ->
+    file = options.svg or 'svg/defs.svg'
     req = new XMLHttpRequest()
     render = ->
       if req.readyState is 4 and req.status is 200
         VECTORS = document.createElement 'div'
         VECTORS.innerHTML = req.responseText
         options.success() if options.success
-      else if req.status > 400 and console?.error
-        console.error 'Couldn\'t load SVG definitions file'
+      else if req.status > 400
+        log "[Tour.js] Couldn\'t load SVG definitions file: #{file}"
     req.onreadystatechange = render
-    req.open 'GET', (options.svg or 'svg/defs.svg'), true
+    req.open 'GET', file, true
     req.send()
 
   getWindowSize = ->
@@ -118,12 +119,37 @@
 
   isFunction = (f) -> typeof f is 'function'
 
+  log = (message, type = 'warn') ->
+    console[type](message) if console and console[type]
+
   renderSVG = (selector, options = {}) ->
     vector = VECTORS.querySelector(selector).cloneNode true
     vector.setAttribute 'class', 'tourjs-shape'
     if options.transform
       vector.setAttribute 'transform', options.transform
     vector
+
+  waitFor = (selector, timeout = 500, done) ->
+    found = document.querySelector(selector)?
+    error = false
+
+    if found
+      done found
+      return
+
+    setTimeout (->
+      found = document.querySelector(selector)?
+      error = true unless found
+    ), timeout
+
+    wait = ->
+      found = document.querySelector(selector)?
+      unless found or error
+        setTimeout wait, 1
+      else
+        done(found)
+
+    wait()
 
   class Highlight
 
@@ -134,18 +160,25 @@
     render: (parent) =>
       return if @config.highlight is false
 
-      unless @node
-        @node = document.createElementNS XMLNS, 'rect'
-        @node.id = @id
-        @node.setAttributeNS null, 'style', 'stroke: none; fill: #000'
-        parent.appendChild @node
+      waitFor @config.highlight or @config.target, @config.timeout, (exist) =>
 
-      window.addEventListener 'resize', @_setPosition
-      window.addEventListener 'scroll', @_setPosition
+        unless exist
+          if @config.highlight
+            log "[Tour.js] DOM selector didn't match any elements: #{@config.highlight}"
 
-      # The timeout is to prevent setting the position
-      # before the node is fully rendered
-      setTimeout @_setPosition
+        else
+          unless @node
+            @node = document.createElementNS XMLNS, 'rect'
+            @node.id = @id
+            @node.setAttributeNS null, 'style', 'stroke: none; fill: #000'
+            parent.appendChild @node
+
+          window.addEventListener 'resize', @_setPosition
+          window.addEventListener 'scroll', @_setPosition
+
+          # The timeout is to prevent setting the position
+          # before the node is fully rendered
+          setTimeout @_setPosition
 
     unload: =>
       if @node
@@ -171,38 +204,44 @@
 
     render: (parent) =>
 
-      unless @node
-        @node = document.createElement 'div'
-        @node.id = @id
+      waitFor @config.target, @config.timeout, (exist) =>
 
-        className = [
-          'tourjs-hint'
-          "tourjs-#{@config.position}#{if @config.inverted then '-inverted' else ''}"
-          "tourjs-#{@config.type}"
-        ]
+        unless exist
+          log "[Tour.js] DOM selector didn't match any elements: #{@config.target}"
 
-        @node.className = className.join(' ')
+        else
+          unless @node
+            @node = document.createElement 'div'
+            @node.id = @id
 
-        if @config.width
-          width = "#{@config.width}px"
-          @node.style.maxWidth = width
-          @node.style.width = width
+            className = [
+              'tourjs-hint'
+              "tourjs-#{@config.position}#{if @config.inverted then '-inverted' else ''}"
+              "tourjs-#{@config.type}"
+            ]
 
-        # avoid flicker by positioning off the page
-        @node.style.top = '-9999px'
-        @node.style.left = '-9999px'
+            @node.className = className.join(' ')
 
-        @_renderTooltip()
-        @_renderShape()
+            if @config.width
+              width = "#{@config.width}px"
+              @node.style.maxWidth = width
+              @node.style.width = width
 
-        parent.appendChild @node
+            # avoid flicker by positioning off the page
+            @node.style.top = '-9999px'
+            @node.style.left = '-9999px'
 
-      window.addEventListener 'resize', @_setPosition
-      window.addEventListener 'scroll', @_setPosition
+            @_renderTooltip()
+            @_renderShape()
 
-      # The timeout is to prevent setting the position
-      # before the node is fully rendered
-      setTimeout @_setPosition
+            parent.appendChild @node
+
+          window.addEventListener 'resize', @_setPosition
+          window.addEventListener 'scroll', @_setPosition
+
+          # The timeout is to prevent setting the position
+          # before the node is fully rendered
+          setTimeout @_setPosition
 
     unload: =>
       if @node

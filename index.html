@@ -152,7 +152,7 @@
 
             steps: [{
                 load: function (state) {
-                  console.log(state);
+                  console.log('first step loaded');
                 },
 
                 shouldShow: function (done) {
@@ -166,11 +166,12 @@
                     // Arrows
 
                     {
-                        target: '#arrow-target',
+                        target: '#arrow-target-fail',
                         type: 'arrow',
                         position: 'bottom-left',
                         title: 'Hello World',
                         description: 'The classic <b>programming<\/b> example.',
+                        timeout: 5000
                     },
                     {
                         target: '#arrow-target',

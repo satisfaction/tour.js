@@ -19,7 +19,7 @@ var __slice = [].slice,
    * * Passthrough clicks on highlights (optional)
    */
   'use strict';
-  var DEFAULT_MARGIN, Highlight, Hint, Overlay, Overview, Step, Tour, VECTORS, XMLNS, addFilter, assign, buildID, fetchSVG, getWindowSize, isFunction, renderSVG;
+  var DEFAULT_MARGIN, Highlight, Hint, Overlay, Overview, Step, Tour, VECTORS, XMLNS, addFilter, assign, buildID, fetchSVG, getWindowSize, isFunction, log, renderSVG, waitFor;
   DEFAULT_MARGIN = 10;
   VECTORS = null;
   XMLNS = 'http://www.w3.org/2000/svg';
@@ -105,10 +105,11 @@ var __slice = [].slice,
    * Fetches SVGs symbols and appends them into the DOM
    */
   fetchSVG = function(options) {
-    var render, req;
+    var file, render, req;
     if (options == null) {
       options = {};
     }
+    file = options.svg || 'svg/defs.svg';
     req = new XMLHttpRequest();
     render = function() {
       if (req.readyState === 4 && req.status === 200) {
@@ -117,12 +118,12 @@ var __slice = [].slice,
         if (options.success) {
           return options.success();
         }
-      } else if (req.status > 400 && (typeof console !== "undefined" && console !== null ? console.error : void 0)) {
-        return console.error('Couldn\'t load SVG definitions file');
+      } else if (req.status > 400) {
+        return log("[Tour.js] Couldn\'t load SVG definitions file: " + file);
       }
     };
     req.onreadystatechange = render;
-    req.open('GET', options.svg || 'svg/defs.svg', true);
+    req.open('GET', file, true);
     return req.send();
   };
   getWindowSize = function() {
@@ -133,6 +134,14 @@ var __slice = [].slice,
   };
   isFunction = function(f) {
     return typeof f === 'function';
+  };
+  log = function(message, type) {
+    if (type == null) {
+      type = 'warn';
+    }
+    if (console && console[type]) {
+      return console[type](message);
+    }
   };
   renderSVG = function(selector, options) {
     var vector;
@@ -145,6 +154,33 @@ var __slice = [].slice,
       vector.setAttribute('transform', options.transform);
     }
     return vector;
+  };
+  waitFor = function(selector, timeout, done) {
+    var error, found, wait;
+    if (timeout == null) {
+      timeout = 500;
+    }
+    found = document.querySelector(selector) != null;
+    error = false;
+    if (found) {
+      done(found);
+      return;
+    }
+    setTimeout((function() {
+      found = document.querySelector(selector) != null;
+      if (!found) {
+        return error = true;
+      }
+    }), timeout);
+    wait = function() {
+      found = document.querySelector(selector) != null;
+      if (!(found || error)) {
+        return setTimeout(wait, 1);
+      } else {
+        return done(found);
+      }
+    };
+    return wait();
   };
   Highlight = (function() {
     function Highlight(state, config) {
@@ -160,15 +196,25 @@ var __slice = [].slice,
       if (this.config.highlight === false) {
         return;
       }
-      if (!this.node) {
-        this.node = document.createElementNS(XMLNS, 'rect');
-        this.node.id = this.id;
-        this.node.setAttributeNS(null, 'style', 'stroke: none; fill: #000');
-        parent.appendChild(this.node);
-      }
-      window.addEventListener('resize', this._setPosition);
-      window.addEventListener('scroll', this._setPosition);
-      return setTimeout(this._setPosition);
+      return waitFor(this.config.highlight || this.config.target, this.config.timeout, (function(_this) {
+        return function(exist) {
+          if (!exist) {
+            if (_this.config.highlight) {
+              return log("[Tour.js] DOM selector didn't match any elements: " + _this.config.highlight);
+            }
+          } else {
+            if (!_this.node) {
+              _this.node = document.createElementNS(XMLNS, 'rect');
+              _this.node.id = _this.id;
+              _this.node.setAttributeNS(null, 'style', 'stroke: none; fill: #000');
+              parent.appendChild(_this.node);
+            }
+            window.addEventListener('resize', _this._setPosition);
+            window.addEventListener('scroll', _this._setPosition);
+            return setTimeout(_this._setPosition);
+          }
+        };
+      })(this));
     };
 
     Highlight.prototype.unload = function() {
@@ -210,26 +256,34 @@ var __slice = [].slice,
     }
 
     Hint.prototype.render = function(parent) {
-      var className, width;
-      if (!this.node) {
-        this.node = document.createElement('div');
-        this.node.id = this.id;
-        className = ['tourjs-hint', "tourjs-" + this.config.position + (this.config.inverted ? '-inverted' : ''), "tourjs-" + this.config.type];
-        this.node.className = className.join(' ');
-        if (this.config.width) {
-          width = "" + this.config.width + "px";
-          this.node.style.maxWidth = width;
-          this.node.style.width = width;
-        }
-        this.node.style.top = '-9999px';
-        this.node.style.left = '-9999px';
-        this._renderTooltip();
-        this._renderShape();
-        parent.appendChild(this.node);
-      }
-      window.addEventListener('resize', this._setPosition);
-      window.addEventListener('scroll', this._setPosition);
-      return setTimeout(this._setPosition);
+      return waitFor(this.config.target, this.config.timeout, (function(_this) {
+        return function(exist) {
+          var className, width;
+          if (!exist) {
+            return log("[Tour.js] DOM selector didn't match any elements: " + _this.config.target);
+          } else {
+            if (!_this.node) {
+              _this.node = document.createElement('div');
+              _this.node.id = _this.id;
+              className = ['tourjs-hint', "tourjs-" + _this.config.position + (_this.config.inverted ? '-inverted' : ''), "tourjs-" + _this.config.type];
+              _this.node.className = className.join(' ');
+              if (_this.config.width) {
+                width = "" + _this.config.width + "px";
+                _this.node.style.maxWidth = width;
+                _this.node.style.width = width;
+              }
+              _this.node.style.top = '-9999px';
+              _this.node.style.left = '-9999px';
+              _this._renderTooltip();
+              _this._renderShape();
+              parent.appendChild(_this.node);
+            }
+            window.addEventListener('resize', _this._setPosition);
+            window.addEventListener('scroll', _this._setPosition);
+            return setTimeout(_this._setPosition);
+          }
+        };
+      })(this));
     };
 
     Hint.prototype.unload = function() {
