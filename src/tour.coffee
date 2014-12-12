@@ -593,6 +593,9 @@
 
         @node.style.display = 'block'
 
+        if @state.step and @state.step.index isnt @index
+          @state.step.unload()
+
         @state.step = this
         @state.started = true unless @state.started
         @state.finished = true unless @next
@@ -610,7 +613,6 @@
       else load()
 
     unload: =>
-
       unload = =>
         if @node
           @node.style.display = 'none'
@@ -648,7 +650,6 @@
         previous.addEventListener 'click', (event) =>
           event.preventDefault()
           event.stopPropagation()
-          @unload @state
           @previous.load()
       else
         previous.className += ' tourjs-step-disabled'
@@ -669,7 +670,6 @@
         next.addEventListener 'click', (event) =>
           event.preventDefault()
           event.stopPropagation()
-          @unload @state
           @next.load()
       else
         next.className += ' tourjs-step-disabled'

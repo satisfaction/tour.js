@@ -676,6 +676,9 @@ var __slice = [].slice,
           _this._renderOverlay();
           _this._renderPagination();
           _this.node.style.display = 'block';
+          if (_this.state.step && _this.state.step.index !== _this.index) {
+            _this.state.step.unload();
+          }
           _this.state.step = _this;
           if (!_this.state.started) {
             _this.state.started = true;
@@ -758,7 +761,6 @@ var __slice = [].slice,
           return function(event) {
             event.preventDefault();
             event.stopPropagation();
-            _this.unload(_this.state);
             return _this.previous.load();
           };
         })(this));
@@ -778,7 +780,6 @@ var __slice = [].slice,
           return function(event) {
             event.preventDefault();
             event.stopPropagation();
-            _this.unload(_this.state);
             return _this.next.load();
           };
         })(this));
