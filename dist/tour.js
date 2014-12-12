@@ -178,7 +178,7 @@ var __slice = [].slice,
   waitFor = function(selector, timeout, done) {
     var error, found, wait;
     if (timeout == null) {
-      timeout = 500;
+      timeout = 10000;
     }
     found = document.querySelector(selector) != null;
     error = false;

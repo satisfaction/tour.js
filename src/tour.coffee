@@ -144,7 +144,7 @@
   ###
   # Waits for DOM elements to be present
   ###
-  waitFor = (selector, timeout = 500, done) ->
+  waitFor = (selector, timeout = 10000, done) ->
     found = document.querySelector(selector)?
     error = false
 
