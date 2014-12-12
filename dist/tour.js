@@ -497,7 +497,6 @@ var __slice = [].slice,
         rect.setAttributeNS(null, 'y', 0);
         mask.appendChild(rect);
         this.highlights = [];
-        console.log(this.step.hints);
         _ref = this.step.hints;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           hint = _ref[_i];
@@ -806,6 +805,8 @@ var __slice = [].slice,
 
   })();
   Tour = (function() {
+    Tour.waitFor = waitFor;
+
     function Tour(config) {
       this.config = config != null ? config : {};
       this._renderStep = __bind(this._renderStep, this);

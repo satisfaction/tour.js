@@ -437,7 +437,6 @@
         mask.appendChild rect
 
         @highlights = []
-        console.log @step.hints
         for hint in @step.hints
           h = new Highlight(@state, hint)
           @highlights.push h
@@ -690,6 +689,8 @@
 
   class Tour
 
+    @waitFor: waitFor
+
     constructor: (@config = {}) ->
 
       @id = buildID()
@@ -736,6 +737,7 @@
         @config.beforeUnload @state, unload
       else
         unload()
+
 
     _unloadCloseBtn: =>
       btn = document.getElementById 'tourjs-close'
