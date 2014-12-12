@@ -203,31 +203,31 @@ var __slice = [].slice,
     return wait();
   };
   Highlight = (function() {
-    function Highlight(state, config) {
+    function Highlight(state, hint) {
       this.state = state;
-      this.config = config != null ? config : {};
+      this.hint = hint;
       this._setPosition = __bind(this._setPosition, this);
       this.unload = __bind(this.unload, this);
       this.render = __bind(this.render, this);
       this.id = buildID('highlight');
     }
 
-    Highlight.prototype.render = function(parent) {
-      if (this.config.highlight === false) {
+    Highlight.prototype.render = function(mask) {
+      if (this.hint.config.highlight === false) {
         return;
       }
-      return waitFor(this.config.highlight || this.config.target, this.config.timeout, (function(_this) {
+      return waitFor(this.hint.config.highlight || this.hint.config.target, this.hint.config.timeout, (function(_this) {
         return function(exist) {
           if (!exist) {
-            if (_this.config.highlight) {
-              return log("[Tour.js] DOM selector didn't match any elements: " + _this.config.highlight);
+            if (_this.hint.config.highlight) {
+              return log("[Tour.js] DOM selector didn't match any elements: " + _this.hint.config.highlight);
             }
           } else {
             if (!_this.node) {
               _this.node = document.createElementNS(XMLNS, 'rect');
               _this.node.id = _this.id;
               _this.node.setAttributeNS(null, 'style', 'stroke: none; fill: #000');
-              parent.appendChild(_this.node);
+              mask.appendChild(_this.node);
             }
             window.addEventListener('resize', _this._setPosition);
             window.addEventListener('scroll', _this._setPosition);
@@ -247,9 +247,9 @@ var __slice = [].slice,
     Highlight.prototype._setPosition = function() {
       var padding, rect, target;
       if (this.node) {
-        target = document.querySelector(this.config.highlight || this.config.target);
+        target = document.querySelector(this.hint.config.highlight || this.hint.config.target);
         rect = target.getBoundingClientRect();
-        padding = this.config.padding || 0;
+        padding = this.hint.config.padding || 0;
         this.node.setAttributeNS(null, 'height', rect.height + padding * 2);
         this.node.setAttributeNS(null, 'width', rect.width + padding * 2);
         this.node.setAttributeNS(null, 'x', rect.left - padding);
@@ -261,10 +261,10 @@ var __slice = [].slice,
 
   })();
   Hint = (function() {
-    function Hint(state, config, step) {
+    function Hint(state, step, config) {
       this.state = state;
-      this.config = config != null ? config : {};
       this.step = step;
+      this.config = config != null ? config : {};
       this._setPosition = __bind(this._setPosition, this);
       this._renderTooltip = __bind(this._renderTooltip, this);
       this._renderTitle = __bind(this._renderTitle, this);
@@ -275,7 +275,7 @@ var __slice = [].slice,
       this.id = buildID('hint');
     }
 
-    Hint.prototype.render = function(parent) {
+    Hint.prototype.render = function() {
       return waitFor(this.config.target, this.config.timeout, (function(_this) {
         return function(exist) {
           var className, width;
@@ -296,7 +296,7 @@ var __slice = [].slice,
               _this.node.style.left = '-9999px';
               _this._renderTooltip();
               _this._renderShape();
-              parent.appendChild(_this.node);
+              _this.step.node.appendChild(_this.node);
             }
             window.addEventListener('resize', _this._setPosition);
             window.addEventListener('scroll', _this._setPosition);
@@ -464,16 +464,17 @@ var __slice = [].slice,
 
   })();
   Overlay = (function() {
-    function Overlay(state, config) {
+    function Overlay(state, step, config) {
       this.state = state;
+      this.step = step;
       this.config = config != null ? config : {};
       this.unload = __bind(this.unload, this);
       this.render = __bind(this.render, this);
       this.id = buildID('overlay');
     }
 
-    Overlay.prototype.render = function(parent, hints) {
-      var defs, h, hint, mask, opacity, rect, _i, _len;
+    Overlay.prototype.render = function() {
+      var defs, h, hint, mask, opacity, rect, _i, _len, _ref;
       if (!this.node) {
         this.node = document.createElementNS(XMLNS, 'svg');
         this.node.setAttributeNS(null, 'id', this.id);
@@ -496,11 +497,13 @@ var __slice = [].slice,
         rect.setAttributeNS(null, 'y', 0);
         mask.appendChild(rect);
         this.highlights = [];
-        for (_i = 0, _len = hints.length; _i < _len; _i++) {
-          hint = hints[_i];
-          h = new Highlight(this.state, hint.config);
+        console.log(this.step.hints);
+        _ref = this.step.hints;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          hint = _ref[_i];
+          h = new Highlight(this.state, hint);
           this.highlights.push(h);
-          h.render(mask, this.state);
+          h.render(mask);
         }
         defs = document.createElementNS(XMLNS, 'defs');
         defs.appendChild(mask);
@@ -514,7 +517,7 @@ var __slice = [].slice,
         rect.setAttributeNS(null, 'style', "stroke:none;fill:rgba(0,0,0," + opacity + "); mask: url(#" + this.id + "-mask);");
         this.node.appendChild(rect);
         this.node.addEventListener('click', this.onClick);
-        return parent.appendChild(this.node);
+        return this.step.node.appendChild(this.node);
       }
     };
 
@@ -538,8 +541,9 @@ var __slice = [].slice,
 
   })();
   Overview = (function() {
-    function Overview(state, config) {
+    function Overview(state, step, config) {
       this.state = state;
+      this.step = step;
       this.config = config != null ? config : {};
       this._setPosition = __bind(this._setPosition, this);
       this.unload = __bind(this.unload, this);
@@ -547,7 +551,7 @@ var __slice = [].slice,
       this.id = buildID('overview');
     }
 
-    Overview.prototype.render = function(parent) {
+    Overview.prototype.render = function() {
       var description, line, title, width;
       if (!this.node) {
         this.node = document.createElement('div');
@@ -574,7 +578,7 @@ var __slice = [].slice,
           description.innerHTML = this.config.description;
           this.node.appendChild(description);
         }
-        parent.appendChild(this.node);
+        this.step.node.appendChild(this.node);
       }
       setTimeout(this._setPosition);
       window.addEventListener('resize', this._setPosition);
@@ -634,8 +638,9 @@ var __slice = [].slice,
 
   })();
   Step = (function() {
-    function Step(state, config) {
+    function Step(state, tour, config) {
       this.state = state;
+      this.tour = tour;
       this.config = config != null ? config : {};
       this._renderOverview = __bind(this._renderOverview, this);
       this._renderPagination = __bind(this._renderPagination, this);
@@ -651,14 +656,13 @@ var __slice = [].slice,
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           config = _ref[_i];
-          _results.push(new Hint(this.state, config));
+          _results.push(new Hint(this.state, this, config));
         }
         return _results;
       }).call(this);
-      this.overlay = new Overlay(this.state, this.config.overlay || {});
     }
 
-    Step.prototype.load = function(parent) {
+    Step.prototype.load = function() {
       var load;
       load = (function(_this) {
         return function() {
@@ -666,12 +670,12 @@ var __slice = [].slice,
             _this.node = document.createElement('div');
             _this.node.id = _this.id;
             _this.node.className = 'tourjs-step';
-            parent.appendChild(_this.node);
+            _this.tour.node.appendChild(_this.node);
           }
-          _this._renderOverview(_this.state);
-          _this._renderHints(_this.state);
-          _this._renderOverlay(_this.state);
-          _this._renderPagination(parent, _this.state);
+          _this._renderOverview();
+          _this._renderHints();
+          _this._renderOverlay();
+          _this._renderPagination();
           _this.node.style.display = 'block';
           _this.state.step = _this;
           if (!_this.state.started) {
@@ -728,16 +732,19 @@ var __slice = [].slice,
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         hint = _ref[_i];
-        _results.push(hint.render(this.node));
+        _results.push(hint.render());
       }
       return _results;
     };
 
     Step.prototype._renderOverlay = function() {
-      return this.overlay.render(this.node, this.hints);
+      if (this.overlay == null) {
+        this.overlay = new Overlay(this.state, this, this.config.overlay || {});
+      }
+      return this.overlay.render();
     };
 
-    Step.prototype._renderPagination = function(parent) {
+    Step.prototype._renderPagination = function() {
       var next, pagination, previous, stepCount, wrapper;
       if (!(this.previous || this.next)) {
         return;
@@ -753,7 +760,7 @@ var __slice = [].slice,
             event.preventDefault();
             event.stopPropagation();
             _this.unload(_this.state);
-            return _this.previous.load(parent);
+            return _this.previous.load();
           };
         })(this));
       } else {
@@ -773,7 +780,7 @@ var __slice = [].slice,
             event.preventDefault();
             event.stopPropagation();
             _this.unload(_this.state);
-            return _this.next.load(parent);
+            return _this.next.load();
           };
         })(this));
       } else {
@@ -789,7 +796,7 @@ var __slice = [].slice,
     Step.prototype._renderOverview = function() {
       if (this.config.overview) {
         if (!this.overview) {
-          this.overview = new Overview(this.state, this.config.overview);
+          this.overview = new Overview(this.state, this, this.config.overview);
         }
         return this.overview.render(this.node, this.state);
       }
@@ -895,7 +902,7 @@ var __slice = [].slice,
         assign(def, {
           overlay: this.config.overlay
         });
-        step = new Step(this.state, def);
+        step = new Step(this.state, this, def);
         allSteps.push(step);
         if (isFunction(step.config.shouldShow)) {
           (function(step) {

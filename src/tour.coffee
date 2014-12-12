@@ -168,25 +168,25 @@
 
   class Highlight
 
-    constructor: (@state, @config = {}) ->
+    constructor: (@state, @hint) ->
 
       @id = buildID 'highlight'
 
-    render: (parent) =>
-      return if @config.highlight is false
+    render: (mask) =>
+      return if @hint.config.highlight is false
 
-      waitFor @config.highlight or @config.target, @config.timeout, (exist) =>
+      waitFor @hint.config.highlight or @hint.config.target, @hint.config.timeout, (exist) =>
 
         unless exist
-          if @config.highlight
-            log "[Tour.js] DOM selector didn't match any elements: #{@config.highlight}"
+          if @hint.config.highlight
+            log "[Tour.js] DOM selector didn't match any elements: #{@hint.config.highlight}"
 
         else
           unless @node
             @node = document.createElementNS XMLNS, 'rect'
             @node.id = @id
             @node.setAttributeNS null, 'style', 'stroke: none; fill: #000'
-            parent.appendChild @node
+            mask.appendChild @node
 
           window.addEventListener 'resize', @_setPosition
           window.addEventListener 'scroll', @_setPosition
@@ -202,9 +202,9 @@
 
     _setPosition: =>
       if @node
-        target = document.querySelector @config.highlight or @config.target
+        target = document.querySelector @hint.config.highlight or @hint.config.target
         rect = target.getBoundingClientRect()
-        padding = @config.padding or 0
+        padding = @hint.config.padding or 0
 
         @node.setAttributeNS null, 'height', rect.height + padding * 2
         @node.setAttributeNS null, 'width', rect.width + padding * 2
@@ -213,11 +213,11 @@
 
   class Hint
 
-    constructor: (@state, @config = {}, @step) ->
+    constructor: (@state, @step, @config = {}) ->
 
       @id = buildID 'hint'
 
-    render: (parent) =>
+    render: =>
 
       waitFor @config.target, @config.timeout, (exist) =>
 
@@ -249,7 +249,7 @@
             @_renderTooltip()
             @_renderShape()
 
-            parent.appendChild @node
+            @step.node.appendChild @node
 
           window.addEventListener 'resize', @_setPosition
           window.addEventListener 'scroll', @_setPosition
@@ -406,11 +406,9 @@
 
   class Overlay
 
-    constructor: (@state, @config = {}) ->
+    constructor: (@state, @step, @config = {}) -> @id = buildID 'overlay'
 
-      @id = buildID 'overlay'
-
-    render: (parent, hints) =>
+    render: =>
 
       unless @node
         @node = document.createElementNS XMLNS, 'svg'
@@ -439,10 +437,11 @@
         mask.appendChild rect
 
         @highlights = []
-        for hint in hints
-          h = new Highlight(@state, hint.config)
+        console.log @step.hints
+        for hint in @step.hints
+          h = new Highlight(@state, hint)
           @highlights.push h
-          h.render mask, @state
+          h.render mask
 
         defs = document.createElementNS XMLNS, 'defs'
         defs.appendChild mask
@@ -459,7 +458,7 @@
 
         @node.addEventListener 'click', @onClick
 
-        parent.appendChild @node
+        @step.node.appendChild @node
 
     unload: =>
       highlight.unload() for highlight in @highlights
@@ -470,11 +469,11 @@
 
   class Overview
 
-    constructor: (@state, @config = {}) ->
+    constructor: (@state, @step, @config = {}) ->
 
       @id = buildID 'overview'
 
-    render: (parent) =>
+    render: =>
 
       unless @node
         @node = document.createElement 'div'
@@ -506,7 +505,7 @@
           description.innerHTML = @config.description
           @node.appendChild description
 
-        parent.appendChild @node
+        @step.node.appendChild @node
 
       # The timeout is to prevent setting the position
       # before the node is fully rendered
@@ -571,15 +570,14 @@
 
   class Step
 
-    constructor: (@state, @config = {}) ->
+    constructor: (@state, @tour, @config = {}) ->
 
       @id = buildID 'step'
       @_active = false
 
-      @hints = (new Hint(@state, config) for config in @config.hints or [])
-      @overlay = new Overlay(@state, @config.overlay or {})
+      @hints = (new Hint(@state, this, config) for config in @config.hints or [])
 
-    load: (parent) =>
+    load: =>
 
       load = =>
         unless @node
@@ -587,12 +585,12 @@
           @node.id = @id
           @node.className = 'tourjs-step'
 
-          parent.appendChild @node
+          @tour.node.appendChild @node
 
-        @_renderOverview @state
-        @_renderHints @state
-        @_renderOverlay @state
-        @_renderPagination parent, @state
+        @_renderOverview()
+        @_renderHints()
+        @_renderOverlay()
+        @_renderPagination()
 
         @node.style.display = 'block'
 
@@ -631,12 +629,13 @@
         unload()
 
     _renderHints: =>
-      hint.render(@node) for hint in @hints
+      hint.render() for hint in @hints
 
     _renderOverlay: =>
-      @overlay.render @node, @hints
+      @overlay ?= new Overlay(@state, this, @config.overlay or {})
+      @overlay.render()
 
-    _renderPagination: (parent) =>
+    _renderPagination: =>
       return unless @previous or @next
 
       wrapper = document.createElement 'div'
@@ -651,7 +650,7 @@
           event.preventDefault()
           event.stopPropagation()
           @unload @state
-          @previous.load parent
+          @previous.load()
       else
         previous.className += ' tourjs-step-disabled'
 
@@ -672,7 +671,7 @@
           event.preventDefault()
           event.stopPropagation()
           @unload @state
-          @next.load parent
+          @next.load()
       else
         next.className += ' tourjs-step-disabled'
 
@@ -686,7 +685,7 @@
 
     _renderOverview: =>
       if @config.overview
-        @overview = new Overview(@state, @config.overview) unless @overview
+        @overview = new Overview(@state, this, @config.overview) unless @overview
         @overview.render @node, @state
 
   class Tour
@@ -757,7 +756,7 @@
       for def in @config.steps
         def.config = {} unless def.config
         assign def, overlay: @config.overlay
-        step = new Step(@state, def)
+        step = new Step(@state, this, def)
         allSteps.push step
 
         if isFunction step.config.shouldShow
