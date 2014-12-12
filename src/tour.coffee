@@ -576,7 +576,7 @@
       @id = buildID 'step'
       @_active = false
 
-      @hints = (new Hint(@state, config) for config in @config.hints)
+      @hints = (new Hint(@state, config) for config in @config.hints or [])
       @overlay = new Overlay(@state, @config.overlay or {})
 
     load: (parent) =>
