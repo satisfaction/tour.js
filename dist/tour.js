@@ -309,7 +309,7 @@ var __slice = [].slice,
     Hint.prototype.unload = function() {
       if (this.node) {
         window.removeEventListener('resize', this._setPosition);
-        window.removeEventListener('scroll', this._setPosition);
+        return window.removeEventListener('scroll', this._setPosition);
       }
     };
 
@@ -519,6 +519,12 @@ var __slice = [].slice,
     };
 
     Overlay.prototype.unload = function() {
+      var highlight, _i, _len, _ref;
+      _ref = this.highlights;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        highlight = _ref[_i];
+        highlight.unload();
+      }
       if (this.node) {
         return this.node.removeEventListener('click', this.onClick);
       }

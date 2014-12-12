@@ -262,7 +262,6 @@
       if @node
         window.removeEventListener 'resize', @_setPosition
         window.removeEventListener 'scroll', @_setPosition
-      return
 
     _renderDescription: (parent) =>
       if @config.description
@@ -463,6 +462,7 @@
         parent.appendChild @node
 
     unload: =>
+      highlight.unload() for highlight in @highlights
       @node.removeEventListener 'click', @onClick if @node
 
     onClick: (event) -> event.stopPropagation()
