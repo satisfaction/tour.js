@@ -710,6 +710,10 @@
         @node.style.display = 'block'
 
       @_initSteps =>
+
+        # Don't render if no steps are available
+        return if @state.steps.length is 0
+
         if isFunction @config.beforeLoad
           @config.beforeLoad @state, load
         else

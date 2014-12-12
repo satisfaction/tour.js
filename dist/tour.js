@@ -95,6 +95,10 @@ var __slice = [].slice,
     }
     return dest;
   };
+
+  /*
+   * Builds an unique id for all DOM elements
+   */
   buildID = (function(idndx) {
     return function(prefix) {
       return "tourjs-" + (prefix ? "" + prefix + "-" : '') + (++idndx);
@@ -132,9 +136,17 @@ var __slice = [].slice,
       width: window.innerWidth || document.documentElement.clientWidth
     };
   };
+
+  /*
+   * Checks if parameter is a function
+   */
   isFunction = function(f) {
     return typeof f === 'function';
   };
+
+  /*
+   * Logs messages in the console when available (IE)
+   */
   log = function(message, type) {
     if (type == null) {
       type = 'warn';
@@ -143,6 +155,10 @@ var __slice = [].slice,
       return console[type](message);
     }
   };
+
+  /*
+   * Renders SVGs in the DOM
+   */
   renderSVG = function(selector, options) {
     var vector;
     if (options == null) {
@@ -155,6 +171,10 @@ var __slice = [].slice,
     }
     return vector;
   };
+
+  /*
+   * Waits for DOM elements to be present
+   */
   waitFor = function(selector, timeout, done) {
     var error, found, wait;
     if (timeout == null) {
@@ -812,6 +832,9 @@ var __slice = [].slice,
       })(this);
       return this._initSteps((function(_this) {
         return function() {
+          if (_this.state.steps.length === 0) {
+            return;
+          }
           if (isFunction(_this.config.beforeLoad)) {
             return _this.config.beforeLoad(_this.state, load);
           } else {
