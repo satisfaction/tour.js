@@ -513,21 +513,19 @@ var __slice = [].slice,
         rect.setAttributeNS(null, 'width', '100%');
         rect.setAttributeNS(null, 'style', "stroke:none;fill:rgba(0,0,0," + opacity + "); mask: url(#" + this.id + "-mask);");
         this.node.appendChild(rect);
+        this.node.addEventListener('click', this.onClick);
         return parent.appendChild(this.node);
       }
     };
 
     Overlay.prototype.unload = function() {
-      var h, _i, _len, _ref, _results;
       if (this.node) {
-        _ref = this.highlights;
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          h = _ref[_i];
-          _results.push(h.unload());
-        }
-        return _results;
+        return this.node.removeEventListener('click', this.onClick);
       }
+    };
+
+    Overlay.prototype.onClick = function(event) {
+      return event.stopPropagation();
     };
 
     return Overlay;
@@ -638,7 +636,7 @@ var __slice = [].slice,
       this._renderOverlay = __bind(this._renderOverlay, this);
       this._renderHints = __bind(this._renderHints, this);
       this.unload = __bind(this.unload, this);
-      this.render = __bind(this.render, this);
+      this.load = __bind(this.load, this);
       this.id = buildID('step');
       this._active = false;
       this.hints = (function() {
@@ -654,7 +652,7 @@ var __slice = [].slice,
       this.overlay = new Overlay(this.state, this.config.overlay || {});
     }
 
-    Step.prototype.render = function(parent) {
+    Step.prototype.load = function(parent) {
       var load;
       load = (function(_this) {
         return function() {
@@ -749,7 +747,7 @@ var __slice = [].slice,
             event.preventDefault();
             event.stopPropagation();
             _this.unload(_this.state);
-            return _this.previous.render(parent);
+            return _this.previous.load(parent);
           };
         })(this));
       } else {
@@ -769,7 +767,7 @@ var __slice = [].slice,
             event.preventDefault();
             event.stopPropagation();
             _this.unload(_this.state);
-            return _this.next.render(parent);
+            return _this.next.load(parent);
           };
         })(this));
       } else {
@@ -822,12 +820,13 @@ var __slice = [].slice,
             _this.node.id = _this.id;
             _this.node.className = 'tourjs';
             document.body.appendChild(_this.node);
-            fetchSVG({
+            return fetchSVG({
               svg: _this.config.svg,
               success: _this._onLoad
             });
+          } else {
+            return _this._onLoad();
           }
-          return _this.node.style.display = 'block';
         };
       })(this);
       return this._initSteps((function(_this) {
@@ -851,7 +850,6 @@ var __slice = [].slice,
           if (_this.node) {
             _this.node.style.display = 'none';
             _this.state.step.unload();
-            _this._unloadCloseBtn();
           }
           if (isFunction(_this.config.unload)) {
             return _this.config.unload(_this.state);
@@ -876,6 +874,9 @@ var __slice = [].slice,
 
     Tour.prototype._initSteps = function(callback) {
       var allSteps, def, i, previous, step, wait, waitCount, _i, _len, _ref;
+      if (this.node) {
+        return callback();
+      }
       waitCount = this.config.steps.length;
       this.state.steps = [];
       allSteps = [];
@@ -940,6 +941,8 @@ var __slice = [].slice,
       document.addEventListener('keyup', this._onKeyUp);
       this._renderCloseBtn();
       this._renderFirstStep();
+      this.state.finished = false;
+      this.node.style.display = 'block';
       if (isFunction(this.config.load)) {
         return this.config.load(this.state);
       }
@@ -969,7 +972,7 @@ var __slice = [].slice,
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         step = _ref[_i];
         if (step.index === index) {
-          _results.push(step.render(this.node, this.state));
+          _results.push(step.load(this.node, this.state));
         } else {
           _results.push(step.unload());
         }

@@ -458,9 +458,15 @@
         rect.setAttributeNS null, 'style', "stroke:none;fill:rgba(0,0,0,#{opacity}); mask: url(##{@id}-mask);"
         @node.appendChild rect
 
+        @node.addEventListener 'click', @onClick
+
         parent.appendChild @node
 
-    unload: => h.unload() for h in @highlights if @node
+    unload: =>
+      @node.removeEventListener 'click', @onClick if @node
+
+    onClick: (event) -> event.stopPropagation()
+
 
   class Overview
 
@@ -573,7 +579,7 @@
       @hints = (new Hint(@state, config) for config in @config.hints)
       @overlay = new Overlay(@state, @config.overlay or {})
 
-    render: (parent) =>
+    load: (parent) =>
 
       load = =>
         unless @node
@@ -645,7 +651,7 @@
           event.preventDefault()
           event.stopPropagation()
           @unload @state
-          @previous.render parent
+          @previous.load parent
       else
         previous.className += ' tourjs-step-disabled'
 
@@ -666,7 +672,7 @@
           event.preventDefault()
           event.stopPropagation()
           @unload @state
-          @next.render parent
+          @next.load parent
       else
         next.className += ' tourjs-step-disabled'
 
@@ -707,7 +713,7 @@
             svg: @config.svg
             success: @_onLoad
 
-        @node.style.display = 'block'
+        else @_onLoad()
 
       @_initSteps =>
 
@@ -724,7 +730,6 @@
         if @node
           @node.style.display = 'none'
           @state.step.unload()
-          @_unloadCloseBtn()
 
         @config.unload(@state) if isFunction @config.unload
 
@@ -741,6 +746,8 @@
         btn.removeEventListener 'click', @unload
 
     _initSteps: (callback) =>
+
+      return callback() if @node
 
       waitCount = @config.steps.length
 
@@ -795,6 +802,9 @@
       @_renderCloseBtn()
       @_renderFirstStep()
 
+      @state.finished = false
+      @node.style.display = 'block'
+
       # calls `load` callback if provided
       @config.load(@state) if isFunction @config.load
 
@@ -818,7 +828,7 @@
     _renderStep: (index) =>
       for step in @state.steps
         if step.index is index
-          step.render(@node, @state)
+          step.load(@node, @state)
         else
           step.unload()
 
