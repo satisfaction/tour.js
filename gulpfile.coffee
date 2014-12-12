@@ -13,7 +13,7 @@ gulp.task 'assets', ->
   gulp.src('index.html')
     .pipe connect.reload()
 
-  gulp.src('./scss/*.scss')
+  gulp.src('src/*.scss')
     .pipe(sass())
     .pipe(gulp.dest 'dist')
     .pipe connect.reload()
