@@ -93,6 +93,9 @@
 
     dest
 
+  ###
+  # Builds an unique id for all DOM elements
+  ###
   buildID = do (idndx = 0) ->
     (prefix) -> "tourjs-#{if prefix then "#{prefix}-" else ''}#{++idndx}"
 
@@ -117,11 +120,20 @@
     height: window.innerHeight or document.documentElement.clientHeight
     width: window.innerWidth or document.documentElement.clientWidth
 
+  ###
+  # Checks if parameter is a function
+  ###
   isFunction = (f) -> typeof f is 'function'
 
+  ###
+  # Logs messages in the console when available (IE)
+  ###
   log = (message, type = 'warn') ->
     console[type](message) if console and console[type]
 
+  ###
+  # Renders SVGs in the DOM
+  ###
   renderSVG = (selector, options = {}) ->
     vector = VECTORS.querySelector(selector).cloneNode true
     vector.setAttribute 'class', 'tourjs-shape'
@@ -129,6 +141,9 @@
       vector.setAttribute 'transform', options.transform
     vector
 
+  ###
+  # Waits for DOM elements to be present
+  ###
   waitFor = (selector, timeout = 500, done) ->
     found = document.querySelector(selector)?
     error = false
