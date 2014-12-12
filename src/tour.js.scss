@@ -486,8 +486,8 @@ $opacity: 0.8;
     &.tourjs-step-disabled {
       cursor: default;
       opacity: 0.2;
-      svg path
-      fill: rgba(0,0,0,0.3);
+
+      svg path { fill: rgba(0,0,0,0.3); }
     }
   }
 
