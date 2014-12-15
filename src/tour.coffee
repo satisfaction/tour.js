@@ -11,7 +11,7 @@
   ###
   # TODOS:
   # ===========================================================================
-  # * Add `shouldShow` to hints
+  # * Add `shouldLoad` to hints
   # * Add click event for highlights
   # * Passthrough clicks on highlights (optional)
   ###
@@ -605,12 +605,15 @@
 
         @_active = true
 
-      # calls `beforeLoad` callback if provided
-      if isFunction(@config.beforeLoad) and not @_active
-        @config.beforeLoad @state, load
+      @shouldLoad (should) ->
+        return  if should if false
+        load()
 
-      # otherwise we start rendering the step immediately
-      else load()
+    shouldLoad: (callback) =>
+      if isFunction(@config.beforeLoad) and not @_active
+        @config.beforeLoad @state, callback
+      else
+        callback true
 
     unload: =>
       unload = =>
@@ -700,7 +703,7 @@
         started: false
         finished: false
 
-    load: ->
+    load: =>
       load = =>
         unless @node
           @node = document.createElement 'div'
@@ -715,15 +718,24 @@
 
         else @_onLoad()
 
-      @_initSteps =>
+      @shouldLoad (should)=>
+        return if should is false
 
-        # Don't render if no steps are available
-        return if @state.steps.length is 0
+        @_initSteps =>
 
-        if isFunction @config.beforeLoad
-          @config.beforeLoad @state, load
-        else
-          load()
+          # Don't render if no steps are available
+          return if @state.steps.length is 0
+
+          if isFunction @config.beforeLoad
+            @config.beforeLoad @state, load
+          else
+            load()
+
+    shouldLoad: (callback) =>
+      if isFunction @config.shouldLoad
+        @config.shouldLoad(callback)
+      else
+        callback true
 
     unload: =>
       unload = =>
@@ -761,9 +773,9 @@
         step = new Step(@state, this, def)
         allSteps.push step
 
-        if isFunction step.config.shouldShow
+        if isFunction step.config.shouldLoad
           do (step) ->
-            step.config.shouldShow (show) ->
+            step.config.shouldLoad (show) ->
               step.show = show or false
               waitCount--
         else

@@ -14,7 +14,7 @@ var __slice = [].slice,
   /*
    * TODOS:
    * ===========================================================================
-   * * Add `shouldShow` to hints
+   * * Add `shouldLoad` to hints
    * * Add click event for highlights
    * * Passthrough clicks on highlights (optional)
    */
@@ -646,6 +646,7 @@ var __slice = [].slice,
       this._renderOverlay = __bind(this._renderOverlay, this);
       this._renderHints = __bind(this._renderHints, this);
       this.unload = __bind(this.unload, this);
+      this.shouldLoad = __bind(this.shouldLoad, this);
       this.load = __bind(this.load, this);
       this.id = buildID('step');
       this._active = false;
@@ -692,10 +693,21 @@ var __slice = [].slice,
           return _this._active = true;
         };
       })(this);
-      if (isFunction(this.config.beforeLoad) && !this._active) {
-        return this.config.beforeLoad(this.state, load);
-      } else {
+      return this.shouldLoad(function(should) {
+        if (false) {
+          if (should) {
+            return;
+          }
+        }
         return load();
+      });
+    };
+
+    Step.prototype.shouldLoad = function(callback) {
+      if (isFunction(this.config.beforeLoad) && !this._active) {
+        return this.config.beforeLoad(this.state, callback);
+      } else {
+        return callback(true);
       }
     };
 
@@ -818,6 +830,8 @@ var __slice = [].slice,
       this._initSteps = __bind(this._initSteps, this);
       this._unloadCloseBtn = __bind(this._unloadCloseBtn, this);
       this.unload = __bind(this.unload, this);
+      this.shouldLoad = __bind(this.shouldLoad, this);
+      this.load = __bind(this.load, this);
       this.id = buildID();
       this.state = {
         tour: this,
@@ -844,18 +858,31 @@ var __slice = [].slice,
           }
         };
       })(this);
-      return this._initSteps((function(_this) {
-        return function() {
-          if (_this.state.steps.length === 0) {
+      return this.shouldLoad((function(_this) {
+        return function(should) {
+          if (should === false) {
             return;
           }
-          if (isFunction(_this.config.beforeLoad)) {
-            return _this.config.beforeLoad(_this.state, load);
-          } else {
-            return load();
-          }
+          return _this._initSteps(function() {
+            if (_this.state.steps.length === 0) {
+              return;
+            }
+            if (isFunction(_this.config.beforeLoad)) {
+              return _this.config.beforeLoad(_this.state, load);
+            } else {
+              return load();
+            }
+          });
         };
       })(this));
+    };
+
+    Tour.prototype.shouldLoad = function(callback) {
+      if (isFunction(this.config.shouldLoad)) {
+        return this.config.shouldLoad(callback);
+      } else {
+        return callback(true);
+      }
     };
 
     Tour.prototype.unload = function() {
@@ -906,9 +933,9 @@ var __slice = [].slice,
         });
         step = new Step(this.state, this, def);
         allSteps.push(step);
-        if (isFunction(step.config.shouldShow)) {
+        if (isFunction(step.config.shouldLoad)) {
           (function(step) {
-            return step.config.shouldShow(function(show) {
+            return step.config.shouldLoad(function(show) {
               step.show = show || false;
               return waitCount--;
             });

@@ -150,12 +150,18 @@
 
             svg: 'dist/svg/defs.svg',
 
+            shouldLoad: function (done) {
+              setTimeout(function () {
+                done(true);
+              }, 10);
+            },
+
             steps: [{
                 load: function (state) {
                   console.log('first step loaded');
                 },
 
-                shouldShow: function (done) {
+                shouldLoad: function (done) {
                   setTimeout(function () {
                     done(true);
                   }, 10);
