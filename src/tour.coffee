@@ -741,7 +741,8 @@
       unload = =>
         if @node
           @node.style.display = 'none'
-          @state.step.unload()
+
+        step.unload() for step in @state.steps
 
         @config.unload(@state) if isFunction @config.unload
 

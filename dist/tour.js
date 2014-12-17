@@ -889,9 +889,14 @@ var __slice = [].slice,
       var unload;
       unload = (function(_this) {
         return function() {
+          var step, _i, _len, _ref;
           if (_this.node) {
             _this.node.style.display = 'none';
-            _this.state.step.unload();
+          }
+          _ref = _this.state.steps;
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            step = _ref[_i];
+            step.unload();
           }
           if (isFunction(_this.config.unload)) {
             return _this.config.unload(_this.state);
