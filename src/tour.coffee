@@ -36,6 +36,27 @@
       C119,45.6,126.1,56.8,135.4,68.7L135.4,68.7z
       """
 
+    chevronLeft:
+      """
+      M3.8,6.3l4.1,4.1c0.2,0.2,0.2,0.5,0,0.7l-1.3,1.3c-0.2,0.2-0.5,0.2-0.7,0L0.1,6.6C0,6.5,0,6.1,0.1,5.9
+      l5.8-5.8C6.1,0,6.5,0,6.6,0.1l1.3,1.3c0.2,0.2,0.2,0.5,0,0.7L3.8,6.3z
+      """
+
+    chevronRight:
+      """
+      M2.1,12.4c-0.2,0.2-0.5,0.2-0.7,0l-1.3-1.3C0,11,0,10.6,0.1,10.4l4.1-4.1L0.1,2.1C0,2,0,1.6,0.1,1.4
+      l1.3-1.3C1.6,0,2,0,2.1,0.1l5.8,5.8c0.2,0.2,0.2,0.5,0,0.7L2.1,12.4z
+      """
+
+    closeButton:
+      """
+      M8,15.7c-4.3,0-7.7-3.5-7.7-7.7S3.7,0.3,8,0.3s7.7,3.5,7.7,7.7S12.3,15.7,8,15.7z M11.6,9.8L9.8,8l1.8-1.8
+      c0.1-0.1,0.2-0.3,0.2-0.5c0-0.2-0.1-0.3-0.2-0.5l-0.9-0.9c-0.1-0.1-0.3-0.2-0.5-0.2c-0.2,0-0.3,0.1-0.5,0.2L8,6.2L6.2,4.4
+      C6.1,4.2,5.9,4.2,5.7,4.2c-0.2,0-0.3,0.1-0.5,0.2L4.4,5.3C4.2,5.4,4.2,5.6,4.2,5.7c0,0.2,0.1,0.3,0.2,0.5L6.2,8L4.4,9.8
+      c-0.1,0.1-0.2,0.3-0.2,0.5c0,0.2,0.1,0.3,0.2,0.5l0.9,0.9c0.1,0.1,0.3,0.2,0.5,0.2c0.2,0,0.3-0.1,0.5-0.2L8,9.8l1.8,1.8
+      c0.1,0.1,0.3,0.2,0.5,0.2c0.2,0,0.3-0.1,0.5-0.2l0.9-0.9c0.1-0.1,0.2-0.3,0.2-0.5C11.8,10.1,11.8,9.9,11.6,9.8z
+      """
+
     curvedArrow:
       """
       M135.4,68.7c1.1,1.3,1.5,2.9,1.3,4.6c-0.2,1.7-1,3.1-2.4,4.2
@@ -618,12 +639,17 @@
     _renderPagination: =>
       return unless @previous or @next
 
-      wrapper = document.createElement 'div'
-      wrapper.className = 'tourjs-pagination-wrapper'
+      shape = document.createElementNS XMLNS, 'path'
+      shape.setAttributeNS null, 'fill', '#FFF'
+      shape.setAttributeNS null, 'd', PATHS['chevronLeft']
+
+      svg = document.createElementNS XMLNS, 'svg'
+      svg.setAttributeNS null, 'viewBox', '0 0 8.1 12.6'
+      svg.appendChild shape
 
       previous = document.createElement 'div'
       previous.className = 'tourjs-previous-step'
-      # previous.appendChild renderSVG '#tourjs-symbol-chevron-left'
+      previous.appendChild svg
 
       if @previous
         previous.addEventListener 'click', (event) =>
@@ -633,6 +659,8 @@
       else
         previous.className += ' tourjs-step-disabled'
 
+      wrapper = document.createElement 'div'
+      wrapper.className = 'tourjs-pagination-wrapper'
       wrapper.appendChild previous
 
       stepCount = document.createElement 'div'
@@ -641,9 +669,17 @@
 
       wrapper.appendChild stepCount
 
+      shape = document.createElementNS XMLNS, 'path'
+      shape.setAttributeNS null, 'fill', '#FFF'
+      shape.setAttributeNS null, 'd', PATHS['chevronRight']
+
+      svg = document.createElementNS XMLNS, 'svg'
+      svg.setAttributeNS null, 'viewBox', '0 0 8.1 12.6'
+      svg.appendChild shape
+
       next = document.createElement 'div'
       next.className = 'tourjs-next-step'
-      # next.appendChild renderSVG '#tourjs-symbol-chevron-right'
+      next.appendChild svg
 
       if @next
         next.addEventListener 'click', (event) =>

@@ -26,6 +26,9 @@ var __slice = [].slice,
   XMLNS = 'http://www.w3.org/2000/svg';
   PATHS = {
     arrow: "M135.4,68.7c1.1,1.3,1.5,2.9,1.3,4.6c-0.2,1.7-1,3.1-2.4,4.2\nc-1.3,1.1-2.9,1.5-4.6,1.3c-1.7-0.2-3.1-1-4.2-2.4c-7.8-10.1-18.4-18.3-19-28.3c2.5,40.3,1.7,98.2-5.1,142.7\nc-1.1,1.5-2.5,2.3-4.2,2.5c-1.7,0.2-3.3-0.2-4.6-1.3c-1.4-1-2.2-2.4-2.4-4.1c-0.2-1.7,1.2-4.5,1.2-4.5c6.2-31.2,5.9-96.1,2.5-135.8\nc-4.7,9.8-11.4,18.7-20.1,26.7c-1.3,1.2-2.8,1.7-4.5,1.7c-1.7-0.1-3.2-0.7-4.4-2c-1.2-1.3-1.7-2.8-1.7-4.5c0.1-1.8,0.7-3.2,2-4.4\nc11.2-10.3,18.7-22.7,22.7-37c0.6-2.5,1.3-5.7,2.1-9.7l-0.4-2.2c-0.2-1.5,0-2.9,0.4-4c0.8-2.9,2.7-4.7,5.7-5.3\nc3.1-0.7,5.6,0.4,7.5,3.1c0.7,1,1.2,2.3,1.4,4c0.1,0.2,0.2,0.7,0.3,1.4l0.1,0.8c0.1,0.1,0.1,0.2,0.1,0.4c1.2,2.6,4.2,8.8,9,18.6\nC119,45.6,126.1,56.8,135.4,68.7L135.4,68.7z",
+    chevronLeft: "M3.8,6.3l4.1,4.1c0.2,0.2,0.2,0.5,0,0.7l-1.3,1.3c-0.2,0.2-0.5,0.2-0.7,0L0.1,6.6C0,6.5,0,6.1,0.1,5.9\nl5.8-5.8C6.1,0,6.5,0,6.6,0.1l1.3,1.3c0.2,0.2,0.2,0.5,0,0.7L3.8,6.3z",
+    chevronRight: "M2.1,12.4c-0.2,0.2-0.5,0.2-0.7,0l-1.3-1.3C0,11,0,10.6,0.1,10.4l4.1-4.1L0.1,2.1C0,2,0,1.6,0.1,1.4\nl1.3-1.3C1.6,0,2,0,2.1,0.1l5.8,5.8c0.2,0.2,0.2,0.5,0,0.7L2.1,12.4z",
+    closeButton: "M8,15.7c-4.3,0-7.7-3.5-7.7-7.7S3.7,0.3,8,0.3s7.7,3.5,7.7,7.7S12.3,15.7,8,15.7z M11.6,9.8L9.8,8l1.8-1.8\nc0.1-0.1,0.2-0.3,0.2-0.5c0-0.2-0.1-0.3-0.2-0.5l-0.9-0.9c-0.1-0.1-0.3-0.2-0.5-0.2c-0.2,0-0.3,0.1-0.5,0.2L8,6.2L6.2,4.4\nC6.1,4.2,5.9,4.2,5.7,4.2c-0.2,0-0.3,0.1-0.5,0.2L4.4,5.3C4.2,5.4,4.2,5.6,4.2,5.7c0,0.2,0.1,0.3,0.2,0.5L6.2,8L4.4,9.8\nc-0.1,0.1-0.2,0.3-0.2,0.5c0,0.2,0.1,0.3,0.2,0.5l0.9,0.9c0.1,0.1,0.3,0.2,0.5,0.2c0.2,0,0.3-0.1,0.5-0.2L8,9.8l1.8,1.8\nc0.1,0.1,0.3,0.2,0.5,0.2c0.2,0,0.3-0.1,0.5-0.2l0.9-0.9c0.1-0.1,0.2-0.3,0.2-0.5C11.8,10.1,11.8,9.9,11.6,9.8z",
     curvedArrow: "M135.4,68.7c1.1,1.3,1.5,2.9,1.3,4.6c-0.2,1.7-1,3.1-2.4,4.2\nc-1.3,1.1-2.9,1.5-4.6,1.3c-1.7-0.2-3.1-1-4.2-2.4c-7.8-10.1-15.8-18.8-19-28.3c15.1,44.8-0.2,112.9-32.1,142.7\nc-1.1,1.5-2.5,2.3-4.2,2.5c-1.7,0.2-3.3-0.2-4.6-1.3c-1.4-1-2.2-2.4-2.4-4.1c-0.2-1.7,1.2-4.5,1.2-4.5\nC94.9,155.9,109.7,86.1,94,47.5c-4.7,9.8-11.4,18.7-20.1,26.7c-1.3,1.2-2.8,1.7-4.5,1.7c-1.7-0.1-3.2-0.7-4.4-2\nc-1.2-1.3-1.7-2.8-1.7-4.5c0.1-1.8,0.7-3.2,2-4.4c11.2-10.3,18.7-22.7,22.7-37c0.6-2.5,1.3-5.7,2.1-9.7l-0.4-2.2\nc-0.2-1.5,0-2.9,0.4-4c0.8-2.9,2.7-4.7,5.7-5.3c3.1-0.7,5.6,0.4,7.5,3.1c0.7,1,1.2,2.3,1.4,4c0.1,0.2,0.2,0.7,0.3,1.4l0.1,0.8\nc0.1,0.1,0.1,0.2,0.1,0.4c1.2,2.6,4.2,8.8,9,18.6C119,45.6,126.1,56.8,135.4,68.7L135.4,68.7z"
   };
 
@@ -705,14 +708,19 @@ var __slice = [].slice,
     };
 
     Step.prototype._renderPagination = function() {
-      var next, pagination, previous, stepCount, wrapper;
+      var next, pagination, previous, shape, stepCount, svg, wrapper;
       if (!(this.previous || this.next)) {
         return;
       }
-      wrapper = document.createElement('div');
-      wrapper.className = 'tourjs-pagination-wrapper';
+      shape = document.createElementNS(XMLNS, 'path');
+      shape.setAttributeNS(null, 'fill', '#FFF');
+      shape.setAttributeNS(null, 'd', PATHS['chevronLeft']);
+      svg = document.createElementNS(XMLNS, 'svg');
+      svg.setAttributeNS(null, 'viewBox', '0 0 8.1 12.6');
+      svg.appendChild(shape);
       previous = document.createElement('div');
       previous.className = 'tourjs-previous-step';
+      previous.appendChild(svg);
       if (this.previous) {
         previous.addEventListener('click', (function(_this) {
           return function(event) {
@@ -724,13 +732,22 @@ var __slice = [].slice,
       } else {
         previous.className += ' tourjs-step-disabled';
       }
+      wrapper = document.createElement('div');
+      wrapper.className = 'tourjs-pagination-wrapper';
       wrapper.appendChild(previous);
       stepCount = document.createElement('div');
       stepCount.className = 'tourjs-step-count';
       stepCount.innerHTML = "Step " + this.index + " of " + this.state.steps.length;
       wrapper.appendChild(stepCount);
+      shape = document.createElementNS(XMLNS, 'path');
+      shape.setAttributeNS(null, 'fill', '#FFF');
+      shape.setAttributeNS(null, 'd', PATHS['chevronRight']);
+      svg = document.createElementNS(XMLNS, 'svg');
+      svg.setAttributeNS(null, 'viewBox', '0 0 8.1 12.6');
+      svg.appendChild(shape);
       next = document.createElement('div');
       next.className = 'tourjs-next-step';
+      next.appendChild(svg);
       if (this.next) {
         next.addEventListener('click', (function(_this) {
           return function(event) {
