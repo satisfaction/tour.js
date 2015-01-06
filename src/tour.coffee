@@ -272,19 +272,6 @@
         parent.appendChild desc
 
     _renderShape: =>
-      className = [
-        'tourjs-shape',
-        "tourjs-#{@config.position}"
-      ].join ' '
-
-      svg = document.createElementNS XMLNS, 'svg'
-      svg.setAttributeNS null, 'class', className
-      svg.setAttributeNS null, 'viewBox', '0 0 200 200'
-
-      shape = null
-      shape = document.createElementNS XMLNS, 'path'
-      shape.setAttributeNS null, 'fill', '#FFF'
-
       switch @config.position
 
         when 'top'
@@ -319,11 +306,18 @@
           path = PATHS['curvedArrow']
           transform = 'rotate(135, 100, 100) scale(-1, 1) translate(-200, 0)'
 
+      shape = document.createElementNS XMLNS, 'path'
+      shape.setAttributeNS null, 'fill', '#FFF'
       shape.setAttributeNS null, 'd', path
       shape.setAttributeNS null, 'transform', transform if transform
 
-      addFilter svg
+      svg = document.createElementNS XMLNS, 'svg'
+      svg.setAttributeNS null, 'class', "tourjs-shape tourjs-#{@config.position}"
+      svg.setAttributeNS null, 'viewBox', '0 0 200 200'
       svg.appendChild shape
+
+      addFilter svg
+
       @node.appendChild svg
 
     _renderTitle: (parent) =>

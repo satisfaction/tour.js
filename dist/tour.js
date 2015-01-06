@@ -298,14 +298,7 @@ var __slice = [].slice,
     };
 
     Hint.prototype._renderShape = function() {
-      var className, path, shape, svg, transform;
-      className = ['tourjs-shape', "tourjs-" + this.config.position].join(' ');
-      svg = document.createElementNS(XMLNS, 'svg');
-      svg.setAttributeNS(null, 'class', className);
-      svg.setAttributeNS(null, 'viewBox', '0 0 200 200');
-      shape = null;
-      shape = document.createElementNS(XMLNS, 'path');
-      shape.setAttributeNS(null, 'fill', '#FFF');
+      var path, shape, svg, transform;
       switch (this.config.position) {
         case 'top':
           path = PATHS['arrow'];
@@ -339,12 +332,17 @@ var __slice = [].slice,
           path = PATHS['curvedArrow'];
           transform = 'rotate(135, 100, 100) scale(-1, 1) translate(-200, 0)';
       }
+      shape = document.createElementNS(XMLNS, 'path');
+      shape.setAttributeNS(null, 'fill', '#FFF');
       shape.setAttributeNS(null, 'd', path);
       if (transform) {
         shape.setAttributeNS(null, 'transform', transform);
       }
-      addFilter(svg);
+      svg = document.createElementNS(XMLNS, 'svg');
+      svg.setAttributeNS(null, 'class', "tourjs-shape tourjs-" + this.config.position);
+      svg.setAttributeNS(null, 'viewBox', '0 0 200 200');
       svg.appendChild(shape);
+      addFilter(svg);
       return this.node.appendChild(svg);
     };
 
