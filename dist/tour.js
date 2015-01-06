@@ -952,8 +952,21 @@ var __slice = [].slice,
     };
 
     Tour.prototype._renderCloseBtn = function() {
-      var btn;
-      return btn = document.getElementById('tourjs-close');
+      var btn, shape, svg;
+      btn = document.getElementById('tourjs-close');
+      if (!btn) {
+        shape = document.createElementNS(XMLNS, 'path');
+        shape.setAttributeNS(null, 'fill', '#FFF');
+        shape.setAttributeNS(null, 'd', PATHS['closeButton']);
+        svg = document.createElementNS(XMLNS, 'svg');
+        svg.setAttributeNS(null, 'viewBox', '0 0 16 16');
+        svg.appendChild(shape);
+        svg.id = 'tourjs-close';
+        svg.addEventListener('click', this.unload);
+        svg.style.display = 'block';
+        addFilter(svg);
+        return this.node.appendChild(svg);
+      }
     };
 
     Tour.prototype._renderFirstStep = function() {

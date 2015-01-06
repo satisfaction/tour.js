@@ -833,18 +833,21 @@
     _renderCloseBtn: =>
       btn = document.getElementById 'tourjs-close'
 
-      # TODO:
-      # unless btn
-      #   btn = renderSVG '#tourjs-symbol-close'
-      #   btn.id = 'tourjs-close'
-      #
-      #   addFilter btn
-      #   btn.addEventListener 'click', @unload
-      #
-      #   # unhide the close button
-      #   btn.style.display = 'block'
-      #
-      #   @node.appendChild btn
+      unless btn
+        shape = document.createElementNS XMLNS, 'path'
+        shape.setAttributeNS null, 'fill', '#FFF'
+        shape.setAttributeNS null, 'd', PATHS['closeButton']
+
+        svg = document.createElementNS XMLNS, 'svg'
+        svg.setAttributeNS null, 'viewBox', '0 0 16 16'
+        svg.appendChild shape
+        svg.id = 'tourjs-close'
+        svg.addEventListener 'click', @unload
+        svg.style.display = 'block'
+
+        addFilter svg
+
+        @node.appendChild svg
 
     _renderFirstStep: => @_renderStep 1
 
