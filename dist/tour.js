@@ -298,8 +298,8 @@ var __slice = [].slice,
     };
 
     Hint.prototype._renderShape = function() {
-      var className, shape, svg;
-      className = ['tourjs-shape', "tourjs-" + this.config.type, "tourjs-" + this.config.position].join(' ');
+      var className, path, shape, svg, transform;
+      className = ['tourjs-shape', "tourjs-" + this.config.position].join(' ');
       svg = document.createElementNS(XMLNS, 'svg');
       svg.setAttributeNS(null, 'class', className);
       svg.setAttributeNS(null, 'viewBox', '0 0 200 200');
@@ -308,35 +308,40 @@ var __slice = [].slice,
       shape.setAttributeNS(null, 'fill', '#FFF');
       switch (this.config.position) {
         case 'top':
-          shape.setAttributeNS(null, 'd', PATHS['arrow']);
-          shape.setAttributeNS(null, 'transform', 'rotate(180, 100, 100)');
+          path = PATHS['arrow'];
+          transform = 'rotate(180, 100, 100)';
           break;
         case 'top-right':
-          shape.setAttributeNS(null, 'd', PATHS['curvedArrow']);
-          shape.setAttributeNS(null, 'transform', 'rotate(-135, 100, 100)');
+          path = PATHS['curvedArrow'];
+          transform = 'rotate(-135, 100, 100)';
           break;
         case 'right':
-          shape.setAttributeNS(null, 'd', PATHS['arrow']);
-          shape.setAttributeNS(null, 'transform', 'rotate(-90, 100, 100)');
+          path = PATHS['arrow'];
+          transform = 'rotate(-90, 100, 100)';
           break;
         case 'bottom-right':
-          shape.setAttributeNS(null, 'd', PATHS['curvedArrow']);
-          shape.setAttributeNS(null, 'transform', 'rotate(-45, 100, 100) scale(-1, 1) translate(-200, 0)');
+          path = PATHS['curvedArrow'];
+          transform = 'rotate(-45, 100, 100) scale(-1, 1) translate(-200, 0)';
           break;
         case 'bottom':
-          shape.setAttributeNS(null, 'd', PATHS['arrow']);
+          path = PATHS['arrow'];
+          transform = null;
           break;
         case 'bottom-left':
-          shape.setAttributeNS(null, 'd', PATHS['curvedArrow']);
-          shape.setAttributeNS(null, 'transform', 'rotate(45, 100, 100)');
+          path = PATHS['curvedArrow'];
+          transform = 'rotate(45, 100, 100)';
           break;
         case 'left':
-          shape.setAttributeNS(null, 'd', PATHS['arrow']);
-          shape.setAttributeNS(null, 'transform', 'rotate(90, 100, 100)');
+          path = PATHS['arrow'];
+          transform = 'rotate(90, 100, 100)';
           break;
         case 'top-left':
-          shape.setAttributeNS(null, 'd', PATHS['curvedArrow']);
-          shape.setAttributeNS(null, 'transform', 'rotate(135, 100, 100) scale(-1, 1) translate(-200, 0)');
+          path = PATHS['curvedArrow'];
+          transform = 'rotate(135, 100, 100) scale(-1, 1) translate(-200, 0)';
+      }
+      shape.setAttributeNS(null, 'd', path);
+      if (transform) {
+        shape.setAttributeNS(null, 'transform', transform);
       }
       addFilter(svg);
       svg.appendChild(shape);

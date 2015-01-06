@@ -274,7 +274,6 @@
     _renderShape: =>
       className = [
         'tourjs-shape',
-        "tourjs-#{@config.type}"
         "tourjs-#{@config.position}"
       ].join ' '
 
@@ -289,36 +288,39 @@
       switch @config.position
 
         when 'top'
-          shape.setAttributeNS null, 'd', PATHS['arrow']
-          shape.setAttributeNS null, 'transform', 'rotate(180, 100, 100)'
+          path = PATHS['arrow']
+          transform = 'rotate(180, 100, 100)'
 
         when 'top-right'
-          shape.setAttributeNS null, 'd', PATHS['curvedArrow']
-          shape.setAttributeNS null, 'transform', 'rotate(-135, 100, 100)'
+          path = PATHS['curvedArrow']
+          transform = 'rotate(-135, 100, 100)'
 
         when 'right'
-          shape.setAttributeNS null, 'd', PATHS['arrow']
-          shape.setAttributeNS null, 'transform', 'rotate(-90, 100, 100)'
+          path = PATHS['arrow']
+          transform = 'rotate(-90, 100, 100)'
 
         when 'bottom-right'
-          shape.setAttributeNS null, 'd', PATHS['curvedArrow']
-          shape.setAttributeNS null, 'transform', 'rotate(-45, 100, 100) scale(-1, 1) translate(-200, 0)'
+          path = PATHS['curvedArrow']
+          transform = 'rotate(-45, 100, 100) scale(-1, 1) translate(-200, 0)'
 
         when 'bottom'
-          shape.setAttributeNS null, 'd', PATHS['arrow']
+          path = PATHS['arrow']
+          transform = null
 
         when 'bottom-left'
-          shape.setAttributeNS null, 'd', PATHS['curvedArrow']
-          shape.setAttributeNS null, 'transform', 'rotate(45, 100, 100)'
+          path = PATHS['curvedArrow']
+          transform = 'rotate(45, 100, 100)'
 
         when 'left'
-          shape.setAttributeNS null, 'd', PATHS['arrow']
-          shape.setAttributeNS null, 'transform', 'rotate(90, 100, 100)'
+          path = PATHS['arrow']
+          transform = 'rotate(90, 100, 100)'
 
         when 'top-left'
-          shape.setAttributeNS null, 'd', PATHS['curvedArrow']
-          shape.setAttributeNS null, 'transform', 'rotate(135, 100, 100) scale(-1, 1) translate(-200, 0)'
+          path = PATHS['curvedArrow']
+          transform = 'rotate(135, 100, 100) scale(-1, 1) translate(-200, 0)'
 
+      shape.setAttributeNS null, 'd', path
+      shape.setAttributeNS null, 'transform', transform if transform
 
       addFilter svg
       svg.appendChild shape
