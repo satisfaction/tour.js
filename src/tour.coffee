@@ -18,9 +18,34 @@
 
   'use strict'
 
+  ARROW_SIZE = 65
   DEFAULT_MARGIN = 10
   VECTORS = null
   XMLNS = 'http://www.w3.org/2000/svg'
+
+  PATHS =
+
+    arrow:
+      """
+      M135.4,68.7c1.1,1.3,1.5,2.9,1.3,4.6c-0.2,1.7-1,3.1-2.4,4.2
+      c-1.3,1.1-2.9,1.5-4.6,1.3c-1.7-0.2-3.1-1-4.2-2.4c-7.8-10.1-18.4-18.3-19-28.3c2.5,40.3,1.7,98.2-5.1,142.7
+      c-1.1,1.5-2.5,2.3-4.2,2.5c-1.7,0.2-3.3-0.2-4.6-1.3c-1.4-1-2.2-2.4-2.4-4.1c-0.2-1.7,1.2-4.5,1.2-4.5c6.2-31.2,5.9-96.1,2.5-135.8
+      c-4.7,9.8-11.4,18.7-20.1,26.7c-1.3,1.2-2.8,1.7-4.5,1.7c-1.7-0.1-3.2-0.7-4.4-2c-1.2-1.3-1.7-2.8-1.7-4.5c0.1-1.8,0.7-3.2,2-4.4
+      c11.2-10.3,18.7-22.7,22.7-37c0.6-2.5,1.3-5.7,2.1-9.7l-0.4-2.2c-0.2-1.5,0-2.9,0.4-4c0.8-2.9,2.7-4.7,5.7-5.3
+      c3.1-0.7,5.6,0.4,7.5,3.1c0.7,1,1.2,2.3,1.4,4c0.1,0.2,0.2,0.7,0.3,1.4l0.1,0.8c0.1,0.1,0.1,0.2,0.1,0.4c1.2,2.6,4.2,8.8,9,18.6
+      C119,45.6,126.1,56.8,135.4,68.7L135.4,68.7z
+      """
+
+    curvedArrow:
+      """
+      M135.4,68.7c1.1,1.3,1.5,2.9,1.3,4.6c-0.2,1.7-1,3.1-2.4,4.2
+      c-1.3,1.1-2.9,1.5-4.6,1.3c-1.7-0.2-3.1-1-4.2-2.4c-7.8-10.1-15.8-18.8-19-28.3c15.1,44.8-0.2,112.9-32.1,142.7
+      c-1.1,1.5-2.5,2.3-4.2,2.5c-1.7,0.2-3.3-0.2-4.6-1.3c-1.4-1-2.2-2.4-2.4-4.1c-0.2-1.7,1.2-4.5,1.2-4.5
+      C94.9,155.9,109.7,86.1,94,47.5c-4.7,9.8-11.4,18.7-20.1,26.7c-1.3,1.2-2.8,1.7-4.5,1.7c-1.7-0.1-3.2-0.7-4.4-2
+      c-1.2-1.3-1.7-2.8-1.7-4.5c0.1-1.8,0.7-3.2,2-4.4c11.2-10.3,18.7-22.7,22.7-37c0.6-2.5,1.3-5.7,2.1-9.7l-0.4-2.2
+      c-0.2-1.5,0-2.9,0.4-4c0.8-2.9,2.7-4.7,5.7-5.3c3.1-0.7,5.6,0.4,7.5,3.1c0.7,1,1.2,2.3,1.4,4c0.1,0.2,0.2,0.7,0.3,1.4l0.1,0.8
+      c0.1,0.1,0.1,0.2,0.1,0.4c1.2,2.6,4.2,8.8,9,18.6C119,45.6,126.1,56.8,135.4,68.7L135.4,68.7z
+      """
 
   ###
   # Adds drop shadow filter to an SVG image
@@ -39,27 +64,21 @@
     offset = document.createElementNS XMLNS, 'feOffset'
     offset.setAttributeNS null, 'dx', 1
     offset.setAttributeNS null, 'dy', 1
-    offset.setAttributeNS null, 'in', 'SourceGraphic'
+    offset.setAttributeNS null, 'in', 'SourceAlpha'
     offset.setAttributeNS null, 'result', 'ShadowOffsetOuter'
 
     blur = document.createElementNS XMLNS, 'feGaussianBlur'
     blur.setAttributeNS null, 'in', 'ShadowOffsetOuter'
-    blur.setAttributeNS null, 'stdDeviation', 2
+    blur.setAttributeNS null, 'stdDeviation', 3
     blur.setAttributeNS null, 'result', 'ShadowBlurOuter'
 
-    matrix = document.createElementNS XMLNS, 'feColorMatrix'
-    matrix.setAttributeNS null, 'values', '0 0 0 0 0   0 0 0 0 0   0 0 0 0 0   0 0 0 0.3 0'
-    matrix.setAttributeNS null, 'in', 'ShadowBlurOuter'
-    matrix.setAttributeNS null, 'result', 'ShadowMatrixOuter'
-
     blend = document.createElementNS XMLNS, 'feBlend'
-    blend.setAttributeNS null, 'in', 'ShadowMatrixOuter'
-    blend.setAttributeNS null, 'in2', 'SourceGraphic'
+    blend.setAttributeNS null, 'in', 'SourceGraphic'
+    blend.setAttributeNS null, 'in2', 'ShadowBlurOuter'
     blend.setAttributeNS null, 'mode', 'normal'
 
     filter.appendChild offset
     filter.appendChild blur
-    filter.appendChild matrix
     filter.appendChild blend
 
     defs.appendChild filter
@@ -98,23 +117,6 @@
   ###
   buildID = do (idndx = 0) ->
     (prefix) -> "tourjs-#{if prefix then "#{prefix}-" else ''}#{++idndx}"
-
-  ###
-  # Fetches SVGs symbols and appends them into the DOM
-  ###
-  fetchSVG = (options = {}) ->
-    file = options.svg or 'svg/defs.svg'
-    req = new XMLHttpRequest()
-    render = ->
-      if req.readyState is 4 and req.status is 200
-        VECTORS = document.createElement 'div'
-        VECTORS.innerHTML = req.responseText
-        options.success() if options.success
-      else if req.status > 400
-        log "[Tour.js] Couldn\'t load SVG definitions file: #{file}"
-    req.onreadystatechange = render
-    req.open 'GET', file, true
-    req.send()
 
   getWindowSize = ->
     height: window.innerHeight or document.documentElement.clientHeight
@@ -232,7 +234,6 @@
             className = [
               'tourjs-hint'
               "tourjs-#{@config.position}#{if @config.inverted then '-inverted' else ''}"
-              "tourjs-#{@config.type}"
             ]
 
             @node.className = className.join(' ')
@@ -271,16 +272,57 @@
         parent.appendChild desc
 
     _renderShape: =>
-      id = [
-        '#tourjs-symbol'
-        @config.type
-        @config.position
-      ]
-      id.push 'inverted' if @config.inverted
+      className = [
+        'tourjs-shape',
+        "tourjs-#{@config.type}"
+        "tourjs-#{@config.position}"
+      ].join ' '
 
-      vector = renderSVG id.join '-'
-      addFilter vector
-      @node.appendChild vector
+      svg = document.createElementNS XMLNS, 'svg'
+      svg.setAttributeNS null, 'class', className
+      svg.setAttributeNS null, 'viewBox', '0 0 200 200'
+
+      shape = null
+      shape = document.createElementNS XMLNS, 'path'
+      shape.setAttributeNS null, 'fill', '#FFF'
+
+      switch @config.position
+
+        when 'top'
+          shape.setAttributeNS null, 'd', PATHS['arrow']
+          shape.setAttributeNS null, 'transform', 'rotate(180, 100, 100)'
+
+        when 'top-right'
+          shape.setAttributeNS null, 'd', PATHS['curvedArrow']
+          shape.setAttributeNS null, 'transform', 'rotate(-135, 100, 100)'
+
+        when 'right'
+          shape.setAttributeNS null, 'd', PATHS['arrow']
+          shape.setAttributeNS null, 'transform', 'rotate(-90, 100, 100)'
+
+        when 'bottom-right'
+          shape.setAttributeNS null, 'd', PATHS['curvedArrow']
+          shape.setAttributeNS null, 'transform', 'rotate(-45, 100, 100) scale(-1, 1) translate(-200, 0)'
+
+        when 'bottom'
+          shape.setAttributeNS null, 'd', PATHS['arrow']
+
+        when 'bottom-left'
+          shape.setAttributeNS null, 'd', PATHS['curvedArrow']
+          shape.setAttributeNS null, 'transform', 'rotate(45, 100, 100)'
+
+        when 'left'
+          shape.setAttributeNS null, 'd', PATHS['arrow']
+          shape.setAttributeNS null, 'transform', 'rotate(90, 100, 100)'
+
+        when 'top-left'
+          shape.setAttributeNS null, 'd', PATHS['curvedArrow']
+          shape.setAttributeNS null, 'transform', 'rotate(135, 100, 100) scale(-1, 1) translate(-200, 0)'
+
+
+      addFilter svg
+      svg.appendChild shape
+      @node.appendChild svg
 
     _renderTitle: (parent) =>
       title = document.createElement 'h2'
@@ -302,107 +344,45 @@
       rect = @node.getBoundingClientRect()
       targetRect = document.querySelector(@config.target).getBoundingClientRect()
 
-      switch @config.type
+      switch @config.position
 
-        when 'arrow'
-          switch @config.position
+        when 'top-left'
+          @node.style.top = "#{targetRect.top - rect.height - DEFAULT_MARGIN}px"
+          @node.style.left = "#{targetRect.left - rect.width - DEFAULT_MARGIN}px"
 
-            when 'top-left'
-              @node.style.top = "#{targetRect.top - rect.height - DEFAULT_MARGIN}px"
-              @node.style.left = "#{targetRect.left - rect.width - DEFAULT_MARGIN}px"
+        when 'top'
+          @node.style.top = "#{targetRect.top - rect.height - DEFAULT_MARGIN}px"
+          @node.style.left = "#{targetRect.left + (targetRect.width / 2) - rect.width / 2}px"
 
-            when 'top'
-              @node.style.top = "#{targetRect.top - rect.height - DEFAULT_MARGIN}px"
-              @node.style.left = "#{targetRect.left + (targetRect.width / 2) - rect.width / 2}px"
+        when 'top-right'
+          @node.style.top = "#{targetRect.top - rect.height - DEFAULT_MARGIN}px"
+          @node.style.left = "#{targetRect.left + targetRect.width + DEFAULT_MARGIN}px"
 
-            when 'top-right'
-              @node.style.top = "#{targetRect.top - rect.height - DEFAULT_MARGIN}px"
-              @node.style.left = "#{targetRect.left + targetRect.width + DEFAULT_MARGIN}px"
+        when 'right'
+          if targetRect.height > rect.height
+            @node.style.top = "#{targetRect.top + ((targetRect.height - rect.height) / 2)}px"
+          else
+            @node.style.top = "#{targetRect.top - ((rect.height - targetRect.height) / 2)}px"
+          @node.style.left = "#{targetRect.left + targetRect.width + DEFAULT_MARGIN}px"
 
-            when 'right'
-              if targetRect.height > rect.height
-                @node.style.top = "#{targetRect.top + ((targetRect.height - rect.height) / 2)}px"
-              else
-                @node.style.top = "#{targetRect.top - ((rect.height - targetRect.height) / 2)}px"
-              @node.style.left = "#{targetRect.left + targetRect.width + DEFAULT_MARGIN}px"
+        when 'bottom-right'
+          @node.style.top = "#{targetRect.bottom + DEFAULT_MARGIN}px"
+          @node.style.left = "#{targetRect.left + targetRect.width + DEFAULT_MARGIN}px"
 
-            when 'bottom-right'
-              @node.style.top = "#{targetRect.bottom + DEFAULT_MARGIN}px"
-              @node.style.left = "#{targetRect.left + targetRect.width + DEFAULT_MARGIN}px"
+        when 'bottom'
+          @node.style.top = "#{targetRect.bottom + DEFAULT_MARGIN}px"
+          @node.style.left = "#{targetRect.left + (targetRect.width / 2) - rect.width / 2}px"
 
-            when 'bottom'
-              @node.style.top = "#{targetRect.bottom + DEFAULT_MARGIN}px"
-              @node.style.left = "#{targetRect.left + (targetRect.width / 2) - rect.width / 2}px"
+        when 'bottom-left'
+          @node.style.top = "#{targetRect.bottom + DEFAULT_MARGIN}px"
+          @node.style.left = "#{targetRect.left - rect.width - DEFAULT_MARGIN}px"
 
-            when 'bottom-left'
-              @node.style.top = "#{targetRect.bottom + DEFAULT_MARGIN}px"
-              @node.style.left = "#{targetRect.left - rect.width - DEFAULT_MARGIN}px"
-
-            when 'left'
-              if targetRect.height > rect.height
-                @node.style.top = "#{targetRect.top + ((targetRect.height - rect.height) / 2)}px"
-              else
-                @node.style.top = "#{targetRect.top - ((rect.height - targetRect.height) / 2)}px"
-              @node.style.left = "#{targetRect.left - rect.width - DEFAULT_MARGIN}px"
-
-        when 'curved-arrow'
-          switch @config.position
-
-            when 'top-left'
-              @node.style.top = "#{targetRect.top - rect.height - DEFAULT_MARGIN}px"
-              @node.style.left = "#{targetRect.left - rect.width - DEFAULT_MARGIN}px"
-
-            when 'top'
-              @node.style.top = "#{targetRect.top - rect.height - DEFAULT_MARGIN}px"
-              unless @config.inverted
-                @node.style.left = "#{targetRect.left + (targetRect.width / 2) - 16}px"
-              else
-                @node.style.left = "#{targetRect.left + (targetRect.width / 2) - rect.width + 16}px"
-
-            when 'top-right'
-              @node.style.top = "#{targetRect.top - rect.height - DEFAULT_MARGIN}px"
-              @node.style.left = "#{targetRect.left + targetRect.width + DEFAULT_MARGIN}px"
-
-            when 'right'
-              if targetRect.height > rect.height
-                unless @config.inverted
-                  @node.style.top = "#{targetRect.top + targetRect.height / 2}px"
-                else
-                  @node.style.top = "#{targetRect.top + targetRect.height / 2 - rect.height + 16}px"
-              else
-                unless @config.inverted
-                  @node.style.top = "#{targetRect.top + targetRect.height / 2 - 16}px"
-                else
-                  @node.style.top = "#{targetRect.top - targetRect.height / 2 - rect.height / 2 + 12}px"
-              @node.style.left = "#{targetRect.left + targetRect.width + DEFAULT_MARGIN}px"
-
-            when 'bottom-right'
-              @node.style.top = "#{targetRect.bottom + DEFAULT_MARGIN}px"
-              @node.style.left = "#{targetRect.left + targetRect.width + DEFAULT_MARGIN}px"
-
-            when 'bottom'
-              @node.style.top = "#{targetRect.bottom + DEFAULT_MARGIN}px"
-              unless @config.inverted
-                @node.style.left = "#{targetRect.left + targetRect.width / 2 - rect.width + 16}px"
-              else
-                @node.style.left = "#{targetRect.left + targetRect.width / 2 - 16}px"
-
-            when 'bottom-left'
-              @node.style.top = "#{targetRect.bottom + DEFAULT_MARGIN}px"
-              @node.style.left = "#{targetRect.left - rect.width - DEFAULT_MARGIN}px"
-
-            when 'left'
-              if targetRect.height > rect.height
-                unless @config.inverted
-                  @node.style.top = "#{targetRect.top - (rect.height - targetRect.height / 2) + 16}px"
-                else
-                  @node.style.top = "#{targetRect.top + targetRect.height / 2 - 16}px"
-              else
-                unless @config.inverted
-                  @node.style.top = "#{targetRect.top + targetRect.height / 2 - rect.height + 18}px"
-                else
-                  @node.style.top = "#{targetRect.top + targetRect.height / 2 - rect.height / 2 + 24}px"
-              @node.style.left = "#{targetRect.left - rect.width - DEFAULT_MARGIN}px"
+        when 'left'
+          if targetRect.height > rect.height
+            @node.style.top = "#{targetRect.top + ((targetRect.height - rect.height) / 2)}px"
+          else
+            @node.style.top = "#{targetRect.top - ((rect.height - targetRect.height) / 2)}px"
+          @node.style.left = "#{targetRect.left - rect.width - DEFAULT_MARGIN}px"
 
   class Overlay
 
@@ -496,7 +476,7 @@
         if @config.description
           line = document.createElement 'div'
           line.className = 'tourjs-overview-line'
-          line.appendChild renderSVG '#tourjs-symbol-line'
+          # line.appendChild renderSVG '#tourjs-symbol-line'
           @node.appendChild line
 
           description = document.createElement 'div'
@@ -647,7 +627,7 @@
 
       previous = document.createElement 'div'
       previous.className = 'tourjs-previous-step'
-      previous.appendChild renderSVG '#tourjs-symbol-chevron-left'
+      # previous.appendChild renderSVG '#tourjs-symbol-chevron-left'
 
       if @previous
         previous.addEventListener 'click', (event) =>
@@ -667,7 +647,7 @@
 
       next = document.createElement 'div'
       next.className = 'tourjs-next-step'
-      next.appendChild renderSVG '#tourjs-symbol-chevron-right'
+      # next.appendChild renderSVG '#tourjs-symbol-chevron-right'
 
       if @next
         next.addEventListener 'click', (event) =>
@@ -712,11 +692,7 @@
 
           document.body.appendChild @node
 
-          fetchSVG
-            svg: @config.svg
-            success: @_onLoad
-
-        else @_onLoad()
+        @_onLoad()
 
       @shouldLoad (should)=>
         return if should is false
@@ -825,17 +801,18 @@
     _renderCloseBtn: =>
       btn = document.getElementById 'tourjs-close'
 
-      unless btn
-        btn = renderSVG '#tourjs-symbol-close'
-        btn.id = 'tourjs-close'
-
-        addFilter btn
-        btn.addEventListener 'click', @unload
-
-        # unhide the close button
-        btn.style.display = 'block'
-
-        @node.appendChild btn
+      # TODO:
+      # unless btn
+      #   btn = renderSVG '#tourjs-symbol-close'
+      #   btn.id = 'tourjs-close'
+      #
+      #   addFilter btn
+      #   btn.addEventListener 'click', @unload
+      #
+      #   # unhide the close button
+      #   btn.style.display = 'block'
+      #
+      #   @node.appendChild btn
 
     _renderFirstStep: => @_renderStep 1
 

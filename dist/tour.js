@@ -19,16 +19,21 @@ var __slice = [].slice,
    * * Passthrough clicks on highlights (optional)
    */
   'use strict';
-  var DEFAULT_MARGIN, Highlight, Hint, Overlay, Overview, Step, Tour, VECTORS, XMLNS, addFilter, assign, buildID, fetchSVG, getWindowSize, isFunction, log, renderSVG, waitFor;
+  var ARROW_SIZE, DEFAULT_MARGIN, Highlight, Hint, Overlay, Overview, PATHS, Step, Tour, VECTORS, XMLNS, addFilter, assign, buildID, getWindowSize, isFunction, log, renderSVG, waitFor;
+  ARROW_SIZE = 65;
   DEFAULT_MARGIN = 10;
   VECTORS = null;
   XMLNS = 'http://www.w3.org/2000/svg';
+  PATHS = {
+    arrow: "M135.4,68.7c1.1,1.3,1.5,2.9,1.3,4.6c-0.2,1.7-1,3.1-2.4,4.2\nc-1.3,1.1-2.9,1.5-4.6,1.3c-1.7-0.2-3.1-1-4.2-2.4c-7.8-10.1-18.4-18.3-19-28.3c2.5,40.3,1.7,98.2-5.1,142.7\nc-1.1,1.5-2.5,2.3-4.2,2.5c-1.7,0.2-3.3-0.2-4.6-1.3c-1.4-1-2.2-2.4-2.4-4.1c-0.2-1.7,1.2-4.5,1.2-4.5c6.2-31.2,5.9-96.1,2.5-135.8\nc-4.7,9.8-11.4,18.7-20.1,26.7c-1.3,1.2-2.8,1.7-4.5,1.7c-1.7-0.1-3.2-0.7-4.4-2c-1.2-1.3-1.7-2.8-1.7-4.5c0.1-1.8,0.7-3.2,2-4.4\nc11.2-10.3,18.7-22.7,22.7-37c0.6-2.5,1.3-5.7,2.1-9.7l-0.4-2.2c-0.2-1.5,0-2.9,0.4-4c0.8-2.9,2.7-4.7,5.7-5.3\nc3.1-0.7,5.6,0.4,7.5,3.1c0.7,1,1.2,2.3,1.4,4c0.1,0.2,0.2,0.7,0.3,1.4l0.1,0.8c0.1,0.1,0.1,0.2,0.1,0.4c1.2,2.6,4.2,8.8,9,18.6\nC119,45.6,126.1,56.8,135.4,68.7L135.4,68.7z",
+    curvedArrow: "M135.4,68.7c1.1,1.3,1.5,2.9,1.3,4.6c-0.2,1.7-1,3.1-2.4,4.2\nc-1.3,1.1-2.9,1.5-4.6,1.3c-1.7-0.2-3.1-1-4.2-2.4c-7.8-10.1-15.8-18.8-19-28.3c15.1,44.8-0.2,112.9-32.1,142.7\nc-1.1,1.5-2.5,2.3-4.2,2.5c-1.7,0.2-3.3-0.2-4.6-1.3c-1.4-1-2.2-2.4-2.4-4.1c-0.2-1.7,1.2-4.5,1.2-4.5\nC94.9,155.9,109.7,86.1,94,47.5c-4.7,9.8-11.4,18.7-20.1,26.7c-1.3,1.2-2.8,1.7-4.5,1.7c-1.7-0.1-3.2-0.7-4.4-2\nc-1.2-1.3-1.7-2.8-1.7-4.5c0.1-1.8,0.7-3.2,2-4.4c11.2-10.3,18.7-22.7,22.7-37c0.6-2.5,1.3-5.7,2.1-9.7l-0.4-2.2\nc-0.2-1.5,0-2.9,0.4-4c0.8-2.9,2.7-4.7,5.7-5.3c3.1-0.7,5.6,0.4,7.5,3.1c0.7,1,1.2,2.3,1.4,4c0.1,0.2,0.2,0.7,0.3,1.4l0.1,0.8\nc0.1,0.1,0.1,0.2,0.1,0.4c1.2,2.6,4.2,8.8,9,18.6C119,45.6,126.1,56.8,135.4,68.7L135.4,68.7z"
+  };
 
   /*
    * Adds drop shadow filter to an SVG image
    */
   addFilter = function(svg) {
-    var blend, blur, defs, filter, id, matrix, offset;
+    var blend, blur, defs, filter, id, offset;
     id = "tourjs-filter-" + (new Date().getTime());
     defs = document.createElementNS(XMLNS, 'defs');
     filter = document.createElementNS(XMLNS, 'filter');
@@ -40,23 +45,18 @@ var __slice = [].slice,
     offset = document.createElementNS(XMLNS, 'feOffset');
     offset.setAttributeNS(null, 'dx', 1);
     offset.setAttributeNS(null, 'dy', 1);
-    offset.setAttributeNS(null, 'in', 'SourceGraphic');
+    offset.setAttributeNS(null, 'in', 'SourceAlpha');
     offset.setAttributeNS(null, 'result', 'ShadowOffsetOuter');
     blur = document.createElementNS(XMLNS, 'feGaussianBlur');
     blur.setAttributeNS(null, 'in', 'ShadowOffsetOuter');
-    blur.setAttributeNS(null, 'stdDeviation', 2);
+    blur.setAttributeNS(null, 'stdDeviation', 3);
     blur.setAttributeNS(null, 'result', 'ShadowBlurOuter');
-    matrix = document.createElementNS(XMLNS, 'feColorMatrix');
-    matrix.setAttributeNS(null, 'values', '0 0 0 0 0   0 0 0 0 0   0 0 0 0 0   0 0 0 0.3 0');
-    matrix.setAttributeNS(null, 'in', 'ShadowBlurOuter');
-    matrix.setAttributeNS(null, 'result', 'ShadowMatrixOuter');
     blend = document.createElementNS(XMLNS, 'feBlend');
-    blend.setAttributeNS(null, 'in', 'ShadowMatrixOuter');
-    blend.setAttributeNS(null, 'in2', 'SourceGraphic');
+    blend.setAttributeNS(null, 'in', 'SourceGraphic');
+    blend.setAttributeNS(null, 'in2', 'ShadowBlurOuter');
     blend.setAttributeNS(null, 'mode', 'normal');
     filter.appendChild(offset);
     filter.appendChild(blur);
-    filter.appendChild(matrix);
     filter.appendChild(blend);
     defs.appendChild(filter);
     svg.appendChild(defs);
@@ -104,32 +104,6 @@ var __slice = [].slice,
       return "tourjs-" + (prefix ? "" + prefix + "-" : '') + (++idndx);
     };
   })(0);
-
-  /*
-   * Fetches SVGs symbols and appends them into the DOM
-   */
-  fetchSVG = function(options) {
-    var file, render, req;
-    if (options == null) {
-      options = {};
-    }
-    file = options.svg || 'svg/defs.svg';
-    req = new XMLHttpRequest();
-    render = function() {
-      if (req.readyState === 4 && req.status === 200) {
-        VECTORS = document.createElement('div');
-        VECTORS.innerHTML = req.responseText;
-        if (options.success) {
-          return options.success();
-        }
-      } else if (req.status > 400) {
-        return log("[Tour.js] Couldn\'t load SVG definitions file: " + file);
-      }
-    };
-    req.onreadystatechange = render;
-    req.open('GET', file, true);
-    return req.send();
-  };
   getWindowSize = function() {
     return {
       height: window.innerHeight || document.documentElement.clientHeight,
@@ -285,7 +259,7 @@ var __slice = [].slice,
             if (!_this.node) {
               _this.node = document.createElement('div');
               _this.node.id = _this.id;
-              className = ['tourjs-hint', "tourjs-" + _this.config.position + (_this.config.inverted ? '-inverted' : ''), "tourjs-" + _this.config.type];
+              className = ['tourjs-hint', "tourjs-" + _this.config.position + (_this.config.inverted ? '-inverted' : '')];
               _this.node.className = className.join(' ');
               if (_this.config.width) {
                 width = "" + _this.config.width + "px";
@@ -324,14 +298,49 @@ var __slice = [].slice,
     };
 
     Hint.prototype._renderShape = function() {
-      var id, vector;
-      id = ['#tourjs-symbol', this.config.type, this.config.position];
-      if (this.config.inverted) {
-        id.push('inverted');
+      var className, shape, svg;
+      className = ['tourjs-shape', "tourjs-" + this.config.type, "tourjs-" + this.config.position].join(' ');
+      svg = document.createElementNS(XMLNS, 'svg');
+      svg.setAttributeNS(null, 'class', className);
+      svg.setAttributeNS(null, 'viewBox', '0 0 200 200');
+      shape = null;
+      shape = document.createElementNS(XMLNS, 'path');
+      shape.setAttributeNS(null, 'fill', '#FFF');
+      switch (this.config.position) {
+        case 'top':
+          shape.setAttributeNS(null, 'd', PATHS['arrow']);
+          shape.setAttributeNS(null, 'transform', 'rotate(180, 100, 100)');
+          break;
+        case 'top-right':
+          shape.setAttributeNS(null, 'd', PATHS['curvedArrow']);
+          shape.setAttributeNS(null, 'transform', 'rotate(-135, 100, 100)');
+          break;
+        case 'right':
+          shape.setAttributeNS(null, 'd', PATHS['arrow']);
+          shape.setAttributeNS(null, 'transform', 'rotate(-90, 100, 100)');
+          break;
+        case 'bottom-right':
+          shape.setAttributeNS(null, 'd', PATHS['curvedArrow']);
+          shape.setAttributeNS(null, 'transform', 'rotate(-45, 100, 100) scale(-1, 1) translate(-200, 0)');
+          break;
+        case 'bottom':
+          shape.setAttributeNS(null, 'd', PATHS['arrow']);
+          break;
+        case 'bottom-left':
+          shape.setAttributeNS(null, 'd', PATHS['curvedArrow']);
+          shape.setAttributeNS(null, 'transform', 'rotate(45, 100, 100)');
+          break;
+        case 'left':
+          shape.setAttributeNS(null, 'd', PATHS['arrow']);
+          shape.setAttributeNS(null, 'transform', 'rotate(90, 100, 100)');
+          break;
+        case 'top-left':
+          shape.setAttributeNS(null, 'd', PATHS['curvedArrow']);
+          shape.setAttributeNS(null, 'transform', 'rotate(135, 100, 100) scale(-1, 1) translate(-200, 0)');
       }
-      vector = renderSVG(id.join('-'));
-      addFilter(vector);
-      return this.node.appendChild(vector);
+      addFilter(svg);
+      svg.appendChild(shape);
+      return this.node.appendChild(svg);
     };
 
     Hint.prototype._renderTitle = function(parent) {
@@ -359,104 +368,39 @@ var __slice = [].slice,
       var rect, targetRect;
       rect = this.node.getBoundingClientRect();
       targetRect = document.querySelector(this.config.target).getBoundingClientRect();
-      switch (this.config.type) {
-        case 'arrow':
-          switch (this.config.position) {
-            case 'top-left':
-              this.node.style.top = "" + (targetRect.top - rect.height - DEFAULT_MARGIN) + "px";
-              return this.node.style.left = "" + (targetRect.left - rect.width - DEFAULT_MARGIN) + "px";
-            case 'top':
-              this.node.style.top = "" + (targetRect.top - rect.height - DEFAULT_MARGIN) + "px";
-              return this.node.style.left = "" + (targetRect.left + (targetRect.width / 2) - rect.width / 2) + "px";
-            case 'top-right':
-              this.node.style.top = "" + (targetRect.top - rect.height - DEFAULT_MARGIN) + "px";
-              return this.node.style.left = "" + (targetRect.left + targetRect.width + DEFAULT_MARGIN) + "px";
-            case 'right':
-              if (targetRect.height > rect.height) {
-                this.node.style.top = "" + (targetRect.top + ((targetRect.height - rect.height) / 2)) + "px";
-              } else {
-                this.node.style.top = "" + (targetRect.top - ((rect.height - targetRect.height) / 2)) + "px";
-              }
-              return this.node.style.left = "" + (targetRect.left + targetRect.width + DEFAULT_MARGIN) + "px";
-            case 'bottom-right':
-              this.node.style.top = "" + (targetRect.bottom + DEFAULT_MARGIN) + "px";
-              return this.node.style.left = "" + (targetRect.left + targetRect.width + DEFAULT_MARGIN) + "px";
-            case 'bottom':
-              this.node.style.top = "" + (targetRect.bottom + DEFAULT_MARGIN) + "px";
-              return this.node.style.left = "" + (targetRect.left + (targetRect.width / 2) - rect.width / 2) + "px";
-            case 'bottom-left':
-              this.node.style.top = "" + (targetRect.bottom + DEFAULT_MARGIN) + "px";
-              return this.node.style.left = "" + (targetRect.left - rect.width - DEFAULT_MARGIN) + "px";
-            case 'left':
-              if (targetRect.height > rect.height) {
-                this.node.style.top = "" + (targetRect.top + ((targetRect.height - rect.height) / 2)) + "px";
-              } else {
-                this.node.style.top = "" + (targetRect.top - ((rect.height - targetRect.height) / 2)) + "px";
-              }
-              return this.node.style.left = "" + (targetRect.left - rect.width - DEFAULT_MARGIN) + "px";
+      switch (this.config.position) {
+        case 'top-left':
+          this.node.style.top = "" + (targetRect.top - rect.height - DEFAULT_MARGIN) + "px";
+          return this.node.style.left = "" + (targetRect.left - rect.width - DEFAULT_MARGIN) + "px";
+        case 'top':
+          this.node.style.top = "" + (targetRect.top - rect.height - DEFAULT_MARGIN) + "px";
+          return this.node.style.left = "" + (targetRect.left + (targetRect.width / 2) - rect.width / 2) + "px";
+        case 'top-right':
+          this.node.style.top = "" + (targetRect.top - rect.height - DEFAULT_MARGIN) + "px";
+          return this.node.style.left = "" + (targetRect.left + targetRect.width + DEFAULT_MARGIN) + "px";
+        case 'right':
+          if (targetRect.height > rect.height) {
+            this.node.style.top = "" + (targetRect.top + ((targetRect.height - rect.height) / 2)) + "px";
+          } else {
+            this.node.style.top = "" + (targetRect.top - ((rect.height - targetRect.height) / 2)) + "px";
           }
-          break;
-        case 'curved-arrow':
-          switch (this.config.position) {
-            case 'top-left':
-              this.node.style.top = "" + (targetRect.top - rect.height - DEFAULT_MARGIN) + "px";
-              return this.node.style.left = "" + (targetRect.left - rect.width - DEFAULT_MARGIN) + "px";
-            case 'top':
-              this.node.style.top = "" + (targetRect.top - rect.height - DEFAULT_MARGIN) + "px";
-              if (!this.config.inverted) {
-                return this.node.style.left = "" + (targetRect.left + (targetRect.width / 2) - 16) + "px";
-              } else {
-                return this.node.style.left = "" + (targetRect.left + (targetRect.width / 2) - rect.width + 16) + "px";
-              }
-              break;
-            case 'top-right':
-              this.node.style.top = "" + (targetRect.top - rect.height - DEFAULT_MARGIN) + "px";
-              return this.node.style.left = "" + (targetRect.left + targetRect.width + DEFAULT_MARGIN) + "px";
-            case 'right':
-              if (targetRect.height > rect.height) {
-                if (!this.config.inverted) {
-                  this.node.style.top = "" + (targetRect.top + targetRect.height / 2) + "px";
-                } else {
-                  this.node.style.top = "" + (targetRect.top + targetRect.height / 2 - rect.height + 16) + "px";
-                }
-              } else {
-                if (!this.config.inverted) {
-                  this.node.style.top = "" + (targetRect.top + targetRect.height / 2 - 16) + "px";
-                } else {
-                  this.node.style.top = "" + (targetRect.top - targetRect.height / 2 - rect.height / 2 + 12) + "px";
-                }
-              }
-              return this.node.style.left = "" + (targetRect.left + targetRect.width + DEFAULT_MARGIN) + "px";
-            case 'bottom-right':
-              this.node.style.top = "" + (targetRect.bottom + DEFAULT_MARGIN) + "px";
-              return this.node.style.left = "" + (targetRect.left + targetRect.width + DEFAULT_MARGIN) + "px";
-            case 'bottom':
-              this.node.style.top = "" + (targetRect.bottom + DEFAULT_MARGIN) + "px";
-              if (!this.config.inverted) {
-                return this.node.style.left = "" + (targetRect.left + targetRect.width / 2 - rect.width + 16) + "px";
-              } else {
-                return this.node.style.left = "" + (targetRect.left + targetRect.width / 2 - 16) + "px";
-              }
-              break;
-            case 'bottom-left':
-              this.node.style.top = "" + (targetRect.bottom + DEFAULT_MARGIN) + "px";
-              return this.node.style.left = "" + (targetRect.left - rect.width - DEFAULT_MARGIN) + "px";
-            case 'left':
-              if (targetRect.height > rect.height) {
-                if (!this.config.inverted) {
-                  this.node.style.top = "" + (targetRect.top - (rect.height - targetRect.height / 2) + 16) + "px";
-                } else {
-                  this.node.style.top = "" + (targetRect.top + targetRect.height / 2 - 16) + "px";
-                }
-              } else {
-                if (!this.config.inverted) {
-                  this.node.style.top = "" + (targetRect.top + targetRect.height / 2 - rect.height + 18) + "px";
-                } else {
-                  this.node.style.top = "" + (targetRect.top + targetRect.height / 2 - rect.height / 2 + 24) + "px";
-                }
-              }
-              return this.node.style.left = "" + (targetRect.left - rect.width - DEFAULT_MARGIN) + "px";
+          return this.node.style.left = "" + (targetRect.left + targetRect.width + DEFAULT_MARGIN) + "px";
+        case 'bottom-right':
+          this.node.style.top = "" + (targetRect.bottom + DEFAULT_MARGIN) + "px";
+          return this.node.style.left = "" + (targetRect.left + targetRect.width + DEFAULT_MARGIN) + "px";
+        case 'bottom':
+          this.node.style.top = "" + (targetRect.bottom + DEFAULT_MARGIN) + "px";
+          return this.node.style.left = "" + (targetRect.left + (targetRect.width / 2) - rect.width / 2) + "px";
+        case 'bottom-left':
+          this.node.style.top = "" + (targetRect.bottom + DEFAULT_MARGIN) + "px";
+          return this.node.style.left = "" + (targetRect.left - rect.width - DEFAULT_MARGIN) + "px";
+        case 'left':
+          if (targetRect.height > rect.height) {
+            this.node.style.top = "" + (targetRect.top + ((targetRect.height - rect.height) / 2)) + "px";
+          } else {
+            this.node.style.top = "" + (targetRect.top - ((rect.height - targetRect.height) / 2)) + "px";
           }
+          return this.node.style.left = "" + (targetRect.left - rect.width - DEFAULT_MARGIN) + "px";
       }
     };
 
@@ -570,7 +514,6 @@ var __slice = [].slice,
         if (this.config.description) {
           line = document.createElement('div');
           line.className = 'tourjs-overview-line';
-          line.appendChild(renderSVG('#tourjs-symbol-line'));
           this.node.appendChild(line);
           description = document.createElement('div');
           description.className = 'tourjs-overview-description';
@@ -767,7 +710,6 @@ var __slice = [].slice,
       wrapper.className = 'tourjs-pagination-wrapper';
       previous = document.createElement('div');
       previous.className = 'tourjs-previous-step';
-      previous.appendChild(renderSVG('#tourjs-symbol-chevron-left'));
       if (this.previous) {
         previous.addEventListener('click', (function(_this) {
           return function(event) {
@@ -786,7 +728,6 @@ var __slice = [].slice,
       wrapper.appendChild(stepCount);
       next = document.createElement('div');
       next.className = 'tourjs-next-step';
-      next.appendChild(renderSVG('#tourjs-symbol-chevron-right'));
       if (this.next) {
         next.addEventListener('click', (function(_this) {
           return function(event) {
@@ -849,13 +790,8 @@ var __slice = [].slice,
             _this.node.id = _this.id;
             _this.node.className = 'tourjs';
             document.body.appendChild(_this.node);
-            return fetchSVG({
-              svg: _this.config.svg,
-              success: _this._onLoad
-            });
-          } else {
-            return _this._onLoad();
           }
+          return _this._onLoad();
         };
       })(this);
       return this.shouldLoad((function(_this) {
@@ -997,15 +933,7 @@ var __slice = [].slice,
 
     Tour.prototype._renderCloseBtn = function() {
       var btn;
-      btn = document.getElementById('tourjs-close');
-      if (!btn) {
-        btn = renderSVG('#tourjs-symbol-close');
-        btn.id = 'tourjs-close';
-        addFilter(btn);
-        btn.addEventListener('click', this.unload);
-        btn.style.display = 'block';
-        return this.node.appendChild(btn);
-      }
+      return btn = document.getElementById('tourjs-close');
     };
 
     Tour.prototype._renderFirstStep = function() {

@@ -78,373 +78,117 @@ $opacity: 0.8;
 
   .tourjs-tooltip { white-space: wrap; }
 
-  .tourjs-shape { position: absolute; }
+  .tourjs-shape {
+    height: 65px;
+    position: absolute;
+    width: 65px;
+  }
 
-  &.tourjs-arrow {
-    &.tourjs-top-left {
-      .tourjs-tooltip,
-      .tourjs-description {
-        text-align: right;
-      }
-
-      .tourjs-tooltip {
-        margin-right: 45px;
-        margin-bottom: 45px;
-      }
-
-      .tourjs-shape {
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        height: 50px;
-        width: 50px;
-      }
+  &.tourjs-top {
+    .tourjs-tooltip,
+    .tourjs-description {
+      font-size: 16px;
+      text-align: center;
     }
 
-    &.tourjs-top {
-      .tourjs-tooltip,
-      .tourjs-description {
-        font-size: 16px;
-        text-align: center;
-      }
+    .tourjs-tooltip { margin-bottom: 65px; }
 
-      .tourjs-tooltip { margin-bottom: 65px; }
-
-      .tourjs-shape {
-        bottom: 0;
-        left: 50%;
-        height: 68px;
-        margin-left: -16px;
-        width: 31px;
-      }
-    }
-
-    &.tourjs-top-right {
-      .tourjs-tooltip {
-        margin-left: 45px;
-        margin-bottom: 45px;
-      }
-
-      .tourjs-shape {
-        bottom: 0;
-        height: 50px;
-        left: 0;
-        width: 50px;
-      }
-    }
-
-    &.tourjs-right {
-      .tourjs-tooltip { margin-left: 65px; }
-
-      .tourjs-shape {
-        height: 31px;
-        left: 0;
-        margin-top: -16px;
-        top: 50%;
-        width: 68px;
-      }
-    }
-
-    &.tourjs-bottom-right {
-      .tourjs-tooltip {
-        margin-left: 45px;
-        margin-top: 45px;
-      }
-
-      .tourjs-shape {
-        top: 0;
-        height: 50px;
-        left: 0;
-        width: 50px;
-      }
-    }
-
-    &.tourjs-bottom {
-      .tourjs-tooltip,
-      .tourjs-description { text-align: center; }
-
-      .tourjs-tooltip { margin-top: 65px; }
-
-      .tourjs-shape {
-        height: 68px;
-        left: 50%;
-        margin-left: -16px;
-        top: 0;
-        width: 31px;
-      }
-    }
-
-    &.tourjs-bottom-left {
-      .tourjs-tooltip,
-      .tourjs-description { text-align: right; }
-
-      .tourjs-tooltip {
-        margin-top: 45px;
-        margin-right: 45px;
-      }
-
-      .tourjs-shape {
-        height: 50px;
-        right: 0;
-        top: 0;
-        width: 50px;
-      }
-    }
-
-    &.tourjs-left {
-      .tourjs-tooltip,
-      .tourjs-description { text-align: right; }
-
-      .tourjs-tooltip { margin-right: 65px; }
-
-      .tourjs-shape {
-        height: 31px;
-        margin-top: -16px;
-        right: 0px;
-        top: 50%;
-        width: 68px;
-      }
+    .tourjs-shape {
+      bottom: 0;
+      left: 50%;
+      margin-left: -32.5px;
     }
   }
 
-  &.tourjs-curved-arrow {
-    &.tourjs-top-left {
-      .tourjs-tooltip,
-      .tourjs-description { text-align: right; }
-
-      .tourjs-tooltip {
-        margin-bottom: 28px;
-        margin-right: 60px;
-        padding-bottom: 0;
-        padding-right: 0;
-      }
-
-      .tourjs-shape {
-        bottom: 0;
-        height: 37px;
-        position: absolute;
-        right: 0;
-        width: 58px;
-      }
+  &.tourjs-top-right {
+    .tourjs-tooltip {
+      margin-left: 65px;
+      margin-bottom: 33px;
     }
 
-    &.tourjs-top {
-      .tourjs-tooltip,
-      .tourjs-description { text-align: left; }
+    .tourjs-shape {
+      bottom: 0;
+      left: 0;
+    }
+  }
 
-      .tourjs-tooltip {
-        margin-bottom: 55px;
-        margin-left: 35px;
-        padding-bottom: 0;
-        padding-left: 0;
-      }
+  &.tourjs-right {
+    .tourjs-tooltip { margin-left: 65px; }
 
-      .tourjs-shape {
-        bottom: 0;
-        height: 65px;
-        position: absolute;
-        width: 32px;
-      }
+    .tourjs-shape {
+      left: 0;
+      margin-top: -32.5px;
+      top: 50%;
+    }
+  }
+
+  &.tourjs-bottom-right {
+    .tourjs-tooltip {
+      margin-left: 65px;
+      margin-top: 23px;
     }
 
-    &.tourjs-top-inverted {
-      .tourjs-tooltip,
-      .tourjs-description { text-align: right; }
+    .tourjs-shape {
+      top: 0;
+      left: 0;
+    }
+  }
 
-      .tourjs-tooltip {
-        margin-bottom: 55px;
-        margin-right: 35px;
-        padding-bottom: 0;
-        padding-right: 0;
-      }
+  &.tourjs-bottom {
+    .tourjs-tooltip,
+    .tourjs-description { text-align: center; }
 
-      .tourjs-shape {
-        bottom: 0;
-        height: 65px;
-        position: absolute;
-        right: 0;
-        width: 32px;
-      }
+    .tourjs-tooltip { margin-top: 65px; }
+
+    .tourjs-shape {
+      left: 50%;
+      margin-left: -32.5px;
+      top: 0;
+    }
+  }
+
+  &.tourjs-bottom-left {
+    .tourjs-tooltip,
+    .tourjs-description { text-align: right; }
+
+    .tourjs-tooltip {
+      margin-top: 23px;
+      margin-right: 65px;
     }
 
-    &.tourjs-top-right {
-      .tourjs-tooltip,
-      .tourjs-description { text-align: left; }
+    .tourjs-shape {
+      right: 0;
+      top: 0;
+    }
+  }
 
-      .tourjs-tooltip {
-        margin-bottom: 28px;
-        margin-left: 60px;
-        padding-bottom: 0;
-        padding-left: 0;
-      }
+  &.tourjs-left {
+    .tourjs-tooltip,
+    .tourjs-description { text-align: right; }
 
-      .tourjs-shape {
-        bottom: 0;
-        height: 37px;
-        position: absolute;
-        left: 0;
-        width: 58px;
-      }
+    .tourjs-tooltip { margin-right: 65px; }
+
+    .tourjs-shape {
+      margin-top: -32.5px;
+      right: 0px;
+      top: 50%;
+    }
+  }
+
+  &.tourjs-top-left {
+    .tourjs-tooltip,
+    .tourjs-description {
+      text-align: right;
     }
 
-    &.tourjs-right {
-      .tourjs-tooltip,
-      .tourjs-description { text-align: left; }
-
-      .tourjs-tooltip {
-        margin-top: 10px;
-        margin-left: 65px;
-        padding-bottom: 0;
-        padding-left: 0;
-      }
-
-      .tourjs-shape {
-        height: 37px;
-        left: 0;
-        position: absolute;
-        top: 0;
-        width: 58px;
-      }
+    .tourjs-tooltip {
+      margin-right: 65px;
+      margin-bottom: 33px;
     }
 
-    &.tourjs-right-inverted {
-      .tourjs-tooltip,
-      .tourjs-description { text-align: left; }
-
-      .tourjs-tooltip {
-        margin-bottom: 22px;
-        margin-left: 65px;
-        padding-bottom: 0;
-        padding-left: 0;
-      }
-
-      .tourjs-shape {
-        height: 37px;
-        left: 0;
-        position: absolute;
-        bottom: 0;
-        width: 58px;
-      }
-    }
-
-    &.tourjs-bottom-right {
-      .tourjs-tooltip,
-      .tourjs-description { text-align: left; }
-
-      .tourjs-tooltip {
-        margin-left: 60px;
-        margin-top: 22px;
-        padding-left: 0;
-        padding-top: 0;
-      }
-
-      .tourjs-shape {
-        height: 37px;
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 58px;
-      }
-    }
-
-    &.tourjs-bottom {
-      .tourjs-tooltip,
-      .tourjs-description { text-align: right; }
-
-      .tourjs-tooltip {
-        margin-right: 40px;
-        margin-top: 51px;
-        padding-right: 0;
-        padding-top: 0;
-      }
-
-      .tourjs-shape {
-        height: 65px;
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 32px;
-      }
-    }
-
-    &.tourjs-bottom-inverted {
-      .tourjs-tooltip,
-      .tourjs-description { text-align: left; }
-
-      .tourjs-tooltip {
-        margin-left: 40px;
-        margin-top: 51px;
-        padding-left: 0;
-        padding-top: 0;
-      }
-
-      .tourjs-shape {
-        height: 65px;
-        left: 0;
-        position: absolute;
-        top: 0;
-        width: 32px;
-      }
-    }
-
-    &.tourjs-bottom-left {
-      .tourjs-tooltip,
-      .tourjs-description { text-align: right; }
-
-      .tourjs-tooltip {
-        margin-right: 60px;
-        margin-top: 22px;
-        padding-right: 0;
-        padding-top: 0;
-      }
-
-      .tourjs-shape {
-        height: 37px;
-        position: absolute;
-        right: 0;
-        top: 0;
-        width: 58px;
-      }
-    }
-
-    &.tourjs-left {
-      .tourjs-tooltip,
-      .tourjs-description { text-align: right; }
-
-      .tourjs-tooltip {
-        margin-bottom: 16px;
-        margin-right: 70px;
-        padding-bottom: 0;
-        padding-right: 0;
-      }
-
-      .tourjs-shape {
-        height: 37px;
-        right: 0;
-        position: absolute;
-        bottom: 0;
-        width: 65px;
-      }
-    }
-
-    &.tourjs-left-inverted {
-      .tourjs-tooltip,
-      .tourjs-description { text-align: right; }
-
-      .tourjs-tooltip {
-        margin-top: 11px;
-        margin-right: 70px;
-        padding-bottom: 0;
-        padding-right: 0;
-      }
-
-      .tourjs-shape {
-        height: 37px;
-        right: 0;
-        position: absolute;
-        top: 0;
-        width: 65px;
-      }
+    .tourjs-shape {
+      bottom: 0;
+      right: 0;
     }
   }
 }
