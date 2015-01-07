@@ -68,6 +68,13 @@
       c0.1,0.1,0.1,0.2,0.1,0.4c1.2,2.6,4.2,8.8,9,18.6C119,45.6,126.1,56.8,135.4,68.7L135.4,68.7z
       """
 
+    line:
+      """
+      M333,2.4c1.5,0.5,2.3,1.2,2.5,2.1c0.2,0.9,0.1,3.5-5.4,3.5
+      C320.5,6.2,35.3,4.5,5.5,8.1C3.2,8.3,0.8,6.8,0.2,5.3c-0.7-1.6,0.4-2.8,3.1-3.7c1-0.3,2.3-0.6,4-0.7c0.2-0.1,0.7-0.1,1.4-0.1
+      l0.8-0.1c0.1,0,0.2,0,0.4,0C12.4,0,288.5-1,333,2.4z
+      """
+
   ###
   # Adds drop shadow filter to an SVG image
   ###
@@ -491,9 +498,20 @@
         @node.appendChild title
 
         if @config.description
+          shape = document.createElementNS XMLNS, 'path'
+          shape.setAttributeNS null, 'fill', '#FFF'
+          shape.setAttributeNS null, 'd', PATHS['line']
+
+          svg = document.createElementNS XMLNS, 'svg'
+          svg.setAttributeNS null, 'viewBox', '0 0 335.5 8.2'
+          svg.appendChild shape
+
           line = document.createElement 'div'
           line.className = 'tourjs-overview-line'
-          # line.appendChild renderSVG '#tourjs-symbol-line'
+          line.appendChild svg
+
+          addFilter svg
+
           @node.appendChild line
 
           description = document.createElement 'div'
