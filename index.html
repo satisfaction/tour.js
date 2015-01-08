@@ -61,7 +61,7 @@
         }
     </style>
 
-    <link rel="stylesheet" type="text/css" href="dist/tour.js.css">
+    <link rel="stylesheet" type="text/css" href="dist/tour.css">
 </head>
 
 <body>
@@ -106,22 +106,22 @@
 
             svg: 'dist/svg/defs.svg',
 
-            shouldLoad: function (done) {
-              setTimeout(function () {
-                done(true);
-              }, 10);
-            },
+            // shouldLoad: function (done) {
+            //   setTimeout(function () {
+            //     done(true);
+            //   }, 10);
+            // },
 
             steps: [{
-                load: function (state) {
-                  console.log('first step loaded');
-                },
+                // load: function (state) {
+                //   console.log('first step loaded');
+                // },
 
-                shouldLoad: function (done) {
-                  setTimeout(function () {
-                    done(true);
-                  }, 10);
-                },
+                // shouldLoad: function (done) {
+                //   setTimeout(function () {
+                //     done(true);
+                //   }, 10);
+                // },
 
                 hints: [
 
@@ -131,8 +131,8 @@
                         target: '#target',
                         position: 'top',
                         title: 'Hello World',
-                        description: 'The classic <b>programming<\/b> example.',
-                        timeout: 100
+                        description: 'The classic <b>programming<\/b> example.'
+                        // timeout: 100
                     },
                     {
                         target: '#target',

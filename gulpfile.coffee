@@ -4,8 +4,8 @@ connect    = require 'gulp-connect'
 gulp       = require 'gulp'
 rename     = require 'gulp-rename'
 sass       = require 'gulp-sass'
-svgSprite  = require 'gulp-svg-sprites'
 uglify     = require 'gulp-uglify'
+uglifycss  = require 'gulp-uglifycss'
 util       = require 'gulp-util'
 
 gulp.task 'assets', ->
@@ -15,6 +15,9 @@ gulp.task 'assets', ->
 
   gulp.src('src/*.scss')
     .pipe(sass())
+    .pipe(gulp.dest 'dist')
+    .pipe(rename suffix: '.min')
+    .pipe(uglifycss())
     .pipe(gulp.dest 'dist')
     .pipe connect.reload()
 
@@ -33,11 +36,6 @@ gulp.task 'assets', ->
 
 gulp.task 'server', ->
   connect.server livereload: true
-
-gulp.task 'sprites', ->
-  gulp.src('svg/*.svg')
-    .pipe(svgSprite mode: 'defs', svgId: 'tourjs-symbol-%f')
-    .pipe gulp.dest('dist')
 
 gulp.task 'watch', ->
   gulp.watch [
