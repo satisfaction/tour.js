@@ -38,6 +38,7 @@ var __slice = [].slice,
    */
   addFilter = function(svg) {
     var blend, blur, defs, filter, id, offset;
+    return;
     id = "tourjs-filter-" + (new Date().getTime());
     defs = document.createElementNS(XMLNS, 'defs');
     filter = document.createElementNS(XMLNS, 'filter');

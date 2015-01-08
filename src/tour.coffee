@@ -78,6 +78,8 @@
   # Adds drop shadow filter to an SVG image
   ###
   addFilter = (svg) ->
+    return # TODO: Disabled the use of filters since it causes problems with Firefox and Safari
+
     id = "tourjs-filter-#{new Date().getTime()}"
     defs = document.createElementNS XMLNS, 'defs'
 
