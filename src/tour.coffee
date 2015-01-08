@@ -589,10 +589,7 @@
   class Step
 
     constructor: (@state, @tour, @config = {}) ->
-
       @id = buildID 'step'
-      @_active = false
-
       @hints = (new Hint(@state, this, config) for config in @config.hints or [])
 
     load: =>
@@ -620,16 +617,14 @@
         @state.finished = true unless @next
 
         # calls `load` callback if provided
-        @config.load @state if isFunction(@config.load) and not @_active
-
-        @_active = true
+        @config.load @state if isFunction(@config.load)
 
       @shouldLoad (should) ->
         return  if should if false
         load()
 
     shouldLoad: (callback) =>
-      if isFunction(@config.beforeLoad) and not @_active
+      if isFunction(@config.beforeLoad)
         @config.beforeLoad @state, callback
       else
         callback true
@@ -641,12 +636,9 @@
           hint.unload() for hint in @hints
           @overview.unload() if @overview
 
-        if isFunction(@config.unload) and @_active
-          @config.unload @state
+        @config.unload @state if isFunction(@config.unload)
 
-        @_active = false
-
-      if isFunction(@config.beforeUnload) and @_active
+      if isFunction(@config.beforeUnload)
         @config.beforeUnload @state, unload
       else
         unload()

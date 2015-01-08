@@ -612,7 +612,6 @@ var __slice = [].slice,
       this.shouldLoad = __bind(this.shouldLoad, this);
       this.load = __bind(this.load, this);
       this.id = buildID('step');
-      this._active = false;
       this.hints = (function() {
         var _i, _len, _ref, _results;
         _ref = this.config.hints || [];
@@ -650,10 +649,9 @@ var __slice = [].slice,
           if (!_this.next) {
             _this.state.finished = true;
           }
-          if (isFunction(_this.config.load) && !_this._active) {
-            _this.config.load(_this.state);
+          if (isFunction(_this.config.load)) {
+            return _this.config.load(_this.state);
           }
-          return _this._active = true;
         };
       })(this);
       return this.shouldLoad(function(should) {
@@ -667,7 +665,7 @@ var __slice = [].slice,
     };
 
     Step.prototype.shouldLoad = function(callback) {
-      if (isFunction(this.config.beforeLoad) && !this._active) {
+      if (isFunction(this.config.beforeLoad)) {
         return this.config.beforeLoad(this.state, callback);
       } else {
         return callback(true);
@@ -690,13 +688,12 @@ var __slice = [].slice,
               _this.overview.unload();
             }
           }
-          if (isFunction(_this.config.unload) && _this._active) {
-            _this.config.unload(_this.state);
+          if (isFunction(_this.config.unload)) {
+            return _this.config.unload(_this.state);
           }
-          return _this._active = false;
         };
       })(this);
-      if (isFunction(this.config.beforeUnload) && this._active) {
+      if (isFunction(this.config.beforeUnload)) {
         return this.config.beforeUnload(this.state, unload);
       } else {
         return unload();
