@@ -280,6 +280,8 @@
 
             @step.node.appendChild @node
 
+            @node.addEventListener 'click', @_onClick
+
           window.addEventListener 'resize', @_setPosition
           window.addEventListener 'scroll', @_setPosition
 
@@ -291,6 +293,8 @@
       if @node
         window.removeEventListener 'resize', @_setPosition
         window.removeEventListener 'scroll', @_setPosition
+
+    _onClick: (event) -> event.stopPropagation()
 
     _renderDescription: (parent) =>
       if @config.description
@@ -778,13 +782,6 @@
         unload()
 
 
-    _unloadCloseBtn: =>
-      btn = document.getElementById 'tourjs-close'
-
-      if btn
-        btn.style.display = 'none'
-        btn.removeEventListener 'click', @unload
-
     _initSteps: (callback) =>
 
       return callback() if @node
@@ -849,23 +846,20 @@
       @config.load(@state) if isFunction @config.load
 
     _renderCloseBtn: =>
-      btn = document.getElementById 'tourjs-close'
+      shape = document.createElementNS XMLNS, 'path'
+      shape.setAttributeNS null, 'fill', '#FFF'
+      shape.setAttributeNS null, 'd', PATHS['closeButton']
 
-      unless btn
-        shape = document.createElementNS XMLNS, 'path'
-        shape.setAttributeNS null, 'fill', '#FFF'
-        shape.setAttributeNS null, 'd', PATHS['closeButton']
+      svg = document.createElementNS XMLNS, 'svg'
+      svg.setAttributeNS null, 'class', 'tourjs-close'
+      svg.setAttributeNS null, 'viewBox', '0 0 16 16'
+      svg.appendChild shape
+      svg.addEventListener 'click', @unload
+      svg.style.display = 'block'
 
-        svg = document.createElementNS XMLNS, 'svg'
-        svg.setAttributeNS null, 'viewBox', '0 0 16 16'
-        svg.appendChild shape
-        svg.id = 'tourjs-close'
-        svg.addEventListener 'click', @unload
-        svg.style.display = 'block'
+      addFilter svg
 
-        addFilter svg
-
-        @node.appendChild svg
+      @node.appendChild svg
 
     _renderFirstStep: => @_renderStep 1
 

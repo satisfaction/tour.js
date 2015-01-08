@@ -6,7 +6,7 @@
   left: 0;
   z-index: 9999; }
 
-#tourjs-close {
+.tourjs-close {
   cursor: pointer;
   height: 30px;
   padding: 4px 8px 8px 4px;

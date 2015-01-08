@@ -275,6 +275,7 @@ var __slice = [].slice,
               _this._renderTooltip();
               _this._renderShape();
               _this.step.node.appendChild(_this.node);
+              _this.node.addEventListener('click', _this._onClick);
             }
             window.addEventListener('resize', _this._setPosition);
             window.addEventListener('scroll', _this._setPosition);
@@ -289,6 +290,10 @@ var __slice = [].slice,
         window.removeEventListener('resize', this._setPosition);
         return window.removeEventListener('scroll', this._setPosition);
       }
+    };
+
+    Hint.prototype._onClick = function(event) {
+      return event.stopPropagation();
     };
 
     Hint.prototype._renderDescription = function(parent) {
@@ -798,7 +803,6 @@ var __slice = [].slice,
       this._onLoad = __bind(this._onLoad, this);
       this._onKeyUp = __bind(this._onKeyUp, this);
       this._initSteps = __bind(this._initSteps, this);
-      this._unloadCloseBtn = __bind(this._unloadCloseBtn, this);
       this.unload = __bind(this.unload, this);
       this.shouldLoad = __bind(this.shouldLoad, this);
       this.load = __bind(this.load, this);
@@ -872,15 +876,6 @@ var __slice = [].slice,
         return this.config.beforeUnload(this.state, unload);
       } else {
         return unload();
-      }
-    };
-
-    Tour.prototype._unloadCloseBtn = function() {
-      var btn;
-      btn = document.getElementById('tourjs-close');
-      if (btn) {
-        btn.style.display = 'none';
-        return btn.removeEventListener('click', this.unload);
       }
     };
 
@@ -961,21 +956,18 @@ var __slice = [].slice,
     };
 
     Tour.prototype._renderCloseBtn = function() {
-      var btn, shape, svg;
-      btn = document.getElementById('tourjs-close');
-      if (!btn) {
-        shape = document.createElementNS(XMLNS, 'path');
-        shape.setAttributeNS(null, 'fill', '#FFF');
-        shape.setAttributeNS(null, 'd', PATHS['closeButton']);
-        svg = document.createElementNS(XMLNS, 'svg');
-        svg.setAttributeNS(null, 'viewBox', '0 0 16 16');
-        svg.appendChild(shape);
-        svg.id = 'tourjs-close';
-        svg.addEventListener('click', this.unload);
-        svg.style.display = 'block';
-        addFilter(svg);
-        return this.node.appendChild(svg);
-      }
+      var shape, svg;
+      shape = document.createElementNS(XMLNS, 'path');
+      shape.setAttributeNS(null, 'fill', '#FFF');
+      shape.setAttributeNS(null, 'd', PATHS['closeButton']);
+      svg = document.createElementNS(XMLNS, 'svg');
+      svg.setAttributeNS(null, 'class', 'tourjs-close');
+      svg.setAttributeNS(null, 'viewBox', '0 0 16 16');
+      svg.appendChild(shape);
+      svg.addEventListener('click', this.unload);
+      svg.style.display = 'block';
+      addFilter(svg);
+      return this.node.appendChild(svg);
     };
 
     Tour.prototype._renderFirstStep = function() {
