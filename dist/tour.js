@@ -613,6 +613,7 @@ var __slice = [].slice,
       this._renderPagination = __bind(this._renderPagination, this);
       this._renderOverlay = __bind(this._renderOverlay, this);
       this._renderHints = __bind(this._renderHints, this);
+      this._beforeLoad = __bind(this._beforeLoad, this);
       this.unload = __bind(this.unload, this);
       this.shouldLoad = __bind(this.shouldLoad, this);
       this.load = __bind(this.load, this);
@@ -659,19 +660,21 @@ var __slice = [].slice,
           }
         };
       })(this);
-      return this.shouldLoad(function(should) {
-        if (false) {
-          if (should) {
+      return this.shouldLoad((function(_this) {
+        return function(should) {
+          if (should !== true) {
             return;
           }
-        }
-        return load();
-      });
+          return _this._beforeLoad(function() {
+            return load();
+          });
+        };
+      })(this));
     };
 
     Step.prototype.shouldLoad = function(callback) {
-      if (isFunction(this.config.beforeLoad)) {
-        return this.config.beforeLoad(this.state, callback);
+      if (isFunction(this.config.shouldLoad)) {
+        return this.config.shouldLoad(this.state, callback);
       } else {
         return callback(true);
       }
@@ -702,6 +705,14 @@ var __slice = [].slice,
         return this.config.beforeUnload(this.state, unload);
       } else {
         return unload();
+      }
+    };
+
+    Step.prototype._beforeLoad = function(callback) {
+      if (isFunction(this.config.beforeLoad)) {
+        return this.config.beforeLoad(this.state, callback);
+      } else {
+        return callback(true);
       }
     };
 

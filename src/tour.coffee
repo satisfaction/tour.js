@@ -625,13 +625,13 @@
         # calls `load` callback if provided
         @config.load @state if isFunction(@config.load)
 
-      @shouldLoad (should) ->
-        return  if should if false
-        load()
+      @shouldLoad (should) =>
+        return unless should is true
+        @_beforeLoad -> load()
 
     shouldLoad: (callback) =>
-      if isFunction(@config.beforeLoad)
-        @config.beforeLoad @state, callback
+      if isFunction(@config.shouldLoad)
+        @config.shouldLoad @state, callback
       else
         callback true
 
@@ -648,6 +648,12 @@
         @config.beforeUnload @state, unload
       else
         unload()
+
+    _beforeLoad: (callback) =>
+      if isFunction(@config.beforeLoad)
+        @config.beforeLoad @state, callback
+      else
+        callback true
 
     _renderHints: =>
       hint.render() for hint in @hints
