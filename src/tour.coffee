@@ -175,6 +175,11 @@
   # Waits for DOM elements to be present
   ###
   waitFor = (selector, timeout = 10000, done) ->
+
+    if typeof timeout is 'function'
+      done = timeout
+      timeout = 10000
+
     found = document.querySelector(selector)?
     error = false
 

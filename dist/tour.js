@@ -158,6 +158,10 @@ var __slice = [].slice,
     if (timeout == null) {
       timeout = 10000;
     }
+    if (typeof timeout === 'function') {
+      done = timeout;
+      timeout = 10000;
+    }
     found = document.querySelector(selector) != null;
     error = false;
     if (found) {
