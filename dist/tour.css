@@ -196,6 +196,7 @@
     margin: 0; }
 
 .tourjs-overview-line {
+  height: 30px;
   padding-bottom: 10px; }
   .tourjs-overview-line svg {
     width: 100%; }
