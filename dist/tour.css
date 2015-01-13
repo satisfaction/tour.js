@@ -26,13 +26,8 @@
   z-index: 99999; }
 
 .tourjs-hint {
-  position: absolute; }
-
-.tourjs-highlight {
-  z-index: 9999999 !important; }
-
-.tourjs-silence {
-  opacity: 0 !important; }
+  position: absolute;
+  z-index: 99999; }
 
 .tourjs-tooltip {
   color: white;
