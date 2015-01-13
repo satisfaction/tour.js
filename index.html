@@ -123,6 +123,12 @@
                 //   }, 10);
                 // },
 
+                beforeLoad: function (state, done) {
+                  setTimeout(function () {
+                    done();
+                  }, 5000);
+                },
+
                 hints: [
 
                     // Small target

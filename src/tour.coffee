@@ -627,6 +627,7 @@
 
       @shouldLoad (should) =>
         return unless should is true
+        @_renderSpinner()
         @_beforeLoad -> load()
 
     shouldLoad: (callback) =>
@@ -654,6 +655,55 @@
         @config.beforeLoad @state, callback
       else
         callback true
+
+    _renderSpinner: ->
+
+      console.log 'rendering spinner'
+
+      @spinner = document.createElementNS XMLNS, 'svg'
+      @spinner.setAttributeNS null, 'id', buildID 'overlay'
+      @spinner.setAttributeNS null, 'class', 'tourjs-overlay'
+      @spinner.setAttributeNS null, 'height', '100%'
+      @spinner.setAttributeNS null, 'width', '100%'
+      @spinner.setAttributeNS null, 'x', 0
+      @spinner.setAttributeNS null, 'y', 0
+
+      opacity = (@config?.overlay?.opacity) or '0.8'
+      rect = document.createElementNS XMLNS, 'rect'
+      rect.setAttributeNS null, 'x', 0
+      rect.setAttributeNS null, 'y', 0
+      rect.setAttributeNS null, 'height', '100%'
+      rect.setAttributeNS null, 'width', '100%'
+      rect.setAttributeNS null, 'style', "stroke:none;fill:rgba(0,0,0,#{opacity});"
+
+
+      circle = document.createElementNS XMLNS, 'path'
+      circle.setAttributeNS null, 'd', 'M16 0 A16 16 0 0 0 16 32 A16 16 0 0 0 16 0 M16 4 A12 12 0 0 1 16 28 A12 12 0 0 1 16 4'
+      circle.setAttributeNS null, 'opacity', '0.25'
+      circle.setAttributeNS null, 'style', 'fill: white;'
+
+      arc = document.createElementNS XMLNS, 'path'
+      arc.setAttributeNS null, 'd', 'M16 0 A16 16 0 0 1 32 16 L28 16 A12 12 0 0 0 16 4z'
+      arc.setAttributeNS null, 'style', 'fill: white;'
+
+      anim = document.createElementNS XMLNS, 'animateTransform'
+      anim.setAttributeNS null, 'attributeName', 'transform'
+      anim.setAttributeNS null, 'type', 'rotate'
+      anim.setAttributeNS null, 'from', '0 16 16'
+      anim.setAttributeNS null, 'to', '360 16 16'
+      anim.setAttributeNS null, 'dur', '0.6s'
+      anim.setAttributeNS null, 'repeatCount', 'indefinite'
+
+      arc.appendChild anim
+
+      # TODO: Position spinner properly
+      g = document.createElementNS XMLNS, 'g'
+      g.appendChild circle
+      g.appendChild arc
+
+      @spinner.appendChild g
+      @spinner.appendChild rect
+      @tour.node.appendChild @spinner
 
     _renderHints: =>
       hint.render() for hint in @hints

@@ -665,6 +665,7 @@ var __slice = [].slice,
           if (should !== true) {
             return;
           }
+          _this._renderSpinner();
           return _this._beforeLoad(function() {
             return load();
           });
@@ -714,6 +715,46 @@ var __slice = [].slice,
       } else {
         return callback(true);
       }
+    };
+
+    Step.prototype._renderSpinner = function() {
+      var anim, arc, circle, g, opacity, rect, _ref, _ref1;
+      console.log('rendering spinner');
+      this.spinner = document.createElementNS(XMLNS, 'svg');
+      this.spinner.setAttributeNS(null, 'id', buildID('overlay'));
+      this.spinner.setAttributeNS(null, 'class', 'tourjs-overlay');
+      this.spinner.setAttributeNS(null, 'height', '100%');
+      this.spinner.setAttributeNS(null, 'width', '100%');
+      this.spinner.setAttributeNS(null, 'x', 0);
+      this.spinner.setAttributeNS(null, 'y', 0);
+      opacity = ((_ref = this.config) != null ? (_ref1 = _ref.overlay) != null ? _ref1.opacity : void 0 : void 0) || '0.8';
+      rect = document.createElementNS(XMLNS, 'rect');
+      rect.setAttributeNS(null, 'x', 0);
+      rect.setAttributeNS(null, 'y', 0);
+      rect.setAttributeNS(null, 'height', '100%');
+      rect.setAttributeNS(null, 'width', '100%');
+      rect.setAttributeNS(null, 'style', "stroke:none;fill:rgba(0,0,0," + opacity + ");");
+      circle = document.createElementNS(XMLNS, 'path');
+      circle.setAttributeNS(null, 'd', 'M16 0 A16 16 0 0 0 16 32 A16 16 0 0 0 16 0 M16 4 A12 12 0 0 1 16 28 A12 12 0 0 1 16 4');
+      circle.setAttributeNS(null, 'opacity', '0.25');
+      circle.setAttributeNS(null, 'style', 'fill: white;');
+      arc = document.createElementNS(XMLNS, 'path');
+      arc.setAttributeNS(null, 'd', 'M16 0 A16 16 0 0 1 32 16 L28 16 A12 12 0 0 0 16 4z');
+      arc.setAttributeNS(null, 'style', 'fill: white;');
+      anim = document.createElementNS(XMLNS, 'animateTransform');
+      anim.setAttributeNS(null, 'attributeName', 'transform');
+      anim.setAttributeNS(null, 'type', 'rotate');
+      anim.setAttributeNS(null, 'from', '0 16 16');
+      anim.setAttributeNS(null, 'to', '360 16 16');
+      anim.setAttributeNS(null, 'dur', '0.6s');
+      anim.setAttributeNS(null, 'repeatCount', 'indefinite');
+      arc.appendChild(anim);
+      g = document.createElementNS(XMLNS, 'g');
+      g.appendChild(circle);
+      g.appendChild(arc);
+      this.spinner.appendChild(g);
+      this.spinner.appendChild(rect);
+      return this.tour.node.appendChild(this.spinner);
     };
 
     Step.prototype._renderHints = function() {
